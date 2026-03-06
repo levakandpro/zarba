@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZARBA — Музыкальная Экосистема Таджикского Рэпа</title>
+    <link rel="icon" type="image/png" href="assets/favicon black.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo-area" onclick="location.reload()">
+            <div class="logo-container">
+                <div class="logo-icon-wrapper">
+                    <img src="assets/white.svg" alt="ZARBA Icon" class="logo-icon">
+                </div>
+                <div class="logo-text-section">
+                    <h1 class="logo-main">ZARBA</h1>
+                    <p class="logo-tagline">МУЗЫКАЛЬНАЯ ЭКО СИСТЕМА ТАДЖИКСКОГО РЭП</p>
+                </div>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <button onclick="showPage('home')">ГЛАВНАЯ</button>
+            <button onclick="showPage('artists')">АРТИСТЫ</button>
+            <button onclick="showPage('charts')">ТОП 100</button>
+            <button onclick="showPage('media')">Z-MEDIA</button>
+            <button onclick="showPage('bazar')">BAZAR</button>
+            <button onclick="showPage('collabs')">COLLABS</button>
+            <button onclick="showPage('playlists')">ПЛЕЙЛИСТЫ</button>
+            <button onclick="showPage('hall')">ЗАЛ СЛАВЫ</button>
+        </nav>
+        <button class="btn-google-auth" onclick="googleAuth()">ВХОД</button>
+    </header>
+
+    <main id="app-content"></main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="assets/black.svg" alt="ZARBA" class="footer-logo">
+                <span class="footer-copy">© 2026</span>
+            </div>
+            <div class="footer-socials">
+                <a href="https://t.me/zarbatj" target="_blank" rel="noopener" class="social-icon tg">TG</a>
+                <a href="https://vk.com/zarbatj" target="_blank" rel="noopener" class="social-icon vk">VK</a>
+                <a href="https://instagram.com/zarbamusic" target="_blank" rel="noopener" class="social-icon ig">IG</a>
+                <a href="https://youtube.com/@zarbamusic" target="_blank" rel="noopener" class="social-icon yt">YT</a>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link" onclick="openModal('about'); return false;">О НАС</a>
+                <a href="#" class="footer-link" onclick="openModal('contact'); return false;">КОНТАКТЫ</a>
+                <a href="#" class="footer-link" onclick="openModal('rules'); return false;">ПРАВИЛА</a>
+                <a href="#" class="footer-link" onclick="openModal('privacy'); return false;">ПОЛИТИКА</a>
+                <a href="#" class="footer-link" onclick="openModal('support'); return false;">ПОДДЕРЖКА</a>
+            </div>
+            <div class="footer-slogan">
+                Made with <span class="heart">❤</span> for Tajik Hip-Hop
+            </div>
+        </div>
+    </footer>
+
+    <div id="about-modal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-hip-hop" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h2 class="modal-title">О НАС</h2>
+            <div class="modal-content">
+                <p>ZARBA — это первая полноценная музыкальная экосистема Таджикистана.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================
+         ВАЖНО: Все скрипты БЕЗ type="module"
+         Порядок загрузки важен — сначала страницы, потом main.js
+    ======================================================= -->
+
+    <!-- Страницы (убираем export, делаем глобальные функции) -->
+    <script src="js/pages/home.js"></script>
+    <script src="js/pages/artists.js"></script>
+    <script src="js/pages/charts.js"></script>
+    <script src="js/pages/media.js"></script>
+    <script src="js/pages/bazar.js"></script>
+    <script src="js/pages/collab.js"></script>
+    <script src="js/pages/playlists.js"></script>
+    <script src="js/pages/hall-of-fame.js"></script>
+
+    <!-- Главный файл — загружается последним -->
+    <script src="js/main.js"></script>
+
+    <script>
+        function openModal(name) {
+            const modal = document.getElementById(name + '-modal');
+            if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+        }
+        function closeModal(event) {
+            const modals = document.querySelectorAll('.modal-overlay');
+            if (event && !event.target.classList.contains('modal-overlay')) return;
+            modals.forEach(m => m.style.display = 'none');
+            document.body.style.overflow = 'auto';
+        }
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+        function googleAuth() { alert('Google Auth coming soon...'); }
+    </script>
+</body>
+</html>
