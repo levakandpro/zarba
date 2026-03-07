@@ -22,33 +22,23 @@ jobs:
           admin.initializeApp({credential: admin.credential.cert(JSON.parse(process.env.FB_KEY))});
           const db = admin.firestore();
           async function go() {
-            const snap = await db.collection('tracks').get();
+            // Берем последние 3 добавленных трека
+            const snap = await db.collection('tracks').limit(3).get();
             if (snap.empty) return;
-            
-            const now = Date.now();
-            const tenMins = 11 * 60 * 1000; // Проверяем за последние 11 минут
 
             for (const doc of snap.docs) {
               const t = doc.data();
-              if (!t.createdAt) continue;
+              const msg = '<b>🔥 Новый трек на ZARBA!</b>\n\n' +
+                          '🎵 Исполнитель: <b>' + (t.artist || '...') + '</b>\n' +
+                          '🎶 Название: <b>' + (t.title || '...') + '</b>\n\n' +
+                          '🔗 <a href=\"https://zarba.ru\">Слушать на сайте</a>';
               
-              // Превращаем твою строку '07.03.2026, 06:48:47' в дату для сравнения
-              const [d, time] = t.createdAt.split(', ');
-              const [day, month, year] = d.split('.');
-              const dateObj = new Date(year, month - 1, day, ...time.split(':'));
-              
-              if (now - dateObj.getTime() < tenMins) {
-                const msg = '<b>🔥 Новый трек на ZARBA!</b>\n\n' +
-                            '🎵 Исполнитель: <b>' + (t.artist || 'Неизвестен') + '</b>\n' +
-                            '🎶 Название: <b>' + (t.title || 'Без названия') + '</b>\n\n' +
-                            '🔗 <a href=\"https://zarba.ru\">Слушать на сайте</a>';
-                await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
-                  chat_id: process.env.TG_ID,
-                  text: msg,
-                  parse_mode: 'HTML'
-                });
-                console.log('Отправлено: ' + t.title);
-              }
+              await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
+                chat_id: process.env.TG_ID,
+                text: msg,
+                parse_mode: 'HTML'
+              });
+              console.log('Отправлено уведомление для: ' + t.title);
             }
           }
           go().catch(console.error);"
