@@ -23,31 +23,16 @@ jobs:
           const db = admin.firestore();
 
           async function go() {
-            // Пытаемся найти коллекцию (и в маленьком, и в большом регистре)
-            let snap = await db.collection('tracks').get();
-            if (snap.empty) {
-                snap = await db.collection('Tracks').get();
-            }
-
+            const snap = await db.collection('tracks').get();
             const now = Date.now();
-            const checkInterval = 15 * 60 * 1000; 
-
-            if (snap.empty) {
-              // Если всё равно пусто, выведем в лог, что вообще есть в базе
-              const collections = await db.listCollections();
-              const names = collections.map(c => c.id).join(', ');
-              await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
-                chat_id: process.env.TG_ID,
-                text: '❌ Треков нет. Доступные коллекции: ' + (names || 'пусто')
-              });
-              return;
-            }
+            const checkInterval = 15 * 60 * 1000; // 15 минут
 
             for (const doc of snap.docs) {
               const t = doc.data();
               if (!t.createdAt) continue;
 
               try {
+                // Парсим твой формат даты: 07.03.2026, 06:48:47
                 const [d, time] = t.createdAt.split(', ');
                 const [day, month, year] = d.split('.');
                 const dateObj = new Date(year, month - 1, day, ...time.split(':'));
@@ -63,8 +48,9 @@ jobs:
                     text: msg,
                     parse_mode: 'HTML'
                   });
+                  console.log('Отправлено: ' + t.title);
                 }
-              } catch (e) { console.log('Ошибка даты'); }
+              } catch (e) { console.log('Ошибка даты в треке'); }
             }
           }
           go().catch(console.error);"
