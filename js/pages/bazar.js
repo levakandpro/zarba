@@ -25,12 +25,12 @@ function renderBazar(container) {
           <div class="bz-hero-line"></div>
           <div class="bz-nav-pills">
             <a href="#bz-shop" class="bz-pill">SHOP</a>
-            <a href="#bz-studio" class="bz-pill">STUDIO</a>
-            <a href="#bz-beats" class="bz-pill">BEATS</a>
-            <a href="#bz-covers" class="bz-pill">COVERS</a>
-            <a href="#bz-partners" class="bz-pill">PARTNERS</a>
-            <a href="#bz-clips" class="bz-pill">CLIPS</a>
-            <a href="#bz-distro" class="bz-pill active">DISTRO</a>
+            <a href="#bz-studio" class="bz-pill">СТУДИИ</a>
+            <a href="#bz-beats" class="bz-pill">БИТЫ</a>
+            <a href="#bz-covers" class="bz-pill">ОБЛОЖКИ</a>
+            <a href="#bz-partners" class="bz-pill">ПАРТНЕРЫ</a>
+            <a href="#bz-clips" class="bz-pill">СЪЕИКИ</a>
+            <a href="#bz-distro" class="bz-pill active">ДИСТРИБУЦИЯ</a>
           </div>
         </div>
       </div>
@@ -663,7 +663,7 @@ function renderBazar(container) {
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.286c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.935z"/></svg>
             ОТПРАВИТЬ ЗАЯВКУ В TELEGRAM
           </a>
-          <p class="bz-distro-hint">Напишите нам — ответим в течение часа</p>
+          <p class="bz-distro-hint">Напишите нам - ответим в течение часа</p>
         </div>
       </section>
 
@@ -813,7 +813,7 @@ function injectBazarCSS() {
       background: #050505 !important;
     }
     .bz-container { padding: 0 60px; max-width: 1440px; margin: 0 auto; }
-    .bz-img-ph { background: #1c1c1c; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #555; letter-spacing: 4px; text-transform: uppercase; border: 1px dashed #2e2e2e; }
+    .bz-img-ph { background: #1c1c1c; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; color: #888; letter-spacing: 4px; text-transform: uppercase; border: 1px dashed #444; }
     .bz-img-ph.tall { height: 100%; width: 100%; }
     .bz-img-ph.square { width: 100%; height: 100%; }
     .bz-img-ph.sq { width: 100%; height: 100%; aspect-ratio: 1; }
@@ -831,17 +831,16 @@ function injectBazarCSS() {
     .bz-hero-sub { font-size: 15px; color: #888; max-width: 480px; line-height: 1.7; margin-bottom: 40px; }
     .bz-hero-line { width: 60px; height: 2px; background: #FF4500; margin-bottom: 40px; }
     .bz-nav-pills { display: flex; flex-wrap: wrap; gap: 10px; }
-    .bz-pill { font-size: 10px; letter-spacing: 3px; border: 1px solid #1e1e1e; color: #555; text-decoration: none; padding: 10px 20px; transition: 0.25s; }
+    .bz-pill { font-size: 10px; letter-spacing: 3px; border: 1px solid #3a3a3a; color: #999; text-decoration: none; padding: 10px 20px; transition: 0.25s; }
     .bz-pill:hover, .bz-pill.active { border-color: #FF4500; color: #fff; background: rgba(255,69,0,0.08); }
-
-    /* ─── SECTIONS ─── */
-    .bz-section { padding: 100px 0; border-bottom: 1px solid #0d0d0d; }
+   /* ─── SECTIONS ─── */
+    .bz-section { padding: 120px 0; border-bottom: 1px solid #1a1a1a; }
     .bz-sec-head { display: flex; align-items: flex-end; gap: 24px; margin-bottom: 60px; }
-    .bz-sec-num { font-family: 'Bebas Neue', sans-serif; font-size: 80px; color: #222; line-height: 1; flex-shrink: 0; }
+    .bz-sec-num { font-family: 'Bebas Neue', sans-serif; font-size: 80px; color: #333; line-height: 1; flex-shrink: 0; }
     .bz-sec-titles { display: flex; flex-direction: column; gap: 4px; }
-    .bz-sec-title { font-family: 'Bebas Neue', sans-serif; font-size: 52px; margin: 0; line-height: 1; letter-spacing: 1px; }
-    .bz-sec-sub { font-size: 11px; letter-spacing: 4px; color: #666; text-transform: uppercase; }
-    .bz-sec-line { flex: 1; height: 1px; background: #151515; margin-bottom: 14px; }
+    .bz-sec-title { font-family: 'Bebas Neue', sans-serif; font-size: 52px; margin: 0; line-height: 1; letter-spacing: 1px; text-shadow: 0 5px 20px rgba(0,0,0,0.8); }
+    .bz-sec-sub { font-size: 11px; font-weight: bold; letter-spacing: 4px; color: #888; text-transform: uppercase; }
+    .bz-sec-line { flex: 1; height: 2px; background: linear-gradient(90deg, #333 0%, transparent 100%); margin-bottom: 14px; }
 
     /* ─── SHOP ─── */
     .bz-shop-meta { margin-bottom: 40px; }
@@ -851,7 +850,7 @@ function injectBazarCSS() {
     .bz-store-info strong { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
     .bz-store-info span { font-size: 11px; color: #555; }
     .bz-shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2px; }
-    .bz-shop-card { background: #0f0f0f; border: 1px solid #242424; transition: 0.35s; }
+    .bz-shop-card { background: #0a0a0a; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,0,0,0.6); transition: 0.35s; }
     .bz-shop-card:hover { border-color: #FF4500; transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
     .bz-shop-img-wrap { position: relative; }
     .bz-shop-img { aspect-ratio: 1; overflow: hidden; }
@@ -874,7 +873,7 @@ function injectBazarCSS() {
     .bz-slink.ig:hover { background: rgba(225,48,108,0.1); border-color: #e1306c; }
 
     /* ─── STUDIO ─── */
-    .bz-studio-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0; background: #0f0f0f; border: 1px solid #242424; }
+    .bz-studio-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0; background: #0a0a0a; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
     .bz-studio-slider-col { position: relative; }
     .bz-slider { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; }
     .bz-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease-in-out; }
@@ -889,14 +888,14 @@ function injectBazarCSS() {
     .bz-studio-meta { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
     .bz-smeta-row { display: flex; gap: 16px; align-items: flex-start; }
     .bz-smeta-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
-    .bz-smeta-label { display: block; font-size: 8px; letter-spacing: 3px; color: #444; margin-bottom: 4px; }
-    .bz-smeta-val { font-size: 13px; color: #aaa; }
+    .bz-smeta-label { display: block; font-size: 9px; font-weight: bold; letter-spacing: 3px; color: #888; margin-bottom: 4px; }
+    .bz-smeta-val { font-size: 13px; color: #ccc; }
     .bz-rating-row { display: flex; align-items: center; gap: 10px; }
     .bz-stars { color: #FFD700; font-size: 18px; }
     .bz-rating-num { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: #FFD700; }
-    .bz-rating-cnt { font-size: 10px; color: #444; }
-    .bz-user-rate-block { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; padding: 16px; background: #0d0d0d; border: 1px solid #181818; }
-    .bz-rate-label { font-size: 9px; letter-spacing: 2px; color: #555; }
+    .bz-rating-cnt { font-size: 10px; color: #888; }
+    .bz-user-rate-block { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; padding: 16px; background: #0d0d0d; border: 1px solid #222; }
+    .bz-rate-label { font-size: 9px; font-weight: bold; letter-spacing: 2px; color: #888; }
     .bz-star-select { display: flex; gap: 4px; cursor: pointer; }
     .bz-s { font-size: 22px; color: #2a2a2a; transition: 0.15s; user-select: none; }
     .bz-s.hover, .bz-s.selected { color: #FFD700; }
@@ -910,38 +909,38 @@ function injectBazarCSS() {
     .bz-soc-btn.yt:hover { border-color: #FF0000; background: rgba(255,0,0,0.08); color: #FF0000; }
     .bz-soc-btn.wa:hover { border-color: #25D366; background: rgba(37,211,102,0.08); color: #25D366; }
 
-    /* ─── BEATS ─── */
+/* ─── BEATS ─── */
     .bz-beats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 2px; }
-    .bz-beat-card { background: #0f0f0f; border: 1px solid #242424; padding: 32px; transition: 0.3s; }
-    .bz-beat-card:hover { border-color: #1e1e1e; }
+    .bz-beat-card { background: #0a0a0a; border: 1px solid #222; padding: 32px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); transition: 0.3s; }
+    .bz-beat-card:hover { border-color: #333; }
     .bz-beat-profile { display: flex; gap: 20px; align-items: center; margin-bottom: 28px; }
     .bz-beat-ava-wrap { position: relative; flex-shrink: 0; }
     .bz-beat-ava { width: 72px; height: 72px; overflow: hidden; border: 2px solid #1a1a1a; }
-    .bz-beat-status { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 1px; background: #111; color: #4CAF50; border: 1px solid #1e1e1e; padding: 2px 7px; white-space: nowrap; }
+    .bz-beat-status { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 1px; background: #111; color: #4CAF50; border: 1px solid #222; padding: 2px 7px; white-space: nowrap; }
     .bz-beat-bio h4 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; margin: 0 0 4px; letter-spacing: 1px; }
-    .bz-beat-genre { font-size: 11px; color: #777; margin-bottom: 10px; letter-spacing: 1px; }
+    .bz-beat-genre { font-size: 11px; color: #aaa; margin-bottom: 10px; letter-spacing: 1px; }
     .bz-beat-socials { display: flex; gap: 6px; }
-    .bz-micro-link { font-size: 8px; letter-spacing: 2px; text-decoration: none; color: #444; border: 1px solid #1e1e1e; padding: 3px 9px; transition: 0.2s; }
+    .bz-micro-link { font-size: 8px; letter-spacing: 2px; text-decoration: none; color: #999; border: 1px solid #333; padding: 3px 9px; transition: 0.2s; }
     .bz-micro-link:hover { color: #fff; border-color: #FF4500; }
     .bz-micro-link.tg:hover { border-color: #29b6f6; color: #29b6f6; }
     .bz-micro-link.yt:hover { border-color: #FF0000; color: #FF0000; }
     .bz-micro-link.ig:hover { border-color: #e1306c; color: #e1306c; }
-    .bz-beat-license { border: 1px solid #111; margin-bottom: 24px; }
-    .bz-lic-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #0e0e0e; }
+    .bz-beat-license { border: 1px solid #222; margin-bottom: 24px; }
+    .bz-lic-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #1a1a1a; }
     .bz-lic-row:last-child { border-bottom: none; }
     .bz-lic-row.premium { background: rgba(255,69,0,0.04); }
-    .bz-lic-type { font-size: 11px; color: #555; }
+    .bz-lic-type { font-size: 11px; color: #888; font-weight: bold; }
     .bz-lic-price { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #fff; }
     .bz-lic-row.premium .bz-lic-price { color: #FF4500; }
-    .bz-beat-tracks-head { font-size: 8px; letter-spacing: 4px; color: #333; margin-bottom: 12px; }
-    .bz-audio-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #0d0d0d; cursor: pointer; transition: 0.2s; }
-    .bz-audio-row:hover { padding-left: 6px; }
+    .bz-beat-tracks-head { font-size: 9px; font-weight: bold; letter-spacing: 4px; color: #888; margin-bottom: 12px; }
+    .bz-audio-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1a1a1a; cursor: pointer; transition: 0.2s; }
+    .bz-audio-row:hover { padding-left: 6px; border-bottom-color: #333; }
     .bz-audio-row.playing { border-bottom-color: #FF4500; }
     .bz-audio-row.playing .bz-track-name { color: #FF4500; }
-    .bz-play-btn { width: 28px; height: 28px; border: 1px solid #1e1e1e; background: none; color: #FF4500; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s; }
+    .bz-play-btn { width: 28px; height: 28px; border: 1px solid #333; background: none; color: #FF4500; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s; }
     .bz-play-btn:hover { background: #FF4500; color: #fff; border-color: #FF4500; }
-    .bz-track-name { font-size: 12px; color: #888; flex: 1; }
-    .bz-track-bpm { font-size: 9px; color: #333; letter-spacing: 1px; }
+    .bz-track-name { font-size: 12px; color: #ccc; flex: 1; }
+    .bz-track-bpm { font-size: 9px; color: #666; letter-spacing: 1px; font-weight: bold; }
 
     /* ─── COVERS ─── */
     .bz-covers-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; }
@@ -961,12 +960,11 @@ function injectBazarCSS() {
 
     /* ─── PARTNERS ─── */
     .bz-partners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 2px; }
-    .bz-partner-card { background: #0f0f0f; border: 1px solid #242424; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 40px 24px; transition: 0.3s; }
-    .bz-partner-card:hover { border-color: #1e1e1e; transform: translateY(-4px); }
+    .bz-partner-card { background: #0a0a0a; border: 1px solid #222; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 40px 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); transition: 0.3s; }
     .bz-partner-logo { width: 100px; height: 60px; overflow: hidden; }
-    .bz-partner-name { font-size: 13px; letter-spacing: 3px; color: #888; text-align: center; }
+    .bz-partner-name { font-size: 13px; font-weight: bold; letter-spacing: 3px; color: #ccc; text-align: center; }
     .bz-partner-links { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-    .bz-p-link { font-size: 8px; letter-spacing: 2px; text-decoration: none; color: #444; border: 1px solid #1a1a1a; padding: 5px 11px; transition: 0.2s; }
+    .bz-p-link { font-size: 9px; font-weight: bold; letter-spacing: 2px; text-decoration: none; color: #ccc; border: 1px solid #555; padding: 6px 12px; transition: 0.2s; }
     .bz-p-link:hover { color: #fff; }
     .bz-p-link.tg:hover { border-color: #29b6f6; color: #29b6f6; background: rgba(41,182,246,0.06); }
     .bz-p-link.yt:hover { border-color: #FF0000; color: #FF0000; background: rgba(255,0,0,0.06); }
@@ -976,46 +974,46 @@ function injectBazarCSS() {
     .bz-p-link.tt:hover { border-color: #69C9D0; color: #69C9D0; background: rgba(105,201,208,0.06); }
 
     /* ─── CLIPS ─── */
-    .bz-clip-wrap { display: grid; grid-template-columns: 1.3fr 1fr; background: #0f0f0f; border: 1px solid #242424; }
+    .bz-clip-wrap { display: grid; grid-template-columns: 1.3fr 1fr; background: #0a0a0a; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
     .bz-clip-video-col { position: relative; min-height: 440px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; overflow: hidden; border-right: 1px solid #111; }
     .bz-clip-play-overlay { display: flex; flex-direction: column; align-items: center; gap: 20px; cursor: pointer; }
     .bz-play-circle { width: 80px; height: 80px; border: 2px solid #FF4500; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
     .bz-play-circle svg { width: 32px; height: 32px; color: #FF4500; margin-left: 4px; }
     .bz-clip-play-overlay:hover .bz-play-circle { background: #FF4500; transform: scale(1.1); box-shadow: 0 0 40px rgba(255,69,0,0.4); }
     .bz-clip-play-overlay:hover .bz-play-circle svg { color: #fff; }
-    .bz-clip-play-overlay span { font-size: 9px; letter-spacing: 5px; color: #444; }
+    .bz-clip-play-overlay span { font-size: 10px; font-weight: bold; letter-spacing: 5px; color: #ccc; }
     .bz-clip-info-col { padding: 56px; }
-    .bz-clip-badge { font-size: 8px; letter-spacing: 5px; color: #555; border: 1px solid #1a1a1a; display: inline-block; padding: 6px 14px; margin-bottom: 20px; }
+    .bz-clip-badge { font-size: 9px; font-weight: bold; letter-spacing: 5px; color: #ccc; border: 1px solid #555; display: inline-block; padding: 6px 14px; margin-bottom: 20px; }
     .bz-clip-title { font-family: 'Bebas Neue', sans-serif; font-size: 60px; line-height: 0.9; margin: 0 0 20px; }
     .bz-clip-desc { font-size: 13px; color: #888; line-height: 1.8; margin-bottom: 24px; }
     .bz-clip-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-    .bz-clip-tags span { font-size: 8px; letter-spacing: 2px; color: #444; border: 1px solid #1a1a1a; padding: 5px 12px; }
+    .bz-clip-tags span { font-size: 9px; font-weight: bold; letter-spacing: 2px; color: #ccc; border: 1px solid #555; padding: 5px 12px; }
     .bz-clip-price-block { margin-bottom: 32px; border-left: 3px solid #FF4500; padding-left: 16px; }
-    .bz-clip-price-label { display: block; font-size: 8px; letter-spacing: 3px; color: #555; margin-bottom: 4px; }
+    .bz-clip-price-label { display: block; font-size: 9px; font-weight: bold; letter-spacing: 3px; color: #aaa; margin-bottom: 4px; }
     .bz-clip-price-val { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #FF4500; }
     .bz-clip-cta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .bz-clip-btn-main { display: flex; align-items: center; gap: 10px; background: #FF4500; color: #fff; text-decoration: none; padding: 14px 24px; font-size: 11px; letter-spacing: 2px; font-weight: 900; transition: 0.3s; }
     .bz-clip-btn-main svg { width: 16px; height: 16px; }
     .bz-clip-btn-main:hover { background: #e03c00; transform: translateX(4px); }
     .bz-clip-mini-links { display: flex; gap: 8px; }
-    .bz-mini-btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; text-decoration: none; color: #555; font-size: 9px; letter-spacing: 1px; transition: 0.2s; }
+    .bz-mini-btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #555; text-decoration: none; color: #ccc; font-size: 10px; font-weight: bold; letter-spacing: 1px; transition: 0.2s; }
     .bz-mini-btn.ig:hover { border-color: #e1306c; color: #e1306c; }
     .bz-mini-btn.yt:hover { border-color: #FF0000; color: #FF0000; }
 
-    /* ─── DISTRO ─── */
+/* ─── DISTRO ─── */
     .bz-distro { position: relative; background: #FF4500; overflow: hidden; text-align: center; padding: 120px 60px; }
     .bz-distro-noise { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"); pointer-events: none; }
     .bz-distro-inner { position: relative; z-index: 2; }
-    .bz-distro-label { font-size: 9px; letter-spacing: 6px; color: rgba(0,0,0,0.5); margin-bottom: 20px; }
+    .bz-distro-label { font-size: 10px; font-weight: 900; letter-spacing: 6px; color: #000; margin-bottom: 20px; }
     .bz-distro-title { font-family: 'Bebas Neue', sans-serif; font-size: 80px; line-height: 1; margin: 0 0 20px; color: #000; }
     .bz-distro-title span { color: #fff; }
-    .bz-distro-desc { font-size: 16px; color: rgba(0,0,0,0.65); margin-bottom: 40px; line-height: 1.6; }
+    .bz-distro-desc { font-size: 18px; font-weight: 600; color: #000; margin-bottom: 40px; line-height: 1.6; }
     .bz-distro-platforms { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 50px; }
-    .bz-distro-platforms span { font-size: 10px; letter-spacing: 2px; background: rgba(0,0,0,0.12); color: #000; padding: 8px 18px; }
+    .bz-distro-platforms span { font-size: 11px; font-weight: 800; letter-spacing: 2px; background: #000; color: #fff; padding: 10px 22px; }
     .bz-distro-btn { display: inline-flex; align-items: center; gap: 12px; background: #000; color: #fff; text-decoration: none; padding: 20px 50px; font-size: 12px; letter-spacing: 3px; font-weight: 900; transition: 0.3s; margin-bottom: 20px; }
     .bz-distro-btn svg { width: 18px; height: 18px; }
-    .bz-distro-btn:hover { transform: scale(1.04); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
-    .bz-distro-hint { font-size: 11px; color: rgba(0,0,0,0.45); }
+    .bz-distro-btn:hover { transform: scale(1.04); box-shadow: 0 15px 40px rgba(0,0,0,0.5); background: #fff; color: #000; }
+    .bz-distro-hint { font-size: 12px; font-weight: 700; color: #000; opacity: 0.6; }
 
     /* ─── SCROLL TO TOP ─── */
     .bz-scroll-top { position: fixed; bottom: 36px; right: 36px; width: 52px; height: 52px; background: #FF4500; color: #fff; border: none; font-size: 22px; cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(20px); pointer-events: none; transition: 0.35s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 8px 30px rgba(255,69,0,0.4); }

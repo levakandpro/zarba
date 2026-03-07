@@ -2226,3 +2226,76 @@ img:focus-visible {
 .card-mini-btn:hover svg {
     filter: brightness(0);
 }
+/* Увеличение шрифта шапки */
+.main-nav button {
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    letter-spacing: 1.5px !important;
+}
+.btn-google-auth {
+    background: #FF4500; /* Фирменный оранжевый ZARBA */
+    color: #ffffff;
+    border: none;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
+    margin-left: auto; /* Чтобы кнопка прижалась вправо */
+}
+
+.btn-google-auth:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5);
+    background: #ff571a;
+}
+
+.btn-google-auth:active {
+    transform: translateY(1px);
+}
+.user-profile-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px 5px 5px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+.user-profile-head:hover {
+    background: rgba(255, 0, 85, 0.15);
+    border-color: #ff0055;
+}
+
+.user-name-small {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.user-avatar-small {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ff0055;
+}
+
+/* ============================================
+   FIX: app-content поверх фоновых слоёв
+   ============================================ */
+#app-content {
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 70px);
+}

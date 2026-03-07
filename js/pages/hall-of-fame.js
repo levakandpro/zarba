@@ -1,327 +1,353 @@
 // ============================================================
-//  ZARBA — ЗАЛ СЛАВЫ [HALL OF FAME]
+//  ZARBA — ЗАЛ СЛАВЫ (hall-of-fame.js)
+//  ПОЛНАЯ ВЕРСИЯ: Статусы, Live-Пульс, PNG Корона с частицами, 
+//  Модалка с правилами, Элитный Чат.
 // ============================================================
 
-function renderHall(container) {
-  container.innerHTML = '';
-  injectHallCSS();
+function renderHallOfFame(container) {
+    container.innerHTML = '';
+    
+    // Вставляем стили (инлайново для надежности верстки)
+    if (!document.getElementById('hof-styles')) {
+        const style = document.createElement('style');
+        style.id = 'hof-styles';
+        style.innerHTML = `
+            .hof-wrapper { background: #000; color: #fff; font-family: 'Inter', sans-serif; padding-bottom: 100px; min-height: 100vh; position: relative; overflow-x: hidden; }
+            .hof-header { text-align: center; padding: 80px 20px 40px; background: radial-gradient(circle at top, #1a1a1a 0%, #000 70%); }
+            .hof-title { font-size: clamp(40px, 8vw, 100px); font-weight: 900; letter-spacing: 15px; text-transform: uppercase; margin: 0; line-height: 1; color: #fff; }
+            
+            /* Сетка карточек */
+            .hof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 40px; padding: 20px 40px 60px; max-width: 1400px; margin: 0 auto; align-items: end; }
+            
+            /* Карточка артиста */
+            .hof-card { position: relative; height: 550px; background: #080808; border-radius: 20px; overflow: hidden; border: 1px solid #222; transition: 0.5s ease; display: flex; flex-direction: column; justify-content: flex-end; }
+            
+            /* Уникальные свечения для статусов */
+            .theme-gold { border-color: rgba(255, 215, 0, 0.4); box-shadow: 0 0 30px rgba(255, 215, 0, 0.1); }
+            .theme-gold:hover { transform: translateY(-10px); box-shadow: 0 0 50px rgba(255, 215, 0, 0.3); border-color: #ffd700; }
+            
+            .theme-platinum { border-color: rgba(229, 229, 229, 0.4); box-shadow: 0 0 30px rgba(229, 229, 229, 0.1); }
+            .theme-platinum:hover { transform: translateY(-10px); box-shadow: 0 0 50px rgba(229, 229, 229, 0.3); border-color: #e5e5e5; }
+            
+            .theme-red { border-color: rgba(255, 69, 0, 0.4); box-shadow: 0 0 30px rgba(255, 69, 0, 0.1); }
+            .theme-red:hover { transform: translateY(-10px); box-shadow: 0 0 50px rgba(255, 69, 0, 0.4); border-color: #FF4500; }
 
-  container.innerHTML = `
-    <div class="hof-page">
+            /* 3D Видео на фоне */
+            .status-video { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 120%; height: auto; z-index: 1; mix-blend-mode: screen; opacity: 0.8; pointer-events: none; }
+            
+            /* Силуэт артиста */
+            .artist-photo { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); height: 85%; z-index: 2; transition: 0.5s; pointer-events: none; }
+            .theme-gold:hover .artist-photo { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); height: 88%; }
+            .theme-platinum:hover .artist-photo { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5)); height: 88%; }
+            .theme-red:hover .artist-photo { filter: drop-shadow(0 0 20px rgba(255, 69, 0, 0.8)); height: 88%; }
+            
+            /* Название статуса */
+            .status-badge { position: absolute; top: 20px; left: 0; right: 0; text-align: center; font-size: 1.2rem; font-weight: 900; letter-spacing: 5px; z-index: 4; text-transform: uppercase; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+            .badge-gold { color: #ffd700; }
+            .badge-plat { color: #e5e5e5; }
+            .badge-red { color: #FF4500; }
 
-      <!-- 3D CANVAS -->
-      <div id="hof-canvas-wrap"></div>
+            /* Инфо-панель */
+            .artist-info { position: relative; z-index: 3; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,1) 40%, rgba(0,0,0,0.7) 80%, transparent); width: 100%; box-sizing: border-box; }
+            
+            /* Live-Пульс (Эквалайзер) */
+            .track-record-wrapper { display: flex; align-items: center; margin-bottom: 8px; }
+            .track-record { font-size: 10px; color: #FF4500; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+            .live-eq { display: flex; align-items: flex-end; gap: 2px; height: 10px; margin-left: 10px; }
+            .eq-bar { width: 3px; background: #FF4500; border-radius: 1px; animation: eq-bounce 1s infinite ease-in-out; }
+            .eq-bar:nth-child(1) { animation-delay: 0s; height: 40%; }
+            .eq-bar:nth-child(2) { animation-delay: 0.2s; height: 100%; }
+            .eq-bar:nth-child(3) { animation-delay: 0.4s; height: 60%; }
+            @keyframes eq-bounce { 0%, 100% { height: 30%; } 50% { height: 100%; } }
 
-      <!-- OVERLAY КОНТЕНТ -->
-      <div class="hof-overlay">
-        <div class="hof-label">ZARBA · ЗАЛ СЛАВЫ</div>
-        <h1 class="hof-title">
-          <span>LEG</span><span>EN</span><span>DS</span>
-        </h1>
-        <ul class="hof-names">
-          <li><a href="#">ISMAIL</a></li>
-          <li><a href="#">RYDER</a></li>
-          <li><a href="#">ABADA</a></li>
-          <li><a href="#">MR SLIM</a></li>
-        </ul>
-        <p class="hof-sub">Артисты преодолевшие отметку 100 000 фанатов</p>
-      </div>
+            .name-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+            .artist-name { font-size: 2rem; font-weight: 900; margin: 0; letter-spacing: 1px; color: #fff; }
+            
+            /* Своя Корона (PNG) */
+            .crown-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; width: 44px; height: 44px; border-radius: 50%; transition: 0.3s; display: flex; align-items: center; justify-content: center; position: relative; }
+            .crown-btn img { width: 22px; height: 22px; object-fit: contain; transition: 0.3s; opacity: 0.5; filter: grayscale(100%); }
+            .crown-btn:hover { transform: scale(1.1); background: #ffd70033; border-color: #ffd700; }
+            .crown-btn:hover img { opacity: 0.8; filter: grayscale(50%); }
+            .crown-btn.active { background: rgba(255, 215, 0, 0.2); border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+            .crown-btn.active img { opacity: 1; filter: grayscale(0%); filter: drop-shadow(0 0 5px #ffd700); transform: scale(1.1) rotate(-10deg); }
+            
+            /* Анимация частиц для короны */
+            .crown-particle { position: fixed; width: 6px; height: 6px; background: #FFD700; border-radius: 50%; pointer-events: none; z-index: 9999; animation: particle-fly 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; box-shadow: 0 0 5px #FFD700; }
+            @keyframes particle-fly {
+                0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
+            }
+            
+            /* Статистика */
+            .stat-row { display: flex; justify-content: space-between; align-items: flex-start; }
+            .stat-col { display: flex; flex-direction: column; }
+            .stat-val { font-size: 1.2rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 5px; }
+            .stat-lbl { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; font-weight: 700; }
+            .trend-up { color: #00FF41; font-size: 0.9rem; } 
+            .trend-down { color: #FF4500; font-size: 0.9rem; }
+            .geo-row { display: flex; justify-content: space-between; margin-top: 20px; font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase; }
 
-    </div>
-  `;
+            /* --- ИНФО СЕКЦИЯ С ПРАВИЛАМИ --- */
+            .hof-rules-section { max-width: 900px; margin: 0 auto 80px; text-align: center; padding: 0 20px; }
+            .hof-rules-btn { background: transparent; border: 1px solid #FF4500; color: #FF4500; padding: 15px 40px; border-radius: 30px; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.3s ease; margin-bottom: 40px; }
+            .hof-rules-btn:hover { background: #FF4500; color: #000; box-shadow: 0 0 25px rgba(255, 69, 0, 0.5); transform: translateY(-3px); }
+            .hof-quote { font-size: clamp(18px, 3vw, 24px); font-weight: 900; line-height: 1.6; letter-spacing: 1px; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+            .hof-quote-accent { color: #FF4500; display: block; margin-top: 10px; font-size: clamp(20px, 3.5vw, 28px); }
 
-  initHallScene(container);
+            /* --- МОДАЛЬНОЕ ОКНО --- */
+            .hof-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+            .hof-modal-overlay.open { display: flex; opacity: 1; }
+            .hof-modal-box { background: #0a0a0a; border: 1px solid #333; border-radius: 20px; width: 90%; max-width: 600px; padding: 40px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.9); transform: translateY(20px); transition: transform 0.3s ease; }
+            .hof-modal-overlay.open .hof-modal-box { transform: translateY(0); }
+            .hof-modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #888; font-size: 24px; cursor: pointer; transition: 0.2s; }
+            .hof-modal-close:hover { color: #FF4500; }
+            
+            .hof-modal-title { color: #FF4500; font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; margin: 0 0 25px 0; text-transform: uppercase; text-align: center; }
+            .hof-modal-text { font-size: 15px; line-height: 1.6; color: #ccc; margin-bottom: 20px; }
+            
+            .hof-status-list { list-style: none; padding: 0; margin: 30px 0; }
+            .hof-status-list li { margin-bottom: 20px; padding-left: 25px; position: relative; font-size: 15px; line-height: 1.5; color: #aaa; }
+            .hof-status-list li::before { content: '■'; position: absolute; left: 0; top: 2px; font-size: 12px; }
+            .li-gold::before { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
+            .li-plat::before { color: #e5e5e5; text-shadow: 0 0 10px #e5e5e5; }
+            .li-red::before { color: #FF4500; text-shadow: 0 0 10px #FF4500; }
+            .hof-status-list b { color: #fff; font-size: 16px; letter-spacing: 1px; }
+
+            .hof-modal-footer { text-align: center; font-weight: 800; color: #FF4500; font-size: 16px; margin-top: 30px; letter-spacing: 1px; text-transform: uppercase; }
+
+            /* --- ЭЛИТНЫЙ ЧАТ --- */
+            .hof-chat-section { max-width: 900px; margin: 0 auto; padding: 30px; background: #0a0a0a; border-radius: 20px; border: 1px solid #1a1a1a; }
+            .chat-title { font-size: 1.2rem; margin-bottom: 20px; color: #FF4500; font-weight: 800; letter-spacing: 3px; text-align: center; }
+            .chat-messages { height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-right: 10px; }
+            .msg { background: #111; padding: 15px; border-radius: 12px; border-left: 3px solid #FF4500; font-size: 14px; line-height: 1.5; color: #ddd; }
+            .msg b { color: #FF4500; margin-right: 8px; font-size: 12px; }
+            .chat-input-area { display: flex; gap: 15px; margin-top: 20px; border-top: 1px solid #1a1a1a; padding-top: 20px; }
+            .chat-input { flex: 1; background: #000; border: 1px solid #222; padding: 15px; color: #fff; border-radius: 10px; outline: none; transition: 0.3s; }
+            .chat-input:focus { border-color: #FF4500; }
+            .chat-send { background: #FF4500; border: none; padding: 0 30px; color: #fff; border-radius: 10px; cursor: pointer; font-weight: 800; transition: 0.3s; letter-spacing: 1px; }
+            .chat-send:hover { background: #ff5500; transform: scale(1.02); }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Порядок: GOLD -> PLATINUM -> RED DIAMOND
+    const eliteArtists = [
+        { 
+            id: 'art_gold', 
+            name: 'ЛЕГЕНДА', 
+            statusTitle: 'GOLD STATUS',
+            badgeClass: 'badge-gold',
+            streams: '180K', 
+            track: 'MY WAY', 
+            rank: 15, 
+            trend: 'up', 
+            city: 'Бохтар', 
+            genre: 'LYRIC',
+            photo: 'assets/status/Дизайн без названия (1).png', 
+            video: 'assets/status/gold.mp4',
+            theme: 'theme-gold'
+        },
+        { 
+            id: 'art_plat', 
+            name: 'СКАЙ', 
+            statusTitle: 'PLATINUM STATUS',
+            badgeClass: 'badge-plat',
+            streams: '620K', 
+            track: 'VIBE', 
+            rank: 4, 
+            trend: 'down', 
+            city: 'Худжанд', 
+            genre: 'TRAP',
+            photo: 'assets/status/platinum.png', 
+            video: 'assets/status/Platinum.mp4',
+            theme: 'theme-platinum'
+        },
+        { 
+            id: 'art_red', 
+            name: 'КРИМ', 
+            statusTitle: 'RED DIAMOND',
+            badgeClass: 'badge-red',
+            streams: '1.2M', 
+            track: 'ZARBA', 
+            rank: 1, 
+            trend: 'up', 
+            city: 'Душанбе', 
+            genre: 'РЭП',
+            photo: 'assets/status/reddiamond.png', 
+            video: 'assets/status/reddiamond.png.mp4',
+            theme: 'theme-red'
+        }
+    ];
+
+    container.innerHTML = `
+        <div class="hof-wrapper">
+            <header class="hof-header">
+                <h1 class="hof-title">ЗАЛ СЛАВЫ</h1>
+                <p style="color: #666; letter-spacing: 5px; margin-top:15px; font-weight:700;">ЗАКРЫТЫЙ КЛУБ ЛЕГЕНД ZARBA</p>
+            </header>
+
+            <div class="hof-grid">
+                ${eliteArtists.map(a => `
+                    <div class="hof-card ${a.theme}">
+                        <div class="status-badge ${a.badgeClass}">${a.statusTitle}</div>
+
+                        <video class="status-video" autoplay loop muted playsinline>
+                            <source src="${a.video}" type="video/mp4">
+                        </video>
+                        
+                        <img src="${a.photo}" class="artist-photo" alt="${a.name}">
+                        
+                        <div class="artist-info">
+                            <div class="track-record-wrapper">
+                                <div class="track-record">RECORD TRACK: ${a.track}</div>
+                                <div class="live-eq" title="Слушают прямо сейчас">
+                                    <div class="eq-bar"></div>
+                                    <div class="eq-bar"></div>
+                                    <div class="eq-bar"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="name-row">
+                                <h2 class="artist-name">${a.name}</h2>
+                                <button class="crown-btn" onclick="toggleCrown(event, this)">
+                                    <img src="assets/status/goldxrown.png" alt="Crown">
+                                </button>
+                            </div>
+                            
+                            <div class="stat-row">
+                                <div class="stat-col">
+                                    <div class="stat-val">${a.streams}</div>
+                                    <div class="stat-lbl">Z-STREAMS</div>
+                                </div>
+                                <div class="stat-col" style="text-align: right;">
+                                    <div class="stat-val">
+                                        RANK #${a.rank} 
+                                        <span class="trend-${a.trend}">${a.trend === 'up' ? '▲' : '▼'}</span>
+                                    </div>
+                                    <div class="stat-lbl">В ЧАРТЕ ТОП 100</div>
+                                </div>
+                            </div>
+                            
+                            <div class="geo-row">
+                                <div>${a.city}</div>
+                                <div>${a.genre}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <section class="hof-rules-section">
+                <button class="hof-rules-btn" onclick="openHofModal()">ПРАВИЛА ЗАЛА СЛАВЫ</button>
+                <div class="hof-quote">
+                    «ТОЛЬКО ТЫ РЕШАЕШЬ, КТО СТАНЕТ СЛЕДУЮЩИМ.<br>
+                    <span class="hof-quote-accent">СЛУШАЙ ТРЕКИ. СТАВЬ КОРОНЫ. ТВОРИ ИСТОРИЮ.»</span>
+                </div>
+            </section>
+
+            <section class="hof-chat-section">
+                <div class="chat-title">Z-TALK / ОБСУЖДЕНИЕ ЛЕГЕНД</div>
+                <div class="chat-messages" id="hof-chat-box">
+                    <div class="msg"><b>@SYSTEM:</b> Добро пожаловать в Зал Славы. Выдавайте короны достойным!</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" id="hof-input" placeholder="Напиши сообщение...">
+                    <button class="chat-send" onclick="sendHofMessage()">ОТПРАВИТЬ</button>
+                </div>
+            </section>
+
+            <div id="hof-rules-modal" class="hof-modal-overlay" onclick="closeHofModal(event)">
+                <div class="hof-modal-box" onclick="event.stopPropagation()">
+                    <button class="hof-modal-close" onclick="closeHofModal()">✕</button>
+                    <h2 class="hof-modal-title">КАК ЭТО РАБОТАЕТ?</h2>
+                    
+                    <p class="hof-modal-text">В Зал Славы ZARBA попадают <b>исключительно автоматически</b>. Никакого блата или скрытых накруток. Всё решают реальные прослушивания от фанатов внутри нашей экосистемы.</p>
+                    <p class="hof-modal-text">Как только трек таджикского рэп-артиста пробивает определенный рубеж Z-Streams, он навсегда вписывает свое имя в историю, получая статус:</p>
+                    
+                    <ul class="hof-status-list">
+                        <li class="li-gold"><b style="color:#ffd700">GOLD STATUS (100,000+ СТРИМОВ)</b><br>Вход в элиту. Трек качает на улицах, артист получает золотой статус и право находиться в Зале Славы.</li>
+                        <li class="li-plat"><b style="color:#e5e5e5">PLATINUM STATUS (500,000+ СТРИМОВ)</b><br>Всеобщее признание. Трек становится гимном поколений.</li>
+                        <li class="li-red"><b style="color:#FF4500">RED DIAMOND (1,000,000+ СТРИМОВ)</b><br>Абсолютная величина. Миллион прослушиваний. Высшая награда экосистемы ZARBA.</li>
+                    </ul>
+                    
+                    <div class="hof-modal-footer">Всё по-честному. Только фанаты решают!</div>
+                </div>
+            </div>
+
+        </div>
+    `;
+
+    // Глобальные функции
+    
+    // Функция клика на корону с эффектом частиц (конфетти)
+    window.toggleCrown = function(event, btn) {
+        btn.classList.toggle('active');
+        
+        // Если корона стала активной - запускаем эффект взрыва частиц
+        if (btn.classList.contains('active')) {
+            const rect = btn.getBoundingClientRect();
+            const btnCenterX = rect.left + rect.width / 2;
+            const btnCenterY = rect.top + rect.height / 2;
+            
+            // Создаем 8-10 частиц
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'crown-particle';
+                document.body.appendChild(particle);
+                
+                // Устанавливаем начальную позицию (центр кнопки)
+                particle.style.left = btnCenterX + 'px';
+                particle.style.top = btnCenterY + 'px';
+                
+                // Вычисляем случайное направление полета
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 30 + Math.random() * 40; // Сила разлета
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity - 20; // Слегка направляем вверх
+                
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                
+                // Удаляем частицу из DOM после завершения анимации (0.6s)
+                setTimeout(() => {
+                    particle.remove();
+                }, 600);
+            }
+        }
+    };
+
+    window.openHofModal = function() {
+        const modal = document.getElementById('hof-rules-modal');
+        if (modal) modal.classList.add('open');
+    };
+
+    window.closeHofModal = function(e) {
+        const modal = document.getElementById('hof-rules-modal');
+        if (e && e.target === modal || !e) {
+            modal.classList.remove('open');
+        }
+    };
+
+    window.sendHofMessage = function() {
+        const input = document.getElementById('hof-input');
+        const box = document.getElementById('hof-chat-box');
+        if (input && input.value.trim()) {
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            box.innerHTML += `
+                <div class="msg" style="animation: hofFade 0.3s ease both">
+                    <b>ВЫ [${time}]:</b> ${input.value}
+                </div>
+            `;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+        }
+    };
 }
 
-// ─── THREE.JS СЦЕНА ─────────────────────────────────────────
-function initHallScene(el) {
-  const wrap = el.querySelector('#hof-canvas-wrap');
-  if (!wrap) return;
-
-  // Динамически грузим Three.js если ещё не загружен
-  if (typeof THREE !== 'undefined') {
-    _buildScene(wrap);
-    return;
-  }
-
-  // Importmap + module script
-  const importmap = document.createElement('script');
-  importmap.type = 'importmap';
-  importmap.textContent = JSON.stringify({
-    imports: {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
-      "jsm/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
-    }
-  });
-
-  // Проверяем что importmap ещё не добавлен
-  if (!document.querySelector('script[type="importmap"]')) {
-    document.head.appendChild(importmap);
-  }
-
-  const script = document.createElement('script');
-  script.type = 'module';
-  script.textContent = `
-    import * as THREE from 'three';
-    import { OrbitControls } from 'jsm/controls/OrbitControls.js';
-    import { OBJLoader } from 'jsm/loaders/OBJLoader.js';
-
-    const wrap = document.getElementById('hof-canvas-wrap');
-    if (!wrap) return;
-
-    const w = wrap.clientWidth || window.innerWidth;
-    const h = wrap.clientHeight || window.innerHeight;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
-    camera.position.set(-7, -5, 11);
-    camera.lookAt(0, 0, 0);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(w, h);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.setClearColor(0x000000, 0);
-    wrap.appendChild(renderer.domElement);
-
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.enableZoom = false;
-    controls.minPolarAngle = Math.PI / 3;
-    controls.maxPolarAngle = Math.PI / 2.2;
-
-    const vertexShader = \`
-      varying vec2 vUv;
-      varying vec3 vNormal;
-      varying vec3 vPosition;
-      void main() {
-        vUv = uv;
-        vNormal = normalize(normalMatrix * normal);
-        vPosition = position;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    \`;
-
-    const fragmentShader = \`
-      uniform float uTime;
-      uniform float uCircleSpacing;
-      uniform float uLineWidth;
-      uniform float uSpeed;
-      uniform float uFadeEdge;
-      uniform vec3 uCameraPosition;
-      varying vec2 vUv;
-      varying vec3 vNormal;
-      varying vec3 vPosition;
-
-      void main() {
-        vec2 center = vec2(0.5, 0.5);
-        vec2 uv = vUv;
-        float dist = distance(uv, center);
-        float animatedDist = dist - uTime * uSpeed;
-        float circle = mod(animatedDist, uCircleSpacing);
-        float distFromEdge = min(circle, uCircleSpacing - circle);
-        float aaWidth = length(vec2(dFdx(animatedDist), dFdy(animatedDist))) * 2.0;
-        float lineAlpha = 1.0 - smoothstep(uLineWidth - aaWidth, uLineWidth + aaWidth, distFromEdge);
-        vec3 baseColor = mix(vec3(0.12, 0.0, 0.0), vec3(0.8, 0.1, 0.0), lineAlpha);
-        vec3 normal = normalize(vNormal);
-        vec3 viewDir = normalize(uCameraPosition - vPosition);
-        vec3 lightDir = normalize(vec3(5.0, 10.0, 5.0));
-        float NdotL = max(dot(normal, lightDir), 0.0);
-        vec3 diffuse = baseColor * (0.5 + 0.5 * NdotL);
-        vec3 reflectDir = reflect(-lightDir, normal);
-        float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
-        vec3 specular = vec3(1.0, 0.3, 0.0) * spec * 0.6;
-        float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 2.0);
-        vec3 fresnelColor = vec3(0.8, 0.2, 0.0) * fresnel * 0.3;
-        vec3 finalColor = diffuse + specular + fresnelColor;
-        float edgeFade = smoothstep(0.5 - uFadeEdge, 0.5, dist);
-        float alpha = 1.0 - edgeFade;
-        gl_FragColor = vec4(finalColor, alpha);
-      }
-    \`;
-
-    const floorGeometry = new THREE.CircleGeometry(20, 200);
-    const floorMaterial = new THREE.ShaderMaterial({
-      vertexShader, fragmentShader,
-      uniforms: {
-        uTime: { value: 0.0 },
-        uCircleSpacing: { value: 0.06 },
-        uLineWidth: { value: 0.02 },
-        uSpeed: { value: 0.01 },
-        uFadeEdge: { value: 0.2 },
-        uCameraPosition: { value: new THREE.Vector3() },
-      },
-      side: THREE.DoubleSide,
-      transparent: true,
-    });
-    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -1;
-    floor.receiveShadow = true;
-    scene.add(floor);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    dirLight.position.set(5, 10, 5);
-    dirLight.castShadow = true;
-    scene.add(dirLight);
-
-    const loader = new OBJLoader();
-    loader.load(
-      'https://cdn.jsdelivr.net/gh/danielyl123/person/person.obj',
-      (object) => {
-        object.traverse((child) => {
-          if (child.isMesh) {
-            child.material = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.7, metalness: 0.3 });
-            child.castShadow = true;
-          }
-        });
-        const box = new THREE.Box3().setFromObject(object);
-        const center = new THREE.Vector3();
-        box.getCenter(center);
-        const size = new THREE.Vector3();
-        box.getSize(size);
-        object.traverse((child) => {
-          if (child.isMesh && child.geometry) child.geometry.translate(-center.x, -center.y, -center.z);
-        });
-        const scale = 4 / Math.max(size.x, size.y, size.z);
-        object.scale.set(scale, scale, scale);
-        object.position.set(0, 1, 0);
-        object.rotation.y = Math.PI / 3;
-        scene.add(object);
-        controls.target.set(0, 0, 0);
-        controls.update();
-      }
-    );
-
-    let time = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      time += 0.016;
-      floorMaterial.uniforms.uTime.value = time;
-      camera.getWorldPosition(floorMaterial.uniforms.uCameraPosition.value);
-      controls.update();
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    window.addEventListener('resize', () => {
-      const w2 = wrap.clientWidth || window.innerWidth;
-      const h2 = wrap.clientHeight || window.innerHeight;
-      renderer.setSize(w2, h2);
-      camera.aspect = w2 / h2;
-      camera.updateProjectionMatrix();
-    });
-  `;
-
-  document.body.appendChild(script);
-}
-
-// ─── CSS ────────────────────────────────────────────────────
-function injectHallCSS() {
-  const existing = document.getElementById('hall-styles');
-  if (existing) existing.remove();
-  const s = document.createElement('style');
-  s.id = 'hall-styles';
-  s.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;900&family=Bebas+Neue&display=swap');
-
-    .hof-page {
-      position: relative;
-      width: 100%;
-      height: calc(100vh - 60px);
-      background: #000;
-      overflow: hidden;
-    }
-
-    #hof-canvas-wrap {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-
-    #hof-canvas-wrap canvas {
-      width: 100% !important;
-      height: 100% !important;
-    }
-
-    .hof-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding-top: 60px;
-      pointer-events: none;
-      text-align: center;
-    }
-
-    .hof-label {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 10px;
-      letter-spacing: 6px;
-      color: rgba(255,69,0,0.8);
-      margin-bottom: 16px;
-      text-transform: uppercase;
-    }
-
-    .hof-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 120px;
-      font-weight: 900;
-      line-height: 1;
-      margin: 0 0 20px;
-      display: flex;
-      gap: 0;
-      color: #fff;
-      text-shadow: 0 0 60px rgba(255,69,0,0.3);
-    }
-
-    .hof-title span:nth-child(1) { font-weight: 900; color: #fff; }
-    .hof-title span:nth-child(2) { font-weight: 600; color: #ddd; }
-    .hof-title span:nth-child(3) { font-weight: 300; color: #aaa; }
-
-    .hof-names {
-      list-style: none;
-      display: flex;
-      gap: 40px;
-      margin: 0 0 30px;
-      padding: 0;
-      pointer-events: all;
-    }
-
-    .hof-names li a {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 4px;
-      color: rgba(255,255,255,0.5);
-      text-decoration: none;
-      text-transform: uppercase;
-      transition: color 0.3s;
-    }
-
-    .hof-names li a:hover {
-      color: #FF4500;
-    }
-
-    .hof-sub {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,0.25);
-      text-transform: uppercase;
-    }
-
-    @media (max-width: 768px) {
-      .hof-title { font-size: 70px; }
-      .hof-names { gap: 20px; flex-wrap: wrap; justify-content: center; }
-    }
-  `;
-  document.head.appendChild(s);
+// Анимация появления сообщений в чате
+if (!document.getElementById('hof-anim')) {
+    const hofFadeStyle = document.createElement('style');
+    hofFadeStyle.id = 'hof-anim';
+    hofFadeStyle.textContent = "@keyframes hofFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }";
+    document.head.appendChild(hofFadeStyle);
 }
