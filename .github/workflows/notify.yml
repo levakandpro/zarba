@@ -19,41 +19,37 @@ jobs:
           node -e "
           const admin = require('firebase-admin');
           const axios = require('axios');
-
-          async function send(text) {
-            try {
-              await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
-                chat_id: process.env.TG_ID,
-                text: text,
-                parse_mode: 'HTML'
-              });
-            } catch (e) { console.error('Ошибка TG:', e.response ? e.response.data : e.message); }
-          }
-
           admin.initializeApp({credential: admin.credential.cert(JSON.parse(process.env.FB_KEY))});
           const db = admin.firestore();
 
           async function go() {
-            console.log('Проверка связи...');
-            await send('🚀 <b>Бот ZARBA запущен!</b>\nПроверяю новые треки...');
-
-            const snap = await db.collection('tracks').limit(5).get();
-            if (snap.empty) {
-              await send('❌ В базе данных нет треков в коллекции tracks');
-              return;
-            }
+            const snap = await db.collection('tracks').get();
+            const now = Date.now();
+            const checkInterval = 12 * 60 * 1000; // 12 минут
 
             for (const doc of snap.docs) {
               const t = doc.data();
-              const msg = '<b>🔥 Новый трек на ZARBA!</b>\n\n' +
-                          '🎵 Исполнитель: <b>' + (t.artist || '...') + '</b>\n' +
-                          '🎶 Название: <b>' + (t.title || '...') + '</b>\n\n' +
-                          '🔗 <a href=\"https://zarba.ru\">Слушать на сайте</a>';
-              await send(msg);
-              console.log('Отправлено: ' + t.title);
+              if (!t.createdAt) continue;
+
+              // Парсим твой формат: 07.03.2026, 06:48:47
+              const [d, time] = t.createdAt.split(', ');
+              const [day, month, year] = d.split('.');
+              const dateObj = new Date(year, month - 1, day, ...time.split(':'));
+              
+              // Если трек создан в последние 12 минут — шлем в ТГ
+              if (now - dateObj.getTime() < checkInterval) {
+                const msg = '<b>🔥 Новый трек на ZARBA!</b>\n\n' +
+                            '🎵 Исполнитель: <b>' + (t.artist || '...') + '</b>\n' +
+                            '🎶 Название: <b>' + (t.title || '...') + '</b>\n\n' +
+                            '🔗 <a href=\"https://zarba.ru\">Слушать на сайте</a>';
+                
+                await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
+                  chat_id: process.env.TG_ID,
+                  text: msg,
+                  parse_mode: 'HTML'
+                });
+                console.log('Уведомление отправлено: ' + t.title);
+              }
             }
           }
-          go().catch(async (err) => {
-            await send('⚠️ Ошибка скрипта: ' + err.message);
-            console.error(err);
-          });"
+          go().catch(console.error);"
