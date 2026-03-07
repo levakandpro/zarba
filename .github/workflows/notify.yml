@@ -1,5 +1,7 @@
 name: ZARBA_Bot
 on:
+  schedule:
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 jobs:
   check:
@@ -19,17 +21,36 @@ jobs:
           const axios = require('axios');
           admin.initializeApp({credential: admin.credential.cert(JSON.parse(process.env.FB_KEY))});
           const db = admin.firestore();
+
           async function go() {
-            const collections = await db.listCollections();
-            const names = collections.map(c => c.id).join(', ');
-            await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
-              chat_id: process.env.TG_ID,
-              text: '🔎 СПИСОК ВСЕХ КОЛЛЕКЦИЙ: ' + (names || 'ПУСТО')
-            });
+            const snap = await db.collection('tracks').get();
+            const now = Date.now();
+            const checkInterval = 15 * 60 * 1000; 
+
+            if (snap.empty) {
+              console.log('Коллекция пуста');
+              return;
+            }
+
+            for (const doc of snap.docs) {
+              const t = doc.data();
+              if (!t.createdAt) continue;
+
+              // Обработка даты (Timestamp или Date)
+              let trackDate = t.createdAt.seconds ? t.createdAt.seconds * 1000 : new Date(t.createdAt).getTime();
+              
+              if (now - trackDate < checkInterval) {
+                const msg = '<b>🔥 НОВЫЙ ТРЕК НА ZARBA!</b>\n\n' +
+                            '🎵 Артист: <b>' + (t.artist || '...') + '</b>\n' +
+                            '🎶 Трек: <b>' + (t.title || '...') + '</b>\n\n' +
+                            '🔗 <a href=\"https://zarba.ru\">Открыть ZARBA</a>';
+                
+                await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
+                  chat_id: process.env.TG_ID,
+                  text: msg,
+                  parse_mode: 'HTML'
+                });
+              }
+            }
           }
-          go().catch(async (e) => {
-            await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
-              chat_id: process.env.TG_ID,
-              text: '⛔️ Ошибка доступа: ' + e.message
-            });
-          });"
+          go().catch(console.error);"
