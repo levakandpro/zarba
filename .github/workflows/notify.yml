@@ -23,33 +23,48 @@ jobs:
           const db = admin.firestore();
 
           async function go() {
-            const snap = await db.collection('tracks').get();
+            // Пытаемся найти коллекцию (и в маленьком, и в большом регистре)
+            let snap = await db.collection('tracks').get();
+            if (snap.empty) {
+                snap = await db.collection('Tracks').get();
+            }
+
             const now = Date.now();
-            const checkInterval = 12 * 60 * 1000; // 12 минут
+            const checkInterval = 15 * 60 * 1000; 
+
+            if (snap.empty) {
+              // Если всё равно пусто, выведем в лог, что вообще есть в базе
+              const collections = await db.listCollections();
+              const names = collections.map(c => c.id).join(', ');
+              await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
+                chat_id: process.env.TG_ID,
+                text: '❌ Треков нет. Доступные коллекции: ' + (names || 'пусто')
+              });
+              return;
+            }
 
             for (const doc of snap.docs) {
               const t = doc.data();
               if (!t.createdAt) continue;
 
-              // Парсим твой формат: 07.03.2026, 06:48:47
-              const [d, time] = t.createdAt.split(', ');
-              const [day, month, year] = d.split('.');
-              const dateObj = new Date(year, month - 1, day, ...time.split(':'));
-              
-              // Если трек создан в последние 12 минут — шлем в ТГ
-              if (now - dateObj.getTime() < checkInterval) {
-                const msg = '<b>🔥 Новый трек на ZARBA!</b>\n\n' +
-                            '🎵 Исполнитель: <b>' + (t.artist || '...') + '</b>\n' +
-                            '🎶 Название: <b>' + (t.title || '...') + '</b>\n\n' +
-                            '🔗 <a href=\"https://zarba.ru\">Слушать на сайте</a>';
+              try {
+                const [d, time] = t.createdAt.split(', ');
+                const [day, month, year] = d.split('.');
+                const dateObj = new Date(year, month - 1, day, ...time.split(':'));
                 
-                await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
-                  chat_id: process.env.TG_ID,
-                  text: msg,
-                  parse_mode: 'HTML'
-                });
-                console.log('Уведомление отправлено: ' + t.title);
-              }
+                if (now - dateObj.getTime() < checkInterval) {
+                  const msg = '<b>🔥 Новый трек на ZARBA!</b>\n\n' +
+                              '🎵 Исполнитель: <b>' + (t.artist || '...') + '</b>\n' +
+                              '🎶 Название: <b>' + (t.title || '...') + '</b>\n\n' +
+                              '🔗 <a href=\"https://zarba.ru\">Слушать на сайте</a>';
+                  
+                  await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
+                    chat_id: process.env.TG_ID,
+                    text: msg,
+                    parse_mode: 'HTML'
+                  });
+                }
+              } catch (e) { console.log('Ошибка даты'); }
             }
           }
           go().catch(console.error);"
