@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Dependencies
+      - name: Install
         run: npm install firebase-admin axios
       - name: Run Notifier
         env:
@@ -22,35 +22,36 @@ jobs:
           admin.initializeApp({credential: admin.credential.cert(JSON.parse(process.env.FB_KEY))});
           const db = admin.firestore();
 
+          async function send(text) {
+            await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
+              chat_id: process.env.TG_ID, text: text, parse_mode: 'HTML'
+            });
+          }
+
           async function go() {
+            console.log('Начинаю проверку...');
+            await send('📣 <b>Бот на связи!</b>\nПроверяю базу данных...');
+
             const snap = await db.collection('tracks').get();
+            if (snap.empty) {
+              await send('❌ Коллекция tracks пуста в проекте ' + JSON.parse(process.env.FB_KEY).project_id);
+              return;
+            }
+
+            let found = 0;
             const now = Date.now();
-            const checkInterval = 15 * 60 * 1000; // 15 минут
 
             for (const doc of snap.docs) {
               const t = doc.data();
               if (!t.createdAt) continue;
 
-              try {
-                // Парсим твой формат даты: 07.03.2026, 06:48:47
-                const [d, time] = t.createdAt.split(', ');
-                const [day, month, year] = d.split('.');
-                const dateObj = new Date(year, month - 1, day, ...time.split(':'));
-                
-                if (now - dateObj.getTime() < checkInterval) {
-                  const msg = '<b>🔥 Новый трек на ZARBA!</b>\n\n' +
-                              '🎵 Исполнитель: <b>' + (t.artist || '...') + '</b>\n' +
-                              '🎶 Название: <b>' + (t.title || '...') + '</b>\n\n' +
-                              '🔗 <a href=\"https://zarba.ru\">Слушать на сайте</a>';
-                  
-                  await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
-                    chat_id: process.env.TG_ID,
-                    text: msg,
-                    parse_mode: 'HTML'
-                  });
-                  console.log('Отправлено: ' + t.title);
-                }
-              } catch (e) { console.log('Ошибка даты в треке'); }
+              // ВРЕМЕННО: Убираем фильтр 15 минут, чтобы просто увидеть хоть ОДИН трек
+              const msg = '<b>✅ Нашел трек в базе!</b>\n\n🎵 ' + t.artist + ' - ' + t.title + '\n📅 Дата в базе: ' + t.createdAt;
+              await send(msg);
+              found++;
+              if (found >= 2) break; // Пришлем только первые два, чтоб не спамить
             }
+
+            if (found === 0) await send('❓ Треки есть, но у них нет поля createdAt');
           }
-          go().catch(console.error);"
+          go().catch(e => send('⛔️ Ошибка: ' + e.message));"
