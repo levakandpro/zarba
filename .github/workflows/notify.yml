@@ -29,29 +29,24 @@ jobs:
           }
 
           async function go() {
-            console.log('Начинаю проверку...');
-            await send('📣 <b>Бот на связи!</b>\nПроверяю базу данных...');
+            // Получаем список всех существующих коллекций в базе
+            const collections = await db.listCollections();
+            const names = collections.map(c => c.id);
 
-            const snap = await db.collection('tracks').get();
-            if (snap.empty) {
-              await send('❌ Коллекция tracks пуста в проекте ' + JSON.parse(process.env.FB_KEY).project_id);
+            if (names.length === 0) {
+              await send('🚫 В проекте <b>zarbatjlk</b> вообще нет ни одной коллекции! База пустая.');
               return;
             }
 
-            let found = 0;
-            const now = Date.now();
+            await send('🔎 Нашел коллекции в базе: <b>' + names.join(', ') + '</b>');
 
-            for (const doc of snap.docs) {
-              const t = doc.data();
-              if (!t.createdAt) continue;
-
-              // ВРЕМЕННО: Убираем фильтр 15 минут, чтобы просто увидеть хоть ОДИН трек
-              const msg = '<b>✅ Нашел трек в базе!</b>\n\n🎵 ' + t.artist + ' - ' + t.title + '\n📅 Дата в базе: ' + t.createdAt;
-              await send(msg);
-              found++;
-              if (found >= 2) break; // Пришлем только первые два, чтоб не спамить
+            // Пробуем заглянуть в каждую, чтобы найти треки
+            for (const name of names) {
+               const snap = await db.collection(name).limit(1).get();
+               if (!snap.empty) {
+                  const data = snap.docs[0].data();
+                  await send('📂 В коллекции <b>' + name + '</b> есть данные. Пример: ' + (data.title || data.artist || 'какой-то документ'));
+               }
             }
-
-            if (found === 0) await send('❓ Треки есть, но у них нет поля createdAt');
           }
           go().catch(e => send('⛔️ Ошибка: ' + e.message));"
