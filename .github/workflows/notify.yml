@@ -1,7 +1,5 @@
 name: ZARBA_Bot
 on:
-  schedule:
-    - cron: '*/10 * * * *'
   workflow_dispatch:
 jobs:
   check:
@@ -21,32 +19,17 @@ jobs:
           const axios = require('axios');
           admin.initializeApp({credential: admin.credential.cert(JSON.parse(process.env.FB_KEY))});
           const db = admin.firestore();
-
-          async function send(text) {
+          async function go() {
+            const collections = await db.listCollections();
+            const names = collections.map(c => c.id).join(', ');
             await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
-              chat_id: process.env.TG_ID, text: text, parse_mode: 'HTML'
+              chat_id: process.env.TG_ID,
+              text: '🔎 СПИСОК ВСЕХ КОЛЛЕКЦИЙ: ' + (names || 'ПУСТО')
             });
           }
-
-          async function go() {
-            // Получаем список всех существующих коллекций в базе
-            const collections = await db.listCollections();
-            const names = collections.map(c => c.id);
-
-            if (names.length === 0) {
-              await send('🚫 В проекте <b>zarbatjlk</b> вообще нет ни одной коллекции! База пустая.');
-              return;
-            }
-
-            await send('🔎 Нашел коллекции в базе: <b>' + names.join(', ') + '</b>');
-
-            // Пробуем заглянуть в каждую, чтобы найти треки
-            for (const name of names) {
-               const snap = await db.collection(name).limit(1).get();
-               if (!snap.empty) {
-                  const data = snap.docs[0].data();
-                  await send('📂 В коллекции <b>' + name + '</b> есть данные. Пример: ' + (data.title || data.artist || 'какой-то документ'));
-               }
-            }
-          }
-          go().catch(e => send('⛔️ Ошибка: ' + e.message));"
+          go().catch(async (e) => {
+            await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
+              chat_id: process.env.TG_ID,
+              text: '⛔️ Ошибка доступа: ' + e.message
+            });
+          });"
