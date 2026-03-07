@@ -1,0 +1,42 @@
+name: ZARBA_Bot
+on:
+  schedule:
+    - cron: '*/10 * * * *' # Проверка каждые 10 мин
+  workflow_dispatch: # Кнопка для ручного запуска
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: npm install firebase-admin axios
+      - name: Run Notifier
+        env:
+          FB_KEY: ${{ secrets.FB_SERVICE_ACCOUNT }}
+          TG_TOKEN: "8748134701:AAEevZBGp91-dd9q9jgo3aYqsPvenTgUkD0"
+          TG_ID: "5736535127"
+        run: |
+          node -e "
+          const admin = require('firebase-admin');
+          const axios = require('axios');
+          admin.initializeApp({credential: admin.credential.cert(JSON.parse(process.env.FB_KEY))});
+          const db = admin.firestore();
+          async function go() {
+            const timeLimit = admin.firestore.Timestamp.fromMillis(Date.now() - 15 * 60 * 1000);
+            const snap = await db.collection('tracks').where('createdAt', '>', timeLimit).get();
+            if (snap.empty) { console.log('Новых треков нет'); return; }
+            for (const doc of snap.docs) {
+              const t = doc.data();
+              const msg = '<b>🔥 Новый трек на ZARBA!</b>\n\n' +
+                          '🎵 Исполнитель: <b>' + (t.artist || '...') + '</b>\n' +
+                          '🎶 Название: <b>' + (t.title || '...') + '</b>\n\n' +
+                          '🔗 <a href=\"https://zarba.ru\">Слушать на сайте</a>';
+              await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
+                chat_id: process.env.TG_ID,
+                text: msg,
+                parse_mode: 'HTML'
+              });
+              console.log('Уведомление отправлено');
+            }
+          }
+          go().catch(console.error);"
