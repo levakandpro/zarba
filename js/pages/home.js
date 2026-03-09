@@ -531,7 +531,7 @@ window.renderHome = function(container) {
     const ART_IMG = 'assets/TOP ARTIST/';
     const ARTISTS = [
         { name:'RYDER',          file:'ryder.jpg',          id:'ryder'          },
-        { name:'CORLEONE',       file:'corleone.png',       id:'corleone'       },
+        { name:'CORLEONE',       file:'corleone.jpg',       id:'corleone'       },
         { name:'FARUKH HASANOV', file:'farukhhasanov.jpg',  id:'farukh_hasanov' },
         { name:'SAFARMUHAMMAD',  file:'safarmuhammad.jpg',  id:'safarmuhammad'  },
         { name:'BAKHA 84',       file:'baha84.jpg',         id:'bakha84'        },
