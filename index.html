@@ -296,6 +296,94 @@
         }
         .zf-modal-close:hover { background: rgba(255,69,0,.15); color: #FF4500; border-color: rgba(255,69,0,.3); }
 
+        /* ══════════════════════════════════════════
+           АДАПТИВ ШАПКИ И МЕНЮ (МОБИЛКИ)
+        ══════════════════════════════════════════ */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 2000;
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background-color: #fff;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 900px) {
+            .hamburger {
+                display: block;
+                order: 3; /* Ставим гамбургер самым правым */
+                margin-left: 15px;
+            }
+            #auth-section {
+                order: 2; /* Кнопка входа перед гамбургером */
+                margin-left: auto;
+            }
+            .main-header {
+                padding: 0 15px; /* Уменьшаем отступы по краям */
+            }
+            .logo-main {
+                font-size: 22px !important; /* Чуть уменьшим лого на мобилке */
+            }
+            .logo-tagline {
+                display: none; /* Скроем длинный слоган в шапке на мобилке */
+            }
+            .main-nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: rgba(5, 5, 5, 0.98);
+                backdrop-filter: blur(15px);
+                border-left: 1px solid #1a1a1a;
+                display: flex;
+                flex-direction: column;
+                padding-top: 80px;
+                transition: right 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                z-index: 1500;
+                margin: 0 !important; /* перебиваем инлайновый margin-left:auto */
+            }
+            .main-nav.open {
+                right: 0;
+                box-shadow: -10px 0 40px rgba(0,0,0,0.8);
+            }
+            .main-nav button {
+                margin: 5px 20px;
+                padding: 15px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+                text-align: left;
+                font-size: 14px !important;
+                display: block;
+                width: calc(100% - 40px);
+            }
+            .main-nav button::after {
+                display: none; /* Убираем полоску подчеркивания при наведении для мобилок */
+            }
+            
+            /* Анимация крестика для гамбургера */
+            .hamburger.open span:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+                background-color: #FF4500;
+            }
+            .hamburger.open span:nth-child(2) {
+                opacity: 0;
+            }
+            .hamburger.open span:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+                background-color: #FF4500;
+            }
+        }
+
+        /* Адаптив футера */
         @media(max-width: 1100px) {
             .zarba-footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
             .zarba-footer-inner { padding: 48px 32px 32px; }
@@ -319,7 +407,12 @@
                 </div>
             </div>
         </div>
-        <nav class="main-nav" style="margin-left:auto;">
+        
+        <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Меню">
+            <span></span><span></span><span></span>
+        </button>
+        
+        <nav class="main-nav" id="main-nav" style="margin-left:auto;">
             <button onclick="showPage('home')">ГЛАВНАЯ</button>
             <button onclick="showPage('artists')">АРТИСТЫ</button>
             <button onclick="showPage('charts')">ТОП 100</button>
@@ -329,6 +422,7 @@
             <button onclick="showPage('playlists')">ПЛЕЙЛИСТЫ</button>
             <button onclick="showPage('hall')">ЗАЛ СЛАВЫ</button>
         </nav>
+        
         <div id="auth-section" class="auth-container">
             <button class="btn-google-auth" onclick="window.signInWithGoogle()">ВХОД</button>
         </div>
@@ -336,17 +430,12 @@
 
     <main id="app-content"></main>
 
-    <!-- ══════════════════════════════════════════
-         ZARBA FOOTER
-    ══════════════════════════════════════════ -->
     <footer class="zarba-footer">
         <div class="zarba-footer-topline"></div>
         <div class="zarba-footer-inner">
 
-            <!-- ВЕРХНИЙ БЛОК -->
             <div class="zarba-footer-top">
 
-                <!-- 1 — Бренд -->
                 <div class="zf-brand">
                     <div class="zf-brand-logo">
                         <img src="assets/white.svg" alt="ZARBA">
@@ -373,10 +462,10 @@
                         </a>
                     </div>
                 </div>
-                                <!-- 3 — Жанры -->
-                <div class="zf-col">
-                    <div class="zf-col-title">Жанры</div>
-                    <div class="zf-links">
+                
+<div class="zf-col accordion-col">
+                    <div class="zf-col-title" onclick="this.parentElement.classList.toggle('active')">Жанры <span class="acc-icon">+</span></div>
+                    <div class="zf-links acc-content">
                         <span class="zf-link" onclick="showPage('genres')">РЭП</span>
                         <span class="zf-link" onclick="showPage('genres')">ТРЭП</span>
                         <span class="zf-link" onclick="showPage('genres')">ЛИРИКА</span>
@@ -388,10 +477,9 @@
                     </div>
                 </div>
 
-                <!-- 4 — Правовое -->
-                <div class="zf-col">
-                    <div class="zf-col-title">Правовое</div>
-                    <div class="zf-links">
+                <div class="zf-col accordion-col">
+                    <div class="zf-col-title" onclick="this.parentElement.classList.toggle('active')">Правовое <span class="acc-icon">+</span></div>
+                    <div class="zf-links acc-content">
                         <span class="zf-link" onclick="zfOpenModal('terms')">Условия использования</span>
                         <span class="zf-link" onclick="zfOpenModal('privacy')">Политика конфиденциальности</span>
                         <span class="zf-link" onclick="zfOpenModal('copyright')">Авторские права</span>
@@ -401,10 +489,7 @@
                     </div>
                 </div>
 
-            </div><!-- /footer-top -->
-
-            <!-- НИЖНИЙ БЛОК -->
-            <div class="zarba-footer-bottom">
+            </div><div class="zarba-footer-bottom">
                 <div class="zf-copyright">
                     <strong>© 2024–2026 ZARBA Music Ecosystem.</strong> Все права защищены.<br>
                     Весь контент защищён авторским правом. <a href="https://t.me/zarbaes" target="_blank">По вопросам — Telegram</a>.
@@ -418,14 +503,8 @@
                 <div class="zf-made">Made with <span>♥</span> in Tajikistan</div>
             </div>
 
-        </div><!-- /footer-inner -->
-    </footer>
+        </div></footer>
 
-    <!-- ══════════════════════════════════════════
-         ПРАВОВЫЕ МОДАЛКИ
-    ══════════════════════════════════════════ -->
-
-    <!-- Условия использования -->
     <div class="zf-modal-overlay" id="zfm-terms">
         <div class="zf-modal-box">
             <button class="zf-modal-close" onclick="zfCloseModal('terms')">✕</button>
@@ -450,7 +529,6 @@
         </div>
     </div>
 
-    <!-- Политика конфиденциальности -->
     <div class="zf-modal-overlay" id="zfm-privacy">
         <div class="zf-modal-box">
             <button class="zf-modal-close" onclick="zfCloseModal('privacy')">✕</button>
@@ -473,7 +551,6 @@
         </div>
     </div>
 
-    <!-- Авторские права -->
     <div class="zf-modal-overlay" id="zfm-copyright">
         <div class="zf-modal-box">
             <button class="zf-modal-close" onclick="zfCloseModal('copyright')">✕</button>
@@ -494,7 +571,6 @@
         </div>
     </div>
 
-    <!-- DMCA -->
     <div class="zf-modal-overlay" id="zfm-dmca">
         <div class="zf-modal-box">
             <button class="zf-modal-close" onclick="zfCloseModal('dmca')">✕</button>
@@ -520,7 +596,6 @@
         </div>
     </div>
 
-    <!-- Cookies -->
     <div class="zf-modal-overlay" id="zfm-cookies">
         <div class="zf-modal-box">
             <button class="zf-modal-close" onclick="zfCloseModal('cookies')">✕</button>
@@ -541,7 +616,6 @@
         </div>
     </div>
 
-    <!-- СКРИПТЫ -->
     <script src="js/pages/home.js"></script>
     <script src="js/pages/artists.js"></script>
     <script src="js/pages/charts.js"></script>
@@ -592,5 +666,24 @@
             }
         });
     </script>
+<script>
+function toggleMobileMenu() {
+    const nav = document.getElementById('main-nav');
+    const btn = document.getElementById('hamburger');
+    nav.classList.toggle('open');
+    btn.classList.toggle('open');
+    document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+}
+// Закрывать меню при клике на пункт
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.main-nav button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.getElementById('main-nav').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('open');
+            document.body.style.overflow = '';
+        });
+    });
+});
+</script>
 </body>
 </html>
