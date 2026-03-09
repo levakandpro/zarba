@@ -18,6 +18,294 @@
         .dropdown-item { padding: 12px 20px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; text-align: left; }
         .dropdown-item:hover { background: #1a1a1a; color: #ff0055; }
         .dropdown-item.exit:hover { color: #ff4444; }
+        .dropdown-divider { height: 1px; background: rgba(255,255,255,.06); margin: 4px 0; }
+
+        /* ══════════════════════════════════════════
+           ZARBA FOOTER — WORLD CLASS
+        ══════════════════════════════════════════ */
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@700;900&family=Oswald:wght@700&display=swap');
+
+        .zarba-footer {
+            position: relative;
+            background: #050505;
+            border-top: 1px solid rgba(255,255,255,.04);
+            overflow: hidden;
+            font-family: 'fut', -apple-system, sans-serif;
+            margin-top: 60px;
+        }
+
+        /* Фоновый текст */
+        .zarba-footer::before {
+            content: 'ZARBA';
+            position: absolute;
+            bottom: -40px; left: -20px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 240px; font-weight: 700;
+            color: rgba(255,255,255,.018);
+            letter-spacing: 20px;
+            pointer-events: none;
+            white-space: nowrap;
+            line-height: 1;
+        }
+
+        /* Верхняя красная линия с градиентом */
+        .zarba-footer-topline {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FF4500 20%, #FF4500 80%, transparent);
+        }
+
+        .zarba-footer-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 64px 56px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── ВЕРХНИЙ РЯД ── */
+        .zarba-footer-top {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 48px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+        }
+
+        /* Колонка 1 — логотип и описание */
+        .zf-brand {}
+        .zf-brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .zf-brand-logo img {
+            width: 40px;
+            height: 40px;
+            opacity: .9;
+        }
+        .zf-brand-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: #fff;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+        .zf-brand-name span { color: #FF4500; }
+        .zf-brand-tagline {
+            font-size: 9px;
+            letter-spacing: 4px;
+            color: rgba(255,255,255,.3);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .zf-brand-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,.45);
+            line-height: 1.7;
+            margin-bottom: 28px;
+            max-width: 280px;
+        }
+
+        /* Соцсети */
+        .zf-socials {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .zf-social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: 8px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+            color: rgba(255,255,255,.65);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all .22s;
+            cursor: pointer;
+        }
+        .zf-social-btn:hover {
+            background: rgba(255,69,0,.12);
+            border-color: rgba(255,69,0,.35);
+            color: #FF4500;
+            transform: translateY(-2px);
+        }
+        .zf-social-btn svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+        .zf-social-btn.tg:hover { background: rgba(0,136,204,.12); border-color: rgba(0,136,204,.35); color: #29b5e8; }
+        .zf-social-btn.ig:hover { background: rgba(225,48,108,.12); border-color: rgba(225,48,108,.35); color: #e1306c; }
+        .zf-social-btn.yt:hover { background: rgba(255,0,0,.12); border-color: rgba(255,0,0,.35); color: #ff0000; }
+
+        /* Колонки навигации */
+        .zf-col-title {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: rgba(255,255,255,.3);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .zf-col-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,.06);
+        }
+        .zf-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .zf-link {
+            font-size: 13px;
+            color: rgba(255,255,255,.5);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color .18s, transform .18s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: fit-content;
+        }
+        .zf-link::before {
+            content: '—';
+            font-size: 10px;
+            color: rgba(255,69,0,.4);
+            transition: color .18s;
+        }
+        .zf-link:hover { color: #fff; transform: translateX(4px); }
+        .zf-link:hover::before { color: #FF4500; }
+
+        /* Бейдж NEW */
+        .zf-badge-new {
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: #FF4500;
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            margin-left: 4px;
+        }
+
+        /* ── НИЖНИЙ РЯД ── */
+        .zarba-footer-bottom {
+            padding-top: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .zf-copyright {
+            font-size: 11px;
+            color: rgba(255,255,255,.22);
+            letter-spacing: .5px;
+            line-height: 1.6;
+        }
+        .zf-copyright strong { color: rgba(255,255,255,.4); }
+        .zf-copyright a {
+            color: rgba(255,69,0,.6);
+            text-decoration: none;
+            transition: color .18s;
+        }
+        .zf-copyright a:hover { color: #FF4500; }
+
+        .zf-legal-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .zf-legal-link {
+            font-size: 11px;
+            color: rgba(255,255,255,.25);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color .18s;
+            letter-spacing: .3px;
+        }
+        .zf-legal-link:hover { color: rgba(255,255,255,.6); }
+
+        .zf-made {
+            font-size: 10px;
+            color: rgba(255,255,255,.15);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .zf-made span { color: #FF4500; }
+
+        /* Модалки для юридики */
+        .zf-modal-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,.85);
+            backdrop-filter: blur(12px);
+            align-items: center; justify-content: center;
+        }
+        .zf-modal-overlay.open { display: flex; }
+        .zf-modal-box {
+            background: #0d0d0d;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+            width: min(680px, 94vw);
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 40px 44px;
+            position: relative;
+            animation: zf-modal-in .28s cubic-bezier(.16,1,.3,1);
+        }
+        @keyframes zf-modal-in { from{opacity:0;transform:translateY(14px)scale(.97)} to{opacity:1;transform:none} }
+        .zf-modal-box::-webkit-scrollbar { width: 4px; }
+        .zf-modal-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+        .zf-modal-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px; letter-spacing: 3px;
+            color: #fff; margin-bottom: 6px;
+        }
+        .zf-modal-title span { color: #FF4500; }
+        .zf-modal-date { font-size: 11px; color: rgba(255,255,255,.3); letter-spacing: 2px; margin-bottom: 28px; }
+        .zf-modal-body { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.8; }
+        .zf-modal-body h3 { color: rgba(255,255,255,.8); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; margin: 24px 0 8px; }
+        .zf-modal-body p { margin-bottom: 12px; }
+        .zf-modal-close {
+            position: absolute; top: 16px; right: 20px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.1);
+            color: rgba(255,255,255,.5);
+            width: 32px; height: 32px;
+            border-radius: 6px;
+            cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all .18s;
+        }
+        .zf-modal-close:hover { background: rgba(255,69,0,.15); color: #FF4500; border-color: rgba(255,69,0,.3); }
+
+        @media(max-width: 1100px) {
+            .zarba-footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+            .zarba-footer-inner { padding: 48px 32px 32px; }
+        }
+        @media(max-width: 600px) {
+            .zarba-footer-top { grid-template-columns: 1fr; gap: 32px; }
+            .zarba-footer-inner { padding: 40px 20px 28px; }
+            .zarba-footer-bottom { flex-direction: column; align-items: flex-start; }
+            .zarba-footer::before { font-size: 120px; }
+        }
     </style>
 </head>
 <body>
@@ -31,7 +319,7 @@
                 </div>
             </div>
         </div>
-        <nav class="main-nav">
+        <nav class="main-nav" style="margin-left:auto;">
             <button onclick="showPage('home')">ГЛАВНАЯ</button>
             <button onclick="showPage('artists')">АРТИСТЫ</button>
             <button onclick="showPage('charts')">ТОП 100</button>
@@ -48,6 +336,212 @@
 
     <main id="app-content"></main>
 
+    <!-- ══════════════════════════════════════════
+         ZARBA FOOTER
+    ══════════════════════════════════════════ -->
+    <footer class="zarba-footer">
+        <div class="zarba-footer-topline"></div>
+        <div class="zarba-footer-inner">
+
+            <!-- ВЕРХНИЙ БЛОК -->
+            <div class="zarba-footer-top">
+
+                <!-- 1 — Бренд -->
+                <div class="zf-brand">
+                    <div class="zf-brand-logo">
+                        <img src="assets/white.svg" alt="ZARBA">
+                        <div>
+                            <div class="zf-brand-name">ZAR<span>BA</span></div>
+                            <div class="zf-brand-tagline">Music Ecosystem</div>
+                        </div>
+                    </div>
+                    <p class="zf-brand-desc">
+                        Первая музыкальная экосистема таджикского рэпа. Артисты, треки, плейлисты, чарты — всё в одном месте. Сделано с уважением к сцене.
+                    </p>
+                    <div class="zf-socials">
+                        <a href="https://t.me/zarbaes" target="_blank" rel="noopener" class="zf-social-btn tg">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.286c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.935z"/></svg>
+                            Telegram
+                        </a>
+                        <a href="https://www.instagram.com/zarbamusic/" target="_blank" rel="noopener" class="zf-social-btn ig">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            Instagram
+                        </a>
+                        <a href="https://youtube.com/@zarba" target="_blank" rel="noopener" class="zf-social-btn yt">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            YouTube
+                        </a>
+                    </div>
+                </div>
+                                <!-- 3 — Жанры -->
+                <div class="zf-col">
+                    <div class="zf-col-title">Жанры</div>
+                    <div class="zf-links">
+                        <span class="zf-link" onclick="showPage('genres')">РЭП</span>
+                        <span class="zf-link" onclick="showPage('genres')">ТРЭП</span>
+                        <span class="zf-link" onclick="showPage('genres')">ЛИРИКА</span>
+                        <span class="zf-link" onclick="showPage('genres')">ПОЭТЕССА</span>
+                        <span class="zf-link" onclick="showPage('genres')">АНДЕРГРАУНД</span>
+                        <span class="zf-link" onclick="showPage('genres')">ПОП</span>
+                        <span class="zf-link" onclick="showPage('genres')">ПРОДЮСЕР</span>
+                        <span class="zf-link" onclick="showPage('genres')">КАЛЬЯННЫЙ</span>
+                    </div>
+                </div>
+
+                <!-- 4 — Правовое -->
+                <div class="zf-col">
+                    <div class="zf-col-title">Правовое</div>
+                    <div class="zf-links">
+                        <span class="zf-link" onclick="zfOpenModal('terms')">Условия использования</span>
+                        <span class="zf-link" onclick="zfOpenModal('privacy')">Политика конфиденциальности</span>
+                        <span class="zf-link" onclick="zfOpenModal('copyright')">Авторские права</span>
+                        <span class="zf-link" onclick="zfOpenModal('dmca')">DMCA</span>
+                        <span class="zf-link" onclick="zfOpenModal('cookies')">Cookies</span>
+                        <a href="https://t.me/zarbaes" target="_blank" class="zf-link">Связаться с нами</a>
+                    </div>
+                </div>
+
+            </div><!-- /footer-top -->
+
+            <!-- НИЖНИЙ БЛОК -->
+            <div class="zarba-footer-bottom">
+                <div class="zf-copyright">
+                    <strong>© 2024–2026 ZARBA Music Ecosystem.</strong> Все права защищены.<br>
+                    Весь контент защищён авторским правом. <a href="https://t.me/zarbaes" target="_blank">По вопросам — Telegram</a>.
+                </div>
+                <div class="zf-legal-links">
+                    <span class="zf-legal-link" onclick="zfOpenModal('terms')">Условия</span>
+                    <span class="zf-legal-link" onclick="zfOpenModal('privacy')">Конфиденциальность</span>
+                    <span class="zf-legal-link" onclick="zfOpenModal('copyright')">Копирайт</span>
+                    <span class="zf-legal-link" onclick="zfOpenModal('dmca')">DMCA</span>
+                </div>
+                <div class="zf-made">Made with <span>♥</span> in Tajikistan</div>
+            </div>
+
+        </div><!-- /footer-inner -->
+    </footer>
+
+    <!-- ══════════════════════════════════════════
+         ПРАВОВЫЕ МОДАЛКИ
+    ══════════════════════════════════════════ -->
+
+    <!-- Условия использования -->
+    <div class="zf-modal-overlay" id="zfm-terms">
+        <div class="zf-modal-box">
+            <button class="zf-modal-close" onclick="zfCloseModal('terms')">✕</button>
+            <div class="zf-modal-title">УСЛОВИЯ <span>ИСПОЛЬЗОВАНИЯ</span></div>
+            <div class="zf-modal-date">Последнее обновление: 01.01.2026</div>
+            <div class="zf-modal-body">
+                <h3>1. Общие положения</h3>
+                <p>Используя сайт ZARBA (далее — «Платформа»), вы соглашаетесь с настоящими Условиями использования. Если вы не согласны с условиями — прекратите использование Платформы.</p>
+                <h3>2. Описание сервиса</h3>
+                <p>ZARBA — музыкальная экосистема, предоставляющая доступ к аудиоконтенту, информации об артистах, чартам и плейлистам таджикской рэп-сцены. Сервис предоставляется «как есть».</p>
+                <h3>3. Права пользователей</h3>
+                <p>Пользователи вправе прослушивать доступный контент, создавать аккаунты, взаимодействовать с функционалом Платформы в личных некоммерческих целях.</p>
+                <h3>4. Запрещённые действия</h3>
+                <p>Запрещается: скачивание и распространение контента без разрешения правообладателей; использование автоматизированных систем для сбора данных; публикация незаконного, оскорбительного или вводящего в заблуждение контента; взлом или попытки получения несанкционированного доступа к системе.</p>
+                <h3>5. Интеллектуальная собственность</h3>
+                <p>Весь контент на Платформе — треки, обложки, тексты, дизайн — является собственностью ZARBA и соответствующих правообладателей. Воспроизведение без разрешения запрещено.</p>
+                <h3>6. Ограничение ответственности</h3>
+                <p>ZARBA не несёт ответственности за прямой или косвенный ущерб, связанный с использованием или невозможностью использования Платформы.</p>
+                <h3>7. Изменения условий</h3>
+                <p>Мы оставляем за собой право изменять настоящие условия. Об изменениях сообщаем в Telegram-канале: <a href="https://t.me/zarbaes" target="_blank" style="color:#FF4500;">@zarbaes</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Политика конфиденциальности -->
+    <div class="zf-modal-overlay" id="zfm-privacy">
+        <div class="zf-modal-box">
+            <button class="zf-modal-close" onclick="zfCloseModal('privacy')">✕</button>
+            <div class="zf-modal-title">ПОЛИТИКА <span>КОНФИДЕНЦИАЛЬНОСТИ</span></div>
+            <div class="zf-modal-date">Последнее обновление: 01.01.2026</div>
+            <div class="zf-modal-body">
+                <h3>1. Какие данные мы собираем</h3>
+                <p>При входе через Google мы получаем: имя, email, фото профиля. При использовании сайта автоматически фиксируются: история прослушиваний, лайки, активность на Платформе.</p>
+                <h3>2. Как мы используем данные</h3>
+                <p>Данные используются для: персонализации контента, отображения профиля, улучшения рекомендаций и функционала Платформы. Мы не продаём ваши данные третьим лицам.</p>
+                <h3>3. Хранение данных</h3>
+                <p>Данные хранятся в Firebase (Google Cloud) на защищённых серверах. Вы можете запросить удаление своих данных, написав нам в Telegram.</p>
+                <h3>4. Файлы cookie</h3>
+                <p>Мы используем cookie для хранения сессий и аналитики. Вы можете отключить cookie в настройках браузера, но это может повлиять на работу сайта.</p>
+                <h3>5. Ваши права</h3>
+                <p>Вы имеете право запросить, изменить или удалить свои данные. Для этого напишите нам: <a href="https://t.me/zarbaes" target="_blank" style="color:#FF4500;">@zarbaes</a></p>
+                <h3>6. Безопасность</h3>
+                <p>Мы применяем стандартные отраслевые методы защиты данных. Тем не менее, никакая система не гарантирует 100% безопасность.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Авторские права -->
+    <div class="zf-modal-overlay" id="zfm-copyright">
+        <div class="zf-modal-box">
+            <button class="zf-modal-close" onclick="zfCloseModal('copyright')">✕</button>
+            <div class="zf-modal-title">АВТОРСКИЕ <span>ПРАВА</span></div>
+            <div class="zf-modal-date">© 2024–2026 ZARBA Music Ecosystem</div>
+            <div class="zf-modal-body">
+                <h3>Защита контента</h3>
+                <p>Весь аудиоконтент, размещённый на платформе ZARBA, является собственностью соответствующих артистов и лейблов. ZARBA выступает в роли агрегатора и не претендует на права третьих лиц.</p>
+                <h3>Права артистов</h3>
+                <p>Каждый артист, размещающий музыку на ZARBA, сохраняет полные авторские права на свои произведения. ZARBA получает неисключительную лицензию на публичное воспроизведение контента в рамках Платформы.</p>
+                <h3>Использование контента</h3>
+                <p>Прослушивание музыки разрешено только в личных некоммерческих целях. Скачивание, перераспространение, синхронизация или коммерческое использование без письменного разрешения правообладателя запрещены.</p>
+                <h3>Нарушения</h3>
+                <p>Если вы считаете, что на Платформе нарушены ваши авторские права, немедленно свяжитесь с нами: <a href="https://t.me/zarbaes" target="_blank" style="color:#FF4500;">@zarbaes</a>. Мы рассматриваем жалобы в течение 48 часов.</p>
+                <h3>Дизайн и код</h3>
+                <p>Дизайн, исходный код, логотипы, фирменный стиль ZARBA защищены авторским правом. Копирование без разрешения является нарушением закона.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DMCA -->
+    <div class="zf-modal-overlay" id="zfm-dmca">
+        <div class="zf-modal-box">
+            <button class="zf-modal-close" onclick="zfCloseModal('dmca')">✕</button>
+            <div class="zf-modal-title">DMCA <span>POLICY</span></div>
+            <div class="zf-modal-date">Digital Millennium Copyright Act</div>
+            <div class="zf-modal-body">
+                <h3>Уведомление о нарушении (DMCA Takedown)</h3>
+                <p>Если вы являетесь правообладателем и считаете, что на ZARBA размещён контент, нарушающий ваши права, направьте уведомление по следующей форме:</p>
+                <h3>В уведомлении укажите:</h3>
+                <p>1. Ваши контактные данные (имя, email).<br>
+                2. Описание защищённого произведения, права на которое нарушены.<br>
+                3. URL страницы с нарушающим контентом.<br>
+                4. Заявление о добросовестном использовании.<br>
+                5. Вашу электронную подпись.</p>
+                <h3>Куда направить</h3>
+                <p>Telegram: <a href="https://t.me/zarbaes" target="_blank" style="color:#FF4500;">@zarbaes</a><br>
+                Instagram: <a href="https://www.instagram.com/zarbamusic/" target="_blank" style="color:#e1306c;">@zarbamusic</a></p>
+                <h3>Сроки рассмотрения</h3>
+                <p>Мы обрабатываем DMCA-уведомления в течение 48–72 рабочих часов. При подтверждении нарушения контент будет немедленно удалён.</p>
+                <h3>Контр-уведомление</h3>
+                <p>Если вы считаете, что ваш контент был удалён по ошибке, вы можете направить контр-уведомление через те же каналы связи.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookies -->
+    <div class="zf-modal-overlay" id="zfm-cookies">
+        <div class="zf-modal-box">
+            <button class="zf-modal-close" onclick="zfCloseModal('cookies')">✕</button>
+            <div class="zf-modal-title">ПОЛИТИКА <span>COOKIES</span></div>
+            <div class="zf-modal-date">Последнее обновление: 01.01.2026</div>
+            <div class="zf-modal-body">
+                <h3>Что такое Cookie</h3>
+                <p>Cookie — небольшие текстовые файлы, сохраняемые браузером. Они помогают сайту запоминать ваши настройки и улучшать работу сервиса.</p>
+                <h3>Какие Cookie мы используем</h3>
+                <p><strong style="color:rgba(255,255,255,.7)">Необходимые:</strong> авторизация Google, сессия пользователя.<br>
+                <strong style="color:rgba(255,255,255,.7)">Аналитические:</strong> анонимные данные о посещаемости через Firebase Analytics.<br>
+                <strong style="color:rgba(255,255,255,.7)">Функциональные:</strong> запоминание предпочтений (жанр, плейлист).</p>
+                <h3>Управление Cookie</h3>
+                <p>Вы можете отключить cookie в настройках браузера. Обратите внимание: отключение необходимых cookie повлечёт невозможность авторизации на сайте.</p>
+                <h3>Согласие</h3>
+                <p>Продолжая использовать ZARBA, вы соглашаетесь с использованием cookie в соответствии с настоящей политикой.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- СКРИПТЫ -->
     <script src="js/pages/home.js"></script>
     <script src="js/pages/artists.js"></script>
     <script src="js/pages/charts.js"></script>
@@ -56,18 +550,46 @@
     <script src="js/pages/collab.js"></script>
     <script src="js/pages/playlists.js"></script>
     <script src="js/pages/hall-of-fame.js"></script>
-    
+    <script src="js/pages/genres.js"></script>
     <script src="js/pages/profile.js"></script>
-    
+    <script src="js/pages/admin.js"></script>
     <script src="js/components/chat.js"></script>
     <script src="js/main.js"></script>
 
     <script>
         function openModal(name) { const m = document.getElementById(name + '-modal'); if (m) m.style.display = 'flex'; }
         function closeModal() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
-        document.addEventListener('click', (e) => { 
-            const a = document.getElementById('auth-section'); 
-            if (a && !a.contains(e.target)) a.classList.remove('active'); 
+        document.addEventListener('click', (e) => {
+            const a = document.getElementById('auth-section');
+            if (a && !a.contains(e.target)) a.classList.remove('active');
+        });
+
+        // Footer modal logic
+        function zfOpenModal(name) {
+            document.getElementById('zfm-' + name).classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function zfCloseModal(name) {
+            document.getElementById('zfm-' + name).classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        // Close on backdrop click
+        document.querySelectorAll('.zf-modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+        // Close on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.zf-modal-overlay.open').forEach(m => {
+                    m.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            }
         });
     </script>
 </body>

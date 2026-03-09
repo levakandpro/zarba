@@ -24,7 +24,7 @@
 body, html {
     margin: 0;
     padding: 0;
-    background: #0a0a0a;
+    background: #080808;
     color: var(--white);
     font-family: 'Inter', sans-serif;
     height: 100%;
@@ -32,7 +32,7 @@ body, html {
     position: relative;
 }
 
-/* ПРЕМИУМ ФОН - ВДОХНОВЛЕНО APPLE/SPOTIFY */
+/* ПРЕМИУМ ФОН */
 body::before {
     content: '';
     position: fixed;
@@ -41,34 +41,46 @@ body::before {
     right: 0;
     bottom: 0;
     background: 
-        /* Линейный градиент сверху */
-        linear-gradient(
-            180deg,
-            rgba(20, 20, 20, 1) 0%,
-            rgba(10, 10, 10, 1) 50%,
-            rgba(5, 5, 5, 1) 100%
-        ),
-        /* Очень мягкий радиальный блюр в центре */
+        /* Оранжевое свечение левый верхний угол */
         radial-gradient(
-            ellipse 1400px 800px at 50% 20%,
-            rgba(255, 69, 0, 0.05) 0%,
+            ellipse 900px 600px at -5% 10%,
+            rgba(255, 69, 0, 0.09) 0%,
+            transparent 65%
+        ),
+        /* Оранжевое свечение правый нижний угол */
+        radial-gradient(
+            ellipse 700px 500px at 105% 90%,
+            rgba(255, 69, 0, 0.07) 0%,
             transparent 60%
         ),
-        /* Микро-шум текстуры */
+        /* Центральное свечение сверху */
+        radial-gradient(
+            ellipse 1400px 500px at 50% 0%,
+            rgba(255, 69, 0, 0.06) 0%,
+            transparent 55%
+        ),
+        /* Базовый градиент */
+        linear-gradient(
+            180deg,
+            rgba(18, 18, 18, 1) 0%,
+            rgba(10, 10, 10, 1) 40%,
+            rgba(6, 6, 6, 1) 100%
+        ),
+        /* Микро-шум */
         repeating-linear-gradient(
             45deg,
             transparent,
             transparent 2px,
-            rgba(255, 255, 255, 0.01) 2px,
-            rgba(255, 255, 255, 0.01) 4px
+            rgba(255, 255, 255, 0.008) 2px,
+            rgba(255, 255, 255, 0.008) 4px
         );
     background-attachment: fixed;
-    background-color: #0a0a0a;
+    background-color: #080808;
     z-index: 0;
     pointer-events: none;
 }
 
-/* МЯГКОЕ СВЕЧЕНИЕ СНИЗУ (едва видимое) */
+/* ИСКРЫ И ЧАСТИЦЫ */
 body::after {
     content: '';
     position: fixed;
@@ -77,21 +89,17 @@ body::after {
     right: 0;
     bottom: 0;
     background: 
-        /* Мягкое круглое свечение в центре (очень приглушенное) */
-        radial-gradient(
-            circle 600px at 50% 50%,
-            rgba(255, 69, 0, 0.02) 0%,
-            transparent 80%
-        ),
-        /* Еле видимые частички на фоне */
-        radial-gradient(1px 1px at 15% 25%, rgba(255, 255, 255, 0.15) 0%, transparent 1px),
-        radial-gradient(1px 1px at 85% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 1px),
-        radial-gradient(0.5px 0.5px at 45% 45%, rgba(255, 255, 255, 0.08) 0%, transparent 0.5px),
-        radial-gradient(1px 1px at 70% 15%, rgba(255, 255, 255, 0.12) 0%, transparent 1px),
-        radial-gradient(0.5px 0.5px at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 0.5px);
-    background-size: 100% 100%, 300% 300%, auto, 300% 300%, 300% 300%, 300% 300%;
+        radial-gradient(circle 800px at 50% 50%, rgba(255, 69, 0, 0.03) 0%, transparent 80%),
+        radial-gradient(1px 1px at 15% 25%, rgba(255, 255, 255, 0.25) 0%, transparent 1px),
+        radial-gradient(1px 1px at 85% 75%, rgba(255, 255, 255, 0.2) 0%, transparent 1px),
+        radial-gradient(1px 1px at 45% 45%, rgba(255, 100, 0, 0.3) 0%, transparent 1px),
+        radial-gradient(1px 1px at 70% 15%, rgba(255, 255, 255, 0.22) 0%, transparent 1px),
+        radial-gradient(1px 1px at 30% 70%, rgba(255, 255, 255, 0.18) 0%, transparent 1px),
+        radial-gradient(1px 1px at 60% 85%, rgba(255, 100, 0, 0.2) 0%, transparent 1px),
+        radial-gradient(1px 1px at 10% 60%, rgba(255, 255, 255, 0.15) 0%, transparent 1px);
+    background-size: 100% 100%, 200% 200%, 200% 200%, 200% 200%, 200% 200%, 200% 200%, 200% 200%, 200% 200%;
     background-attachment: fixed;
-    opacity: 0.4;
+    opacity: 0.6;
     z-index: 0;
     pointer-events: none;
 }
@@ -124,7 +132,6 @@ body::after {
     transform: scale(1.05);
 }
 
-/* ЛОГОТИП КОНТЕЙНЕР */
 .logo-area {
     cursor: pointer;
     transition: all 0.3s ease;
@@ -141,7 +148,6 @@ body::after {
     cursor: pointer;
 }
 
-/* ИКОНКА ЛОГОТИПА */
 .logo-icon-wrapper {
     width: 50px;
     height: 50px;
@@ -172,7 +178,6 @@ body::after {
     filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(500%) hue-rotate(-10deg);
 }
 
-/* ТЕКСТ ЛОГОТИПА */
 .logo-text-section {
     display: flex;
     flex-direction: column;
@@ -227,7 +232,9 @@ body::after {
     margin: 0 10px;
     font-weight: 800;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    letter-spacing: 1.5px !important;
     text-transform: uppercase;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
@@ -256,26 +263,34 @@ body::after {
 }
 
 .btn-google-auth {
-    background: var(--white);
-    color: black;
+    background: #FF4500;
+    color: #ffffff;
     border: none;
-    padding: 8px 24px;
-    border-radius: 4px;
-    font-weight: 900;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 11px;
     text-transform: uppercase;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
+    margin-left: auto;
 }
 
 .btn-google-auth:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5);
+    background: #ff571a;
+}
+
+.btn-google-auth:active {
+    transform: translateY(1px);
 }
 
 /* ============================================
-   РАДИО КАПСУЛА — ПРЕМИУМ С ВОЛНАМИ
+   РАДИО КАПСУЛА
    ============================================ */
 .radio-section {
     padding-top: 60px;
@@ -287,7 +302,6 @@ body::after {
     z-index: 1;
 }
 
-/* Волны фона */
 .radio-section::before {
     content: '';
     position: absolute;
@@ -312,31 +326,38 @@ body::after {
 .z-capsule {
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
-    border: 1px solid #222;
+    background: linear-gradient(160deg, #141414 0%, #0d0d0d 50%, #0a0a0a 100%);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 120px;
     padding: 16px 50px 16px 20px;
     gap: 35px;
     box-shadow: 
+        0 2px 0 rgba(255,255,255,0.05) inset,
+        0 -2px 0 rgba(0,0,0,0.7) inset,
+        1px 0 0 rgba(255,255,255,0.03) inset,
         0 20px 60px rgba(0, 0, 0, 0.8),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 0 40px rgba(255, 69, 0, 0.15);
+        0 8px 25px rgba(0,0,0,0.6),
+        0 0 60px rgba(255, 69, 0, 0.12),
+        0 0 0 1px rgba(255,69,0,0.05);
     backdrop-filter: blur(20px);
-    background-color: rgba(10, 10, 10, 0.95);
+    background-color: rgba(12, 12, 12, 0.97);
     position: relative;
     z-index: 1;
     transition: all 0.3s ease;
 }
 
 .z-capsule:hover {
-    border-color: #333;
+    border-color: rgba(255,255,255,0.12);
     box-shadow: 
+        0 2px 0 rgba(255,255,255,0.06) inset,
+        0 -2px 0 rgba(0,0,0,0.7) inset,
         0 30px 80px rgba(0, 0, 0, 0.9),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 0 60px rgba(255, 69, 0, 0.25);
+        0 10px 30px rgba(0,0,0,0.7),
+        0 0 80px rgba(255, 69, 0, 0.2),
+        0 0 0 1px rgba(255,69,0,0.12);
+    transform: translateY(-2px);
 }
 
-/* ВИЗУАЛЬНАЯ ЧАСТЬ — ВОЛНЫ И КНОПКА */
 .capsule-visual {
     position: relative;
     display: flex;
@@ -347,7 +368,6 @@ body::after {
     flex-shrink: 0;
 }
 
-/* АУДИО ВОЛНЫ (вместо энергетических колец) */
 .audio-wave {
     position: absolute;
     width: 100%;
@@ -436,7 +456,6 @@ body::after {
     transform: scale(0.95);
 }
 
-/* ЭНЕРГЕТИЧЕСКИЕ КОЛЬЦА (улучшенные) */
 .energy-ring-1, .energy-ring-2 {
     position: absolute;
     width: 80px;
@@ -452,22 +471,11 @@ body::after {
 }
 
 @keyframes ring-pulse {
-    0% {
-        transform: scale(1);
-        opacity: 0.8;
-        border-color: var(--orange);
-    }
-    50% {
-        opacity: 0.4;
-    }
-    100% {
-        transform: scale(2.5);
-        opacity: 0;
-        border-color: var(--orange-light);
-    }
+    0% { transform: scale(1); opacity: 0.8; border-color: var(--orange); }
+    50% { opacity: 0.4; }
+    100% { transform: scale(2.5); opacity: 0; border-color: var(--orange-light); }
 }
 
-/* ИСТОРИЯ ТРЕКОВ (БЫЛО/ДАЛЬШЕ) */
 .history-side {
     display: flex;
     flex-direction: column;
@@ -500,7 +508,6 @@ body::after {
     color: var(--orange);
 }
 
-/* ИНФО КАПСУЛЫ */
 .capsule-info {
     display: flex;
     flex-direction: column;
@@ -508,7 +515,6 @@ body::after {
     gap: 8px;
 }
 
-/* СТАТУС И ТЕГИ */
 .status-row {
     display: flex;
     align-items: center;
@@ -560,7 +566,6 @@ body::after {
     background: rgba(255, 69, 0, 0.1);
 }
 
-/* НАЗВАНИЕ ТРЕКА И АРТИСТА */
 .pure-track-title {
     font-family: 'Montserrat', sans-serif;
     font-size: 28px;
@@ -580,7 +585,6 @@ body::after {
     text-transform: capitalize;
 }
 
-/* ПРОГРЕСС БАР С ВОЛНАМИ */
 .progress-zone {
     display: flex;
     align-items: center;
@@ -609,14 +613,11 @@ body::after {
     width: 45%;
     height: 100%;
     background: linear-gradient(90deg, var(--orange), var(--orange-light));
-    box-shadow: 
-        0 0 15px var(--orange),
-        inset 0 0 10px rgba(255, 69, 0, 0.5);
+    box-shadow: 0 0 15px var(--orange), inset 0 0 10px rgba(255, 69, 0, 0.5);
     border-radius: 2px;
     transition: width 0.3s linear;
 }
 
-/* КНОПКА ЧАТ */
 .capsule-actions {
     display: flex;
     gap: 10px;
@@ -645,13 +646,52 @@ body::after {
 }
 
 /* ============================================
-   КОНТЕНТ БЛОКИ
+   РАЗДЕЛИТЕЛИ МЕЖДУ СЕКЦИЯМИ
    ============================================ */
 .content-block {
-    padding: 60px 40px 100px 40px;
+    padding: 60px 40px 80px 40px;
     position: relative;
-    margin-bottom: 40px;
     z-index: 1;
+}
+
+.content-block + .content-block {
+    border-top: 1px solid transparent;
+    background-clip: padding-box;
+}
+
+.content-block + .content-block::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 40px;
+    right: 40px;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,69,0,0.2) 15%,
+        rgba(255,255,255,0.1) 40%,
+        rgba(255,255,255,0.1) 60%,
+        rgba(255,69,0,0.2) 85%,
+        transparent 100%
+    );
+    pointer-events: none;
+}
+
+.content-block + .content-block::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--orange);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255,69,0,0.6), 0 0 20px rgba(255,69,0,0.3);
+    pointer-events: none;
 }
 
 h3, h2, h1 {
@@ -681,7 +721,6 @@ h3, h2, h1 {
     width: 32px;
     height: 32px;
     flex-shrink: 0;
-    /* Черные иконки становятся оранжевыми */
     filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(500%) hue-rotate(-10deg);
     opacity: 0.9;
     transition: all 0.3s ease;
@@ -704,7 +743,7 @@ h3, h2, h1 {
 }
 
 /* ============================================
-   ТОП 10 СПИСОК
+   ТОП 10
    ============================================ */
 .trending-list {
     display: flex;
@@ -715,14 +754,19 @@ h3, h2, h1 {
 .track-row-skeleton {
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, #080808 0%, #0f0f0f 100%);
-    border: 1px solid #1a1a1a;
+    background: linear-gradient(160deg, #161616 0%, #0f0f0f 60%, #0a0a0a 100%);
+    border: 1px solid rgba(255,255,255,0.08);
     padding: 14px 24px;
-    border-radius: 10px;
+    border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.04) inset,
+        0 -1px 0 rgba(0,0,0,0.5) inset,
+        0 4px 12px rgba(0,0,0,0.4),
+        0 1px 3px rgba(0,0,0,0.5);
 }
 
 .track-row-skeleton::before {
@@ -741,10 +785,15 @@ h3, h2, h1 {
 }
 
 .track-row-skeleton:hover {
-    background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
-    border-color: var(--orange);
-    transform: translateX(8px);
-    box-shadow: 0 10px 30px rgba(255, 69, 0, 0.15);
+    background: linear-gradient(160deg, #1e1e1e 0%, #161616 100%);
+    border-color: rgba(255,69,0,0.4);
+    transform: translateX(6px) translateY(-2px);
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.06) inset,
+        0 -1px 0 rgba(0,0,0,0.6) inset,
+        0 12px 30px rgba(0,0,0,0.5),
+        0 4px 12px rgba(255,69,0,0.15),
+        0 0 0 1px rgba(255,69,0,0.1);
 }
 
 .rank {
@@ -789,7 +838,7 @@ h3, h2, h1 {
 
 .a-name {
     font-size: 12px;
-    color: #666;
+    color: #888;
     text-transform: capitalize;
 }
 
@@ -814,7 +863,7 @@ h3, h2, h1 {
 }
 
 /* ============================================
-   НОВИНКИ (1:1 СЕТКА)
+   НОВИНКИ
    ============================================ */
 .grid-1-1 {
     display: grid;
@@ -824,38 +873,53 @@ h3, h2, h1 {
 
 .release-item-skeleton {
     aspect-ratio: 1/1;
-    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
-    border: 1px solid #1a1a1a;
-    border-radius: 10px;
+    background: linear-gradient(160deg, #1e1e1e 0%, #141414 60%, #0f0f0f 100%);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow:
+        0 2px 0 rgba(255,255,255,0.05) inset,
+        0 -1px 0 rgba(0,0,0,0.6) inset,
+        0 6px 20px rgba(0,0,0,0.6),
+        0 2px 4px rgba(0,0,0,0.4);
 }
 
 .release-item-skeleton::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: radial-gradient(circle at center, rgba(255, 69, 0, 0.3) 0%, transparent 70%);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
-.release-item-skeleton:hover::before {
-    opacity: 1;
+.release-item-skeleton::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+    border-radius: 12px 12px 0 0;
+    pointer-events: none;
 }
 
+.release-item-skeleton:hover::before { opacity: 1; }
+
 .release-item-skeleton:hover {
-    transform: scale(1.05);
-    border-color: var(--orange);
-    box-shadow: 0 8px 32px rgba(255, 69, 0, 0.2);
+    transform: scale(1.05) translateY(-4px);
+    border-color: rgba(255,69,0,0.5);
+    box-shadow:
+        0 2px 0 rgba(255,255,255,0.06) inset,
+        0 -1px 0 rgba(0,0,0,0.6) inset,
+        0 16px 40px rgba(0,0,0,0.7),
+        0 8px 20px rgba(255,69,0,0.2),
+        0 0 0 1px rgba(255,69,0,0.15);
 }
 
 .release-item-skeleton img {
@@ -864,9 +928,7 @@ h3, h2, h1 {
     transition: opacity 0.3s ease;
 }
 
-.release-item-skeleton:hover img {
-    opacity: 0.5;
-}
+.release-item-skeleton:hover img { opacity: 0.5; }
 
 .release-label {
     position: absolute;
@@ -884,7 +946,7 @@ h3, h2, h1 {
 }
 
 /* ============================================
-   АРТИСТЫ МЕСЯЦА (НОВАЯ ВЕРСИЯ)
+   АРТИСТЫ МЕСЯЦА
    ============================================ */
 .artists-grid-home {
     display: grid;
@@ -898,16 +960,14 @@ h3, h2, h1 {
     transition: transform 0.3s ease;
 }
 
-.artist-card-skeleton:hover {
-    transform: translateY(-10px);
-}
+.artist-card-skeleton:hover { transform: translateY(-10px); }
 
 .circle-avatar {
     width: 160px;
     height: 160px;
     background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
     border-radius: 50%;
-    border: 2px solid #222;
+    border: 2px solid #333;
     margin: 0 auto 20px;
     display: flex;
     align-items: center;
@@ -926,15 +986,11 @@ h3, h2, h1 {
     transition: opacity 0.3s ease;
 }
 
-.circle-avatar:hover img {
-    opacity: 1;
-}
+.circle-avatar:hover img { opacity: 1; }
 
 .circle-avatar:hover {
     border-color: var(--orange);
-    box-shadow: 
-        0 0 30px rgba(255, 69, 0, 0.4),
-        inset 0 0 20px rgba(255, 69, 0, 0.1);
+    box-shadow: 0 0 30px rgba(255, 69, 0, 0.4), inset 0 0 20px rgba(255, 69, 0, 0.1);
     transform: scale(1.05);
 }
 
@@ -948,9 +1004,7 @@ h3, h2, h1 {
     line-height: 1.4;
 }
 
-.artist-card-skeleton:hover .artist-name {
-    color: var(--orange);
-}
+.artist-card-skeleton:hover .artist-name { color: var(--orange); }
 
 /* ============================================
    РИНГТОНЫ
@@ -958,26 +1012,34 @@ h3, h2, h1 {
 .ringtones-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .ringtone-item {
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, #0f0f0f 0%, #080808 100%);
-    border: 1px solid #1a1a1a;
+    background: linear-gradient(160deg, #161616 0%, #0f0f0f 60%, #0a0a0a 100%);
+    border: 1px solid rgba(255,255,255,0.08);
     padding: 16px 28px;
     border-radius: 50px;
     justify-content: space-between;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.05) inset,
+        0 -1px 0 rgba(0,0,0,0.5) inset,
+        0 4px 14px rgba(0,0,0,0.45);
 }
 
 .ringtone-item:hover {
-    background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
-    border-color: var(--orange);
-    transform: translateX(8px);
-    box-shadow: 0 10px 30px rgba(255, 69, 0, 0.15);
+    background: linear-gradient(160deg, #1e1e1e 0%, #161616 100%);
+    border-color: rgba(255,69,0,0.4);
+    transform: translateX(6px) translateY(-2px);
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.06) inset,
+        0 -1px 0 rgba(0,0,0,0.6) inset,
+        0 12px 30px rgba(0,0,0,0.5),
+        0 4px 12px rgba(255,69,0,0.15);
 }
 
 .play-small {
@@ -1007,6 +1069,7 @@ h3, h2, h1 {
     flex-grow: 1;
     margin-left: 20px;
     text-transform: capitalize;
+    color: #fff;
 }
 
 .btn-download-wa {
@@ -1029,7 +1092,7 @@ h3, h2, h1 {
 }
 
 /* ============================================
-   FOOTER — КОМПАКТНЫЙ ОДНА СТРОКА
+   FOOTER
    ============================================ */
 .main-footer {
     background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
@@ -1048,7 +1111,6 @@ h3, h2, h1 {
     margin: 0 auto;
 }
 
-/* ЛОГОТИП И КОПИРАЙТ */
 .footer-brand {
     display: flex;
     align-items: center;
@@ -1062,9 +1124,7 @@ h3, h2, h1 {
     transition: opacity 0.3s ease;
 }
 
-.footer-logo:hover {
-    opacity: 0.8;
-}
+.footer-logo:hover { opacity: 0.8; }
 
 .footer-copy {
     font-size: 8px;
@@ -1076,7 +1136,6 @@ h3, h2, h1 {
     padding: 0;
 }
 
-/* СОЦСЕТИ */
 .footer-socials {
     display: flex;
     gap: 8px;
@@ -1109,7 +1168,6 @@ h3, h2, h1 {
     box-shadow: 0 8px 20px rgba(255, 69, 0, 0.2);
 }
 
-/* ССЫЛКИ */
 .footer-links {
     display: flex;
     gap: 20px;
@@ -1140,15 +1198,9 @@ h3, h2, h1 {
     transition: width 0.3s ease;
 }
 
-.footer-link:hover {
-    color: var(--orange);
-}
+.footer-link:hover { color: var(--orange); }
+.footer-link:hover::before { width: 100%; }
 
-.footer-link:hover::before {
-    width: 100%;
-}
-
-/* СЛОГАН */
 .footer-slogan {
     font-size: 9px;
     color: #555;
@@ -1170,15 +1222,12 @@ h3, h2, h1 {
 }
 
 /* ============================================
-   МОДАЛЬНЫЕ ОКНА — ХИП-ХОП СТИЛЬ
+   МОДАЛЬНЫЕ ОКНА
    ============================================ */
 .modal-overlay {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(8px);
     z-index: 2000;
@@ -1187,7 +1236,6 @@ h3, h2, h1 {
     padding: 20px;
 }
 
-/* МОДАЛКА РОМБ/КВАДРАТ РАЗВЁРНУТЫЙ */
 .modal-hip-hop {
     background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
     border: 3px solid #ff4500;
@@ -1201,11 +1249,9 @@ h3, h2, h1 {
     position: relative;
     overflow-y: auto;
     animation: modalIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* УГЛОВЫЕ ЛИНИИ (хип-хоп стиль) */
 .modal-hip-hop::before,
 .modal-hip-hop::after {
     content: '';
@@ -1216,43 +1262,26 @@ h3, h2, h1 {
 }
 
 .modal-hip-hop::before {
-    top: -10px;
-    left: -10px;
-    border-right: none;
-    border-bottom: none;
+    top: -10px; left: -10px;
+    border-right: none; border-bottom: none;
     border-radius: 10px 0 0 0;
 }
 
 .modal-hip-hop::after {
-    bottom: -10px;
-    right: -10px;
-    border-left: none;
-    border-top: none;
+    bottom: -10px; right: -10px;
+    border-left: none; border-top: none;
     border-radius: 0 0 10px 0;
 }
 
 @keyframes modalIn {
-    from {
-        opacity: 0;
-        transform: translateY(-60px) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* ХИП-ХОП ЛОГИКА - ТЕКСТ НА РОМБЕ */
-.modal-hip-hop clip-path {
-    /* Форма как в стихе хип-хопа - острые углы, агрессивный дизайн */
+    from { opacity: 0; transform: translateY(-60px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .modal-close {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 36px;
-    height: 36px;
+    top: 20px; right: 20px;
+    width: 36px; height: 36px;
     background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
     border: none;
     color: black;
@@ -1281,9 +1310,7 @@ h3, h2, h1 {
     padding: 0;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 
-        0 0 40px rgba(255, 69, 0, 0.5),
-        0 0 80px rgba(255, 69, 0, 0.2);
+    text-shadow: 0 0 40px rgba(255, 69, 0, 0.5), 0 0 80px rgba(255, 69, 0, 0.2);
     line-height: 1.1;
 }
 
@@ -1295,13 +1322,8 @@ h3, h2, h1 {
     overflow-y: auto;
 }
 
-.modal-content p {
-    margin: 0 0 20px 0;
-}
-
-.modal-content p:last-child {
-    margin-bottom: 0;
-}
+.modal-content p { margin: 0 0 20px 0; }
+.modal-content p:last-child { margin-bottom: 0; }
 
 .modal-content strong {
     color: var(--orange-light);
@@ -1321,74 +1343,26 @@ h3, h2, h1 {
 .modal-content a::after {
     content: '';
     position: absolute;
-    bottom: -3px;
-    left: 0;
-    width: 0;
-    height: 2px;
+    bottom: -3px; left: 0;
+    width: 0; height: 2px;
     background: var(--orange);
     transition: width 0.3s ease;
     box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
 }
 
-.modal-content a:hover {
-    text-shadow: 0 0 20px rgba(255, 69, 0, 0.7);
-}
-
-.modal-content a:hover::after {
-    width: 100%;
-}
-
-/* АДАПТИВ */
-@media (max-width: 768px) {
-    .footer-content {
-        flex-wrap: wrap;
-        gap: 12px;
-        padding: 0;
-    }
-
-    .footer-links {
-        flex-wrap: wrap;
-        gap: 10px;
-        width: 100%;
-        order: 4;
-    }
-
-    .footer-slogan {
-        width: 100%;
-        text-align: center;
-        order: 5;
-        font-size: 8px;
-    }
-
-    .modal-hip-hop {
-        max-width: 90vw;
-        max-height: 80vh;
-        padding: 30px;
-    }
-
-    .modal-title {
-        font-size: 24px;
-    }
-}
+.modal-content a:hover { text-shadow: 0 0 20px rgba(255, 69, 0, 0.7); }
+.modal-content a:hover::after { width: 100%; }
 
 /* ============================================
-   АНИМАЦИИ И УТИЛИТЫ
+   АНИМАЦИИ
    ============================================ */
 @keyframes blink {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.4;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
 }
 
-/* Плавные переходы */
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-/* Сброс для всех картинок - никаких палочек, линий, квадратов */
 img {
     border: 0 !important;
     outline: 0 !important;
@@ -1400,96 +1374,48 @@ img {
     display: block;
 }
 
-img:focus,
-img:active,
-img:focus-visible {
+img:focus, img:active, img:focus-visible {
     outline: 0 !important;
     border: 0 !important;
 }
 
-/* СКРОЛЛ СТИЛЬ */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #050505;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #333;
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--orange);
-}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--orange); }
 
 /* ============================================
-   АДАПТИВ (базовый)
+   АДАПТИВ
    ============================================ */
 @media (max-width: 1200px) {
-    .capsule-info {
-        min-width: 300px;
-    }
-
-    .pure-track-title {
-        font-size: 24px;
-    }
-
-    .grid-1-1 {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    }
+    .capsule-info { min-width: 300px; }
+    .pure-track-title { font-size: 24px; }
+    .grid-1-1 { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
 }
 
 @media (max-width: 768px) {
-    .main-header {
-        padding: 0 20px;
-    }
-
-    .z-capsule {
-        flex-wrap: wrap;
-        padding: 12px 20px;
-        gap: 20px;
-    }
-
-    .capsule-info {
-        min-width: 100%;
-    }
-
-    .history-side {
-        display: none;
-    }
-
-    .main-nav button {
-        font-size: 9px;
-        margin: 0 5px;
-    }
-
-    .content-block {
-        padding: 0 20px 60px 20px;
-    }
-
-    .section-title {
-        font-size: 18px;
-    }
-
-    .grid-1-1 {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 15px;
-    }
-
-    .artists-grid-home {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 25px;
-    }
+    .main-header { padding: 0 20px; }
+    .z-capsule { flex-wrap: wrap; padding: 12px 20px; gap: 20px; }
+    .capsule-info { min-width: 100%; }
+    .history-side { display: none; }
+    .main-nav button { font-size: 9px; margin: 0 5px; }
+    .content-block { padding: 0 20px 60px 20px; }
+    .section-title { font-size: 18px; }
+    .grid-1-1 { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+    .artists-grid-home { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 25px; }
+    .footer-content { flex-wrap: wrap; gap: 12px; padding: 0; }
+    .footer-links { flex-wrap: wrap; gap: 10px; width: 100%; order: 4; }
+    .footer-slogan { width: 100%; text-align: center; order: 5; font-size: 8px; }
+    .modal-hip-hop { max-width: 90vw; max-height: 80vh; padding: 30px; }
+    .modal-title { font-size: 24px; }
 }
+
 /* ============================================
-   КАСТОМНЫЙ ПРЕМИУМ ПЛЕЕР
+   КАСТОМНЫЙ ПЛЕЕР
    ============================================ */
 .custom-player {
-    background: linear-gradient(135deg, #0a0a0a 0%, #111 100%);
-    border: 1px solid #222;
+    background: linear-gradient(135deg, #111 0%, #161616 100%);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 14px;
     padding: 16px 20px;
     display: flex;
@@ -1497,31 +1423,20 @@ img:focus-visible {
     gap: 16px;
     max-width: 100%;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    
-    /* 3D ЭФФЕКТ - ВЫСТУПАЕТ ВПЕРЁД, БЕЗ СВЕЧЕНИЯ */
     box-shadow: 
-        /* Глубокая тень */
         0 12px 24px rgba(0, 0, 0, 0.8),
-        /* Верхний инсет блеск (едва видимый) */
         inset 0 1px 2px rgba(255, 255, 255, 0.05);
-    
-    /* Лёгкий наклон 3D */
     transform: perspective(1200px) rotateX(0.8deg);
 }
 
 .custom-player:hover {
-    border-color: #333;
+    border-color: rgba(255,69,0,0.2);
     box-shadow: 
-        /* Более сильная тень при наведении */
         0 16px 32px rgba(0, 0, 0, 0.9),
-        /* Верхний инсет блеск */
         inset 0 1px 2px rgba(255, 255, 255, 0.08);
-    
-    /* Поднимается немного */
     transform: perspective(1200px) rotateX(0.8deg) translateY(-4px);
 }
 
-/* КОНТРОЛЫ СЛЕВА */
 .player-controls {
     display: flex;
     align-items: center;
@@ -1553,9 +1468,7 @@ img:focus-visible {
     box-shadow: 0 0 15px rgba(255, 69, 0, 0.3);
 }
 
-.player-btn:active {
-    transform: scale(0.95);
-}
+.player-btn:active { transform: scale(0.95); }
 
 .player-btn.playing {
     background: linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);
@@ -1563,7 +1476,6 @@ img:focus-visible {
     box-shadow: 0 0 20px rgba(255, 69, 0, 0.4);
 }
 
-/* ИНФО И ПРОГРЕСС (ЦЕНТР) */
 .player-info {
     flex: 1;
     min-width: 0;
@@ -1591,7 +1503,7 @@ img:focus-visible {
 .player-time {
     font-size: 10px;
     font-weight: 700;
-    color: #666;
+    color: #888;
     min-width: 35px;
     text-align: right;
 }
@@ -1622,11 +1534,10 @@ img:focus-visible {
 .player-duration {
     font-size: 10px;
     font-weight: 700;
-    color: #666;
+    color: #888;
     min-width: 35px;
 }
 
-/* КНОПКИ СПРАВА */
 .player-actions {
     display: flex;
     align-items: center;
@@ -1649,19 +1560,11 @@ img:focus-visible {
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    gap: 6px;
-    position: relative;
-    overflow: hidden;
     width: 44px;
     height: 44px;
-    
-    /* 3D - ВЫСТУПАЕТ ВПЕРЁД */
-    box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.6),
-        0 -1px 2px rgba(255, 255, 255, 0.05) inset;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6), 0 -1px 2px rgba(255, 255, 255, 0.05) inset;
 }
 
-/* SVG иконка в кнопке */
 .player-action-btn svg {
     width: 18px;
     height: 18px;
@@ -1673,34 +1576,17 @@ img:focus-visible {
     color: #000;
     border-color: #ff4500;
     transform: translateY(-3px);
-    box-shadow: 
-        0 8px 16px rgba(0, 0, 0, 0.7),
-        0 -1px 2px rgba(255, 255, 255, 0.1) inset;
 }
 
-.player-action-btn:hover svg {
-    transform: scale(1.15);
-}
-
-.player-action-btn:active {
-    transform: translateY(-1px);
-    box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.6),
-        0 -1px 2px rgba(255, 255, 255, 0.05) inset;
-}
-
-.ringtones-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+.player-action-btn:hover svg { transform: scale(1.15); }
+.player-action-btn:active { transform: translateY(-1px); }
 
 /* ============================================
-   СКРОЛЛ СЕКЦИИ — ГОРИЗОНТАЛЬНЫЙ
+   СКРОЛЛ ГОРИЗОНТАЛЬНЫЙ
    ============================================ */
 .scroll-nav-row {
     display: flex;
-    align-items: stretch; /* стрелки растягиваются по высоте контента */
+    align-items: stretch;
     gap: 8px;
 }
 
@@ -1719,7 +1605,7 @@ img:focus-visible {
     justify-content: center;
     transition: background 0.2s, color 0.2s;
     flex-shrink: 0;
-    align-self: center; /* центрируем по высоте карточек */
+    align-self: center;
 }
 
 .scroll-arrow-btn:hover {
@@ -1738,9 +1624,7 @@ img:focus-visible {
     scrollbar-color: var(--orange) #1a1a1a;
 }
 
-.hscroll-wrapper::-webkit-scrollbar {
-    height: 4px;
-}
+.hscroll-wrapper::-webkit-scrollbar { height: 4px; }
 .hscroll-wrapper::-webkit-scrollbar-track { background: #1a1a1a; }
 .hscroll-wrapper::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
 
@@ -1758,7 +1642,6 @@ img:focus-visible {
     align-items: flex-start;
 }
 
-/* НОВИНКИ / НОВИЧКИ горизонтальная сетка */
 .grid-1-1.hscroll-inner .release-item-skeleton {
     flex: 0 0 180px;
     min-width: 180px;
@@ -1767,7 +1650,6 @@ img:focus-visible {
     aspect-ratio: 1/1;
 }
 
-/* АРТИСТЫ горизонтально */
 .artists-grid-home.hscroll-inner .artist-card-skeleton {
     flex: 0 0 160px;
     min-width: 160px;
@@ -1777,29 +1659,24 @@ img:focus-visible {
     align-items: center;
 }
 
-/* Стрелки для артистов — выравнивание точно по центру кружка (160px / 2 = 80px - половина кнопки) */
 .artists-scroll-row .scroll-arrow-btn {
     align-self: center;
     margin-top: 0;
     position: relative;
-    top: -14px; /* компенсируем текст имени под кружком */
+    top: -14px;
 }
 
-/* Лейбл НОВИЧКИ — зелёный цвет */
-.newcomer-label {
-    background: #00c851 !important;
-    color: #000 !important;
-}
+.newcomer-label { background: #00c851 !important; color: #000 !important; }
 
 /* ============================================
-   НОВИЧКИ — карточка другого вида (вертикальная с полосой)
+   НОВИЧКИ
    ============================================ */
 .newcomer-card {
     flex: 0 0 150px;
     min-width: 150px;
     width: 150px;
-    background: linear-gradient(180deg, #151515 0%, #0d0d0d 100%);
-    border: 1px solid #222;
+    background: linear-gradient(180deg, #161616 0%, #0f0f0f 100%);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
@@ -1832,16 +1709,14 @@ img:focus-visible {
     transition: opacity 0.3s ease;
 }
 
-.newcomer-card:hover .newcomer-card-cover img {
-    opacity: 0.45;
-}
+.newcomer-card:hover .newcomer-card-cover img { opacity: 0.45; }
 
 .newcomer-card-cover::after {
     content: '';
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 40%;
-    background: linear-gradient(transparent, #0d0d0d);
+    background: linear-gradient(transparent, #0f0f0f);
 }
 
 .newcomer-card-accent {
@@ -1856,9 +1731,7 @@ img:focus-visible {
     gap: 4px;
 }
 
-.newcomer-card-badge {
-    display: none;
-}
+.newcomer-card-badge { display: none; }
 
 .newcomer-card-title {
     font-size: 12px;
@@ -1871,15 +1744,14 @@ img:focus-visible {
 
 .newcomer-card-artist {
     font-size: 11px;
-    color: #666;
+    color: #888;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-
 /* ============================================
-   СКРОЛЛ СЕКЦИИ — ВЕРТИКАЛЬНЫЙ
+   СКРОЛЛ ВЕРТИКАЛЬНЫЙ
    ============================================ */
 .vscroll-wrapper {
     overflow-y: auto;
@@ -1894,41 +1766,41 @@ img:focus-visible {
 .vscroll-wrapper::-webkit-scrollbar-track { background: #1a1a1a; }
 .vscroll-wrapper::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
 
-/* TOP 10 — показываем ровно 10 строк, остальные скроллим */
-.vscroll-top10 {
-    max-height: 640px; /* ~10 треков по 60px + gap */
-}
-
-.ringtones-scroll {
-    max-height: 680px; /* ~10 плееров */
-}
-
+.vscroll-top10 { max-height: 640px; }
+.ringtones-scroll { max-height: 680px; }
 
 /* ============================================
-   В ТРЕНДЕ — СТРОКА С ПЛЕЕРОМ
-   Layout: [rank] [cover] [LEFT: title+artist | RIGHT: controls+progress] [▲▼]
+   В ТРЕНДЕ — СТРОКА
    ============================================ */
-
 .trend-track-row {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 16px;
-    background: linear-gradient(135deg, #080808 0%, #0f0f0f 100%);
-    border: 1px solid #1a1a1a;
-    border-radius: 10px;
+    background: linear-gradient(160deg, #161616 0%, #0f0f0f 60%, #0a0a0a 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
     padding: 14px 20px;
     position: relative;
     overflow: hidden;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.04) inset,
+        0 -1px 0 rgba(0,0,0,0.5) inset,
+        0 4px 12px rgba(0,0,0,0.4);
 }
 
 .trend-track-row:hover {
-    border-color: var(--orange);
-    box-shadow: 0 8px 24px rgba(255, 69, 0, 0.12);
+    border-color: rgba(255,69,0,0.35);
+    transform: translateY(-2px);
+    background: linear-gradient(160deg, #1e1e1e 0%, #161616 100%);
+    box-shadow:
+        0 1px 0 rgba(255,255,255,0.06) inset,
+        0 -1px 0 rgba(0,0,0,0.6) inset,
+        0 12px 30px rgba(0,0,0,0.55),
+        0 4px 12px rgba(255,69,0,0.14);
 }
 
-/* Номер */
 .trend-track-row .rank {
     font-family: 'Montserrat', sans-serif;
     font-size: 20px;
@@ -1939,7 +1811,6 @@ img:focus-visible {
     text-align: center;
 }
 
-/* Оранжевая обложка */
 .trend-cover {
     width: 52px;
     height: 52px;
@@ -1963,7 +1834,6 @@ img:focus-visible {
     margin: 0;
 }
 
-/* Левая часть: только название трека и артист */
 .trend-track-meta {
     display: flex;
     flex-direction: column;
@@ -1989,14 +1859,13 @@ img:focus-visible {
     display: block;
     font-size: 13px;
     font-weight: 500;
-    color: #888888;
+    color: #999;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2;
 }
 
-/* Правая часть: кнопки + прогресс — растягивается */
 .trend-player-controls {
     display: flex;
     align-items: center;
@@ -2005,7 +1874,6 @@ img:focus-visible {
     min-width: 0;
 }
 
-/* Кнопки — идеальный круг, иконка строго по центру */
 .trend-play-btn,
 .trend-stop-btn {
     width: 32px;
@@ -2031,14 +1899,10 @@ img:focus-visible {
 .trend-play-btn {
     background: var(--orange);
     color: #000;
-    /* треугольник play оптически чуть правее */
     padding-left: 2px;
 }
 
-.trend-play-btn:hover {
-    background: var(--orange-light);
-    transform: scale(1.1);
-}
+.trend-play-btn:hover { background: var(--orange-light); transform: scale(1.1); }
 
 .trend-stop-btn {
     background: #1a1a1a;
@@ -2048,18 +1912,16 @@ img:focus-visible {
 
 .trend-stop-btn:hover { background: #252525; }
 
-/* Время */
 .trend-time,
 .trend-duration {
     font-size: 11px;
-    color: #555;
+    color: #888;
     min-width: 30px;
     font-variant-numeric: tabular-nums;
     flex-shrink: 0;
     white-space: nowrap;
 }
 
-/* Прогресс-бар */
 .trend-progress-bar {
     flex: 1;
     height: 3px;
@@ -2079,22 +1941,9 @@ img:focus-visible {
     transition: width 0.1s linear;
 }
 
-/* Стрелки — справа */
-.trend-track-row .trend-indicators {
-    flex-shrink: 0;
-    margin-left: 4px;
-}
+.trend-track-row .trend-indicators { flex-shrink: 0; margin-left: 4px; }
+.trend-player-block { display: contents; }
 
-/* Убираем trend-player-block как обёртку — его нет */
-.trend-player-block {
-    display: contents;
-}
-
-
-
-/* ============================================
-   ТРЕНД — КНОПКИ ДЕЙСТВИЙ + СЧЁТЧИК
-   ============================================ */
 .trend-actions {
     display: flex;
     align-items: center;
@@ -2106,32 +1955,23 @@ img:focus-visible {
 .trend-plays {
     font-size: 11px;
     font-weight: 700;
-    color: #555;
+    color: #888;
     white-space: nowrap;
     letter-spacing: 0.3px;
     min-width: 44px;
 }
 
-/* Чуть меньше кнопки в тренде чем в рингтонах */
-.trend-action-btn {
-    width: 36px !important;
-    height: 36px !important;
-    padding: 0 !important;
-}
+.trend-action-btn { width: 36px !important; height: 36px !important; padding: 0 !important; }
 
-/* ============================================
-   РИНГТОНЫ — СЧЁТЧИК ПРОСЛУШИВАНИЙ
-   ============================================ */
 .ringtone-plays {
     font-size: 11px;
-    color: #555;
+    color: #888;
     font-weight: 600;
     margin-top: 2px;
-    letter-spacing: 0.2px;
 }
 
 /* ============================================
-   НОВИНКИ — низ карточки: счётчик + кнопки
+   НОВИНКИ — низ карточки
    ============================================ */
 .release-item-skeleton {
     position: relative;
@@ -2141,9 +1981,7 @@ img:focus-visible {
 
 .release-bottom {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     background: linear-gradient(transparent, rgba(0,0,0,0.92));
     padding: 24px 10px 10px;
     display: flex;
@@ -2153,9 +1991,7 @@ img:focus-visible {
     transition: opacity 0.25s ease;
 }
 
-.release-item-skeleton:hover .release-bottom {
-    opacity: 1;
-}
+.release-item-skeleton:hover .release-bottom { opacity: 1; }
 
 .release-plays {
     font-size: 11px;
@@ -2164,14 +2000,8 @@ img:focus-visible {
     letter-spacing: 0.3px;
 }
 
-.release-card-btns {
-    display: flex;
-    gap: 6px;
-}
+.release-card-btns { display: flex; gap: 6px; }
 
-/* ============================================
-   НОВИЧКИ — футер карточки: счётчик + кнопки
-   ============================================ */
 .newcomer-footer {
     display: flex;
     align-items: center;
@@ -2181,20 +2011,9 @@ img:focus-visible {
     border-top: 1px solid #222;
 }
 
-.newcomer-plays {
-    font-size: 10px;
-    font-weight: 700;
-    color: #555;
-}
+.newcomer-plays { font-size: 10px; font-weight: 700; color: #666; }
+.newcomer-btns { display: flex; gap: 5px; }
 
-.newcomer-btns {
-    display: flex;
-    gap: 5px;
-}
-
-/* ============================================
-   УНИВЕРСАЛЬНАЯ МИНИ-КНОПКА (карточки)
-   ============================================ */
 .card-mini-btn {
     width: 28px;
     height: 28px;
@@ -2211,10 +2030,7 @@ img:focus-visible {
     flex-shrink: 0;
 }
 
-.card-mini-btn svg {
-    width: 14px;
-    height: 14px;
-}
+.card-mini-btn svg { width: 14px; height: 14px; }
 
 .card-mini-btn:hover {
     background: var(--orange);
@@ -2223,41 +2039,11 @@ img:focus-visible {
     transform: translateY(-2px);
 }
 
-.card-mini-btn:hover svg {
-    filter: brightness(0);
-}
-/* Увеличение шрифта шапки */
-.main-nav button {
-    font-size: 15px !important;
-    font-weight: 900 !important;
-    letter-spacing: 1.5px !important;
-}
-.btn-google-auth {
-    background: #FF4500; /* Фирменный оранжевый ZARBA */
-    color: #ffffff;
-    border: none;
-    padding: 10px 24px;
-    font-size: 14px;
-    font-weight: 800;
-    font-family: 'Montserrat', sans-serif;
-    border-radius: 8px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
-    margin-left: auto; /* Чтобы кнопка прижалась вправо */
-}
+.card-mini-btn:hover svg { filter: brightness(0); }
 
-.btn-google-auth:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5);
-    background: #ff571a;
-}
-
-.btn-google-auth:active {
-    transform: translateY(1px);
-}
+/* ============================================
+   USER PROFILE
+   ============================================ */
 .user-profile-head {
     display: flex;
     align-items: center;
@@ -2291,9 +2077,6 @@ img:focus-visible {
     border: 2px solid #ff0055;
 }
 
-/* ============================================
-   FIX: app-content поверх фоновых слоёв
-   ============================================ */
 #app-content {
     position: relative;
     z-index: 1;

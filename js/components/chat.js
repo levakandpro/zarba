@@ -1,7 +1,7 @@
 // ============================================================
-//  ZARBA — MEGA CHAT [v2.0] - REDESIGN
+//  ZARBA — MEGA CHAT [v2.0] - REDESIGN + REPLIES & LIKES
 //  Красивый чат: анимированные эмодзи, YouTube превью,
-//  статусы пользователей, индикатор печатания и многое другое
+//  ответы на сообщения, анимированные лайки и статусы
 // ============================================================
 
 (function() {
@@ -16,11 +16,11 @@ const CHAT_CONFIG = {
 
 // ── ДЕМО-ПОЛЬЗОВАТЕЛИ ────────────────────────────────────
 const DEMO_USERS = [
-    { id: 'u1', name: 'MANZUR', role: 'artist', color: '#FF4500', avatar: 'M', online: true },
-    { id: 'u2', name: 'FARID_TJ', role: 'fan', color: '#00D4FF', avatar: 'F', online: true },
-    { id: 'u3', name: 'DUSHANBE_BOY', role: 'fan', color: '#A855F7', avatar: 'D', online: false },
-    { id: 'u4', name: 'ZARBA_OFFICIAL', role: 'mod', color: '#FFD700', avatar: 'Z', online: true },
-    { id: 'u5', name: 'KHURSHID', role: 'artist', color: '#FF4500', avatar: 'K', online: true },
+    { id: 'u1', name: 'MANZUR', role: 'artist', avatar: 'M', online: true },
+    { id: 'u2', name: 'FARID_TJ', role: 'fan', avatar: 'F', online: true },
+    { id: 'u3', name: 'DUSHANBE_BOY', role: 'fan', avatar: 'D', online: false },
+    { id: 'u4', name: 'ZARBA_OFFICIAL', role: 'mod', avatar: 'Z', online: true },
+    { id: 'u5', name: 'KHURSHID', role: 'artist', avatar: 'K', online: true },
 ];
 
 // ── АНИМИРОВАННЫЕ ЭМОДЗИ-ПАКИ ────────────────────────────
@@ -28,28 +28,22 @@ const EMOJI_PACKS = {
     '😊': ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🫢','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','🫥','😏','😒','🙄','😬','🤥','🫨','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','🫤','😟','🙁','☹️','😮','😯','😲','😳','🥺','🫹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖'],
     '👋': ['👋','🤚','🖐️','✋','🖖','🫱','🫲','🫳','🫴','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','🫵','👍','👎','✊','👊','🤛','🤜','👏','🙌','🫶','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦵','🦿','🦶','👂','🦻','👃','🫀','🫁','🧠','🦷','🦴','👀','👁️','👅','👄','🫦','💋','👶','🧒','👦','👧','🧑','👱','👨','🧔','👩','🧓','👴','👵','🙍','🙎','🙅','🙆','💁','🙋','🧏','🙇','🤦','🤷'],
     '❤️': ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❤️‍🔥','❤️‍🩹','💕','💞','💓','💗','💖','💘','💝','💟','☮️','✝️','☪️','🕉️','☸️','🪯','✡️','🔯','🕎','☯️','☦️','🛐','⛎','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','🆔','⚛️','🉑','☢️','☣️','📴','📳','🈶','🈚','🈸','🈺','🈷️','✴️','🆚','💮','🉐','㊙️','㊗️','🈴','🈵','🈹','🈲','🅰️','🅱️','🆎','🆑','🅾️','🆘','❌','⭕','🛑','⛔','📛','🚫','💯','💢','♨️','🚷','🚯','🚳','🚱','🔞','📵','🔕'],
-    '🐶': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐻‍❄️','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐒','🦆','🐧','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🦟','🦗','🪲','🕷️','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🐊','🐅','🐆','🦓','🦍','🦧','🦣','🐘','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩','🦮','🐕‍🦺','🐈','🐈‍⬛','🪶','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊️','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿️','🦔','🌵','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🎍','🪴','🎋','🍃','🍂','🍁','🪺','🪹','🍄','🐚','🪸','🪨','🌾','💐','🌷','🌹','🥀','🪷','🌺','🌸','🌼','🌻','🌞','🌝','🌛','🌜','🌚','🌕','🌖','🌗','🌘','🌑','🌒','🌓','🌔','🌙','🌟','⭐','🌠','🌌','☀️','⛅','🌤️','⛈️','🌧️','🌨️','❄️','⛄','🌊','💧','💦','🌈'],
-    '🍕': ['🍕','🍔','🌭','🥪','🌮','🌯','🫔','🥙','🧆','🥚','🍳','🥘','🍲','🫕','🥣','🥗','🍿','🧈','🥞','🧇','🥓','🥩','🍗','🍖','🦴','🌽','🥕','🧄','🧅','🥔','🍠','🥐','🥯','🍞','🥖','🥨','🧀','🍱','🍘','🍙','🍚','🍛','🍜','🍝','🍟','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍩','🍪','🌰','🍑','🍒','🍓','🫐','🍈','🍌','🍉','🍇','🍍','🥭','🍎','🍏','🍐','🍊','🍋','🍋‍🟩','🍆','🥑','🥦','🫑','🥬','🥒','🌶️','🫒','🥜','🫘','🧃','🥤','🧋','🍵','☕','🫖','🍺','🍻','🥂','🍷','🫗','🥃','🍸','🍹','🧉','🍾','🧊','🥢','🍽️','🍴','🥄','🔪','🫙'],
-    '⚽': ['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛼','🛷','⛸️','🥌','🎿','⛷️','🏂','🪂','🏋️','🤼','🤸','⛹️','🤺','🏇','🧘','🏄','🏊','🤽','🚣','🧗','🚵','🚴','🏆','🥇','🥈','🥉','🏅','🎖️','🏵️','🎗️','🎫','🎟️','🎪','🤹','🎭','🎨','🎬','🎤','🎧','🎼','🎹','🪘','🥁','🎷','🎺','🪗','🎸','🪕','🎻','🎲','♟️','🎯','🎳','🎮','🎰','🧩'],
-    '🚗': ['🚗','🚕','🚙','🚌','🚎','🏎️','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🏍️','🛵','🛺','🚲','🛴','🛹','🛼','🚏','🛣️','🛤️','⛽','🛞','🚨','🚥','🚦','🛑','🚧','⚓','🛟','⛵','🚤','🛥️','🛳️','⛴️','🚢','✈️','🛩️','🛫','🛬','🪂','💺','🚁','🚟','🚠','🚡','🛰️','🚀','🛸','🎆','🎇','🧨','✨','🎉','🎊','🎈','🎋','🎍','🎎','🎐','🎑','🎃','🎄','🧧','🎀','🎁','🎗️','🎟️','🎫','🎖️','🏆','🥇','🥈','🥉','🏅'],
-    '💡': ['💡','🔦','🕯️','🪔','🧱','🪞','🪟','🛋️','🪑','🚽','🪠','🚿','🛁','🪤','🪒','🧴','🧷','🧹','🧺','🧻','🪣','🧼','🫧','🪥','🧽','🧯','🛒','🚪','🪝','🧲','🪜','🧰','🪛','🔧','🔨','⚒️','🛠️','⛏️','🔩','🪚','🔫','🧨','💣','🪓','🔪','🗡️','⚔️','🛡️','🪃','🏹','🎣','🤿','🔮','🪬','🧿','💈','⚗️','🔭','🔬','🩺','🩻','🩹','💊','💉','🩸','🧬','🦠','🧫','🧪','🌡️','🪄','✨','🔑','🗝️','🔐','🔏','🔒','🔓','📦','📫','📬','📭','📮','📯','📜','📃','📄','📑','🧾','📊','📈','📉','📋','📌','📍','📎','🖇️','📏','📐','✂️','🗃️','🗄️','🗑️','⚙️','🗜️','⚖️','🦯','🔗','⛓️'],
 };
 
-// Плоский список для поиска
 const ALL_EMOJI_LIST = Object.values(EMOJI_PACKS).flat();
 
 // ── ДЕМО-СООБЩЕНИЯ ────────────────────────────────────────
 const DEMO_MESSAGES = [
-    { userId: 'u4', text: '🎤 ДОБРО ПОЖАЛОВАТЬ В ZARBA CHAT! ЖИВИ РЭПОМ 🔥', type: 'system', time: Date.now() - 600000 },
-    { userId: 'u1', text: 'Новый трек скоро 🔥🔥🔥', type: 'text', time: Date.now() - 300000 },
-    { userId: 'u2', text: 'МАНЗУР ЛУЧШИЙ ❤️💯', type: 'text', time: Date.now() - 240000 },
-    { userId: 'u5', text: 'Смотрите пушку: https://www.youtube.com/watch?v=dQw4w9WgXcQ', type: 'text', time: Date.now() - 180000 },
-    { userId: 'u3', text: 'Душанбе рулит 🇹🇯🏔️', type: 'text', time: Date.now() - 120000 },
-    { userId: 'u2', text: '🎵💎👑', type: 'text', time: Date.now() - 60000 },
+    { id: 'm1', userId: 'u4', text: '🎤 ДОБРО ПОЖАЛОВАТЬ В ZARBA CHAT! ЖИВИ РЭПОМ 🔥', type: 'system', time: Date.now() - 600000, likes: 12 },
+    { id: 'm2', userId: 'u1', text: 'Новый трек скоро 🔥🔥🔥', type: 'text', time: Date.now() - 300000, likes: 5 },
+    { id: 'm3', userId: 'u2', text: 'МАНЗУР ЛУЧШИЙ ❤️💯', type: 'text', time: Date.now() - 240000, likes: 2 },
+    { id: 'm4', userId: 'u5', text: 'Смотрите пушку: https://www.youtube.com/watch?v=dQw4w9WgXcQ', type: 'text', time: Date.now() - 180000, likes: 8 },
+    { id: 'm5', userId: 'u3', text: 'Душанбе рулит 🇹🇯🏔️', type: 'text', time: Date.now() - 120000, likes: 0 },
+    { id: 'm6', userId: 'u2', text: 'Когда релиз?', type: 'text', time: Date.now() - 60000, likes: 1, replyTo: { id: 'm2', name: 'MANZUR', text: 'Новый трек скоро 🔥🔥🔥' } },
 ];
 
-// ── ТЕКУЩИЙ ПОЛЬЗОВАТЕЛЬ ─────────────────────────────────
-let currentUser = { id: 'you', name: 'ВЫ', role: 'fan', color: '#FF4500', avatar: '👤', online: true };
+// ── ТЕКУЩИЙ ПОЛЬЗОВАТЕЛЬ И СОСТОЯНИЕ ─────────────────────
+let currentUser = { id: 'you', name: 'ВЫ', role: 'fan', avatar: '👤', online: true };
 let messages = [...DEMO_MESSAGES];
 let typingUsers = new Set();
 let typingTimer = null;
@@ -58,10 +52,16 @@ let currentEmojiPack = '😊';
 let emojiSearchQuery = '';
 let emojiPanelOpen = false;
 let autoScroll = true;
+let currentReplyTo = null; // Для цепочки ответов
 
 // ── УТИЛИТЫ ───────────────────────────────────────────────
 function getUserById(id) {
     return DEMO_USERS.find(u => u.id === id) || currentUser;
+}
+
+function getUserColor(role) {
+    if (role === 'artist' || role === 'mod') return '#FF4500'; 
+    return '#ffffff'; 
 }
 
 function getRoleBadge(role) {
@@ -93,518 +93,186 @@ function injectChatStyles() {
     const style = document.createElement('style');
     style.id = 'z-chat-styles-v2';
     style.textContent = `
-        /* === ПЕРЕМЕННЫЕ (ЧИСТАЯ ПАЛИТРА) === */
         :root {
-            --zc-bg: #09090b; /* Глубокий темный фон */
-            --zc-surface: #121214; /* Карточки */
+            --zc-bg: #09090b; 
+            --zc-surface: #121214; 
             --zc-surface-hover: #18181b; 
-            --zc-border: #27272a; /* Тонкие рамки */
-            --zc-accent: #FF4500; /* Фирменный оранжевый */
+            --zc-border: #27272a; 
+            --zc-accent: #FF4500; 
             --zc-text: #f4f4f5;
             --zc-text-muted: #a1a1aa;
             --zc-online: #10b981;
             --zc-offline: #52525b;
-            --zc-radius: 12px;
             --zc-font: 'Inter', 'Montserrat', sans-serif;
         }
 
-        /* === АККОРДЕОН-КОНТЕЙНЕР === */
         #z-chat-container {
-            width: 100%;
-            max-height: 0;
-            overflow: hidden;
+            width: 100%; max-height: 0; overflow: hidden;
             background: var(--zc-bg);
             transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            z-index: 998;
-            font-family: var(--zc-font);
+            display: flex; flex-direction: column;
+            position: relative; z-index: 998; font-family: var(--zc-font);
         }
-        #z-chat-container.open {
-            max-height: 80vh;
-            border-bottom: 2px solid var(--zc-accent);
-        }
+        #z-chat-container.open { max-height: 80vh; border-bottom: 2px solid var(--zc-accent); }
+        .zc-wrap { display: flex; height: 100%; overflow: hidden; background: radial-gradient(circle at 50% 0%, rgba(255, 69, 0, 0.03) 0%, transparent 60%), var(--zc-bg); }
 
-        /* === LAYOUT === */
-        .zc-wrap {
-            display: flex;
-            height: 100%;
-            overflow: hidden;
-            background: radial-gradient(circle at 50% 0%, rgba(255, 69, 0, 0.03) 0%, transparent 60%), var(--zc-bg);
-        }
-
-        /* === САЙДБАР ПОЛЬЗОВАТЕЛЕЙ === */
-        .zc-sidebar {
-            width: 220px;
-            min-width: 220px;
-            background: rgba(18, 18, 20, 0.4);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid var(--zc-border);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .zc-sidebar-title {
-            padding: 20px 16px 12px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--zc-text-muted);
-            text-transform: uppercase;
-        }
-        .zc-users-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 8px 8px;
-        }
-        .zc-user-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+        /* САЙДБАР */
+        .zc-sidebar { width: 220px; min-width: 220px; background: rgba(18, 18, 20, 0.4); backdrop-filter: blur(10px); border-right: 1px solid var(--zc-border); display: flex; flex-direction: column; overflow: hidden; }
+        .zc-sidebar-title { padding: 20px 16px 12px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--zc-text-muted); text-transform: uppercase; }
+        .zc-users-list { flex: 1; overflow-y: auto; padding: 0 8px 8px; }
+        .zc-user-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
         .zc-user-item:hover { background: var(--zc-surface-hover); }
-        .zc-user-avatar-wrap {
-            position: relative;
-            flex-shrink: 0;
-        }
-        .zc-user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px; /* Более современная форма */
-            background: var(--zc-surface);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--zc-text);
-            border: 1px solid var(--zc-border);
-        }
-        .zc-status-dot {
-            position: absolute;
-            bottom: -3px;
-            right: -3px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: 2px solid var(--zc-bg);
-            background: var(--zc-offline);
-        }
+        .zc-user-avatar-wrap { position: relative; flex-shrink: 0; }
+        .zc-user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--zc-surface); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: var(--zc-text); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .zc-status-dot { position: absolute; bottom: -3px; right: -3px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--zc-bg); background: var(--zc-offline); }
         .zc-status-dot.online { background: var(--zc-online); }
         .zc-user-info { min-width: 0; }
-.zc-user-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: #ffffff; /* Строгий белый цвет для всех имен */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            letter-spacing: 0.3px;
-        }
-        .zc-user-role-mini {
-            font-size: 11px;
-            font-weight: 500;
-            color: #888888; /* Спокойный серый для подписей */
-            letter-spacing: 0.2px;
-            margin-top: 2px;
-        }
+        .zc-user-name { font-size: 13px; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .zc-user-role-mini { font-size: 11px; font-weight: 500; color: #888888; margin-top: 2px; }
 
-        /* === ГЛАВНАЯ КОЛОНКА === */
-        .zc-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        /* ГЛАВНАЯ */
+        .zc-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        
+        /* ХЕДЕР */
+        .zc-header { padding: 16px 24px; background: linear-gradient(180deg, rgba(18, 18, 20, 0.9) 0%, rgba(9, 9, 11, 0.85) 100%); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 69, 0, 0.2); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: space-between; z-index: 10; }
+        .zc-header-left { display: flex; align-items: center; gap: 16px; }
+        .zc-header-title { font-size: 18px; font-weight: 900; text-transform: uppercase; background: linear-gradient(90deg, #ffffff 0%, #ff8a66 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 10px; }
+        .zc-live-dot { width: 8px; height: 8px; background-color: var(--zc-accent); border-radius: 50%; box-shadow: 0 0 8px var(--zc-accent); animation: pulse-live 2s infinite; }
+        @keyframes pulse-live { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 69, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 69, 0, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 69, 0, 0); } }
+        .zc-header-sub { font-size: 12px; color: var(--zc-text-muted); margin-top: 4px; font-weight: 500; }
+        .zc-online-count { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--zc-online); font-weight: 600; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; }
 
-        /* === ХЕДЕР ЧАТА === */
-        .zc-header {
-            padding: 16px 24px;
-            background: rgba(9, 9, 11, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--zc-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 10;
-        }
-        .zc-header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .zc-header-title {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--zc-text);
-            letter-spacing: -0.2px;
-        }
-        .zc-header-sub {
-            font-size: 11px;
-            color: var(--zc-text-muted);
-            margin-top: 2px;
-        }
-        .zc-online-count {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--zc-online);
-            font-weight: 600;
-            background: rgba(16, 185, 129, 0.1);
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
+        /* ЛЕНТА СООБЩЕНИЙ */
+        .zc-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
 
-        /* === ЛЕНТА СООБЩЕНИЙ === */
-        .zc-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            scroll-behavior: smooth;
-        }
+    /* СИСТЕМНОЕ СООБЩЕНИЕ */
+        .zc-msg-system { display: inline-block; text-align: center; padding: 12px 24px; margin: 16px auto; max-width: 90%; font-size: 13px; font-weight: 800; color: #ffffff; background: linear-gradient(90deg, rgba(255, 69, 0, 0.05) 0%, rgba(255, 69, 0, 0.2) 50%, rgba(255, 69, 0, 0.05) 100%); border: 1px solid rgba(255, 69, 0, 0.4); border-radius: 12px; box-shadow: 0 4px 20px rgba(255, 69, 0, 0.15); position: sticky; top: 16px; z-index: 100; backdrop-filter: blur(8px); }
+        .zc-msg-system::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--zc-accent); border-radius: 12px 0 0 12px; box-shadow: 0 0 10px var(--zc-accent); }
+        .zc-msg-system::after { content: ''; position: absolute; right: 0; top: 0; height: 100%; width: 4px; background: var(--zc-accent); border-radius: 0 12px 12px 0; box-shadow: 0 0 10px var(--zc-accent); }
+        /* СТРОКА СООБЩЕНИЯ */
+        .zc-msg-row { display: flex; gap: 12px; animation: zc-msg-in 0.3s cubic-bezier(0.16,1,0.3,1); padding: 4px 0; position: relative; }
+        .zc-msg-row.zc-own { flex-direction: row-reverse; }
 
-        /* === СИСТЕМНОЕ СООБЩЕНИЕ === */
-        .zc-msg-system {
-            text-align: center;
-            padding: 8px 16px;
-            margin: 0 auto;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--zc-text-muted);
-            background: var(--zc-surface);
-            border: 1px solid var(--zc-border);
-            border-radius: 6px;
-        }
+        /* АВАТАР */
+        .zc-msg-avatar { width: 36px; height: 36px; border-radius: 50%; background: #18181b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
 
-        /* === СТРОКА СООБЩЕНИЯ === */
-        .zc-msg-row {
-            display: flex;
-            gap: 16px;
-            animation: zc-msg-in 0.3s cubic-bezier(0.16,1,0.3,1);
-        }
-        .zc-msg-row.zc-own {
-            flex-direction: row-reverse;
-        }
+        /* ТЕЛО СООБЩЕНИЯ */
+        .zc-msg-body { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+        .zc-own .zc-msg-body { align-items: flex-end; }
 
-        /* === АВАТАР СООБЩЕНИЯ === */
-        .zc-msg-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: var(--zc-surface);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 800;
-            flex-shrink: 0;
-            border: 1px solid var(--zc-border);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .zc-msg-avatar:hover { transform: scale(1.05); }
-
-        /* === ТЕЛО СООБЩЕНИЯ === */
-        .zc-msg-body {
-            flex: 1;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .zc-own .zc-msg-body {
-            align-items: flex-end;
-        }
-
-        .zc-msg-meta {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-            margin-bottom: 6px;
+        /* META (Имя + Разделитель + Время) */
+        .zc-msg-meta { 
+            display: flex; align-items: center; gap: 8px; 
+            width: 100%; /* На всю ширину для правильного позиционирования времени */
+            margin-bottom: 6px; padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* ТОНКИЙ РАЗДЕЛИТЕЛЬ */
         }
         .zc-own .zc-msg-meta { flex-direction: row-reverse; }
 
-        .zc-msg-author {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--zc-text);
-        }
-        .zc-msg-time {
-            font-size: 11px;
-            color: var(--zc-text-muted);
-        }
+        .zc-msg-author { font-size: 13px; font-weight: 800; text-transform: uppercase; }
+        
+        /* ВРЕМЯ - перенесено в конец, сделано светлее */
+        .zc-msg-time { font-size: 11px; color: #a1a1aa; font-weight: 500; margin-left: auto; }
+        .zc-own .zc-msg-time { margin-left: 0; margin-right: auto; }
 
-        /* === ЗНАЧКИ === */
-        .z-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-            letter-spacing: 0.5px;
-        }
+        .z-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
         .z-badge svg { width: 10px; height: 10px; }
         .z-badge-artist { background: rgba(255, 69, 0, 0.1); color: var(--zc-accent); }
         .z-badge-mod { background: rgba(255, 215, 0, 0.1); color: #FFD700; }
-        .z-badge-fan { display: none; /* Прячем бейдж фаната, чтобы не мусорить */ }
+        .z-badge-fan { display: none; }
 
-        /* === ТЕКСТ СООБЩЕНИЯ === */
-        .zc-msg-content-wrap {
-            background: var(--zc-surface);
-            border: 1px solid var(--zc-border);
-            padding: 10px 14px;
-            border-radius: 2px 12px 12px 12px;
-            max-width: 85%;
-        }
-        .zc-own .zc-msg-content-wrap {
-            background: rgba(255, 69, 0, 0.08);
-            border-color: rgba(255, 69, 0, 0.2);
-            border-radius: 12px 2px 12px 12px;
+        /* ЦИТИРОВАНИЕ / ОТВЕТ (Внутри сообщения) */
+        .zc-msg-quoted {
+            font-size: 11px; color: #a1a1aa; background: rgba(255, 255, 255, 0.03);
+            border-left: 2px solid var(--zc-accent); padding: 4px 8px; margin-bottom: 6px;
+            border-radius: 0 4px 4px 0; max-width: 100%; white-space: nowrap; 
+            overflow: hidden; text-overflow: ellipsis; display: block;
         }
 
-        .zc-msg-text {
-            font-size: 14px;
-            color: var(--zc-text);
-            line-height: 1.5;
-            word-break: break-word;
+        /* ТЕКСТ */
+        .zc-msg-content-wrap { background: transparent; border: none; padding: 0; max-width: 95%; position: relative; }
+        .zc-msg-text { font-size: 14px; color: #e4e4e7; line-height: 1.4; word-break: break-word; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+        .zc-msg-content-wrap.is-emoji { background: transparent !important; border: none !important; padding: 0 !important; }
+        .zc-msg-text.zc-emoji-big { font-size: 36px; line-height: 1.1; }
+
+        /* YOUTUBE */
+        .zc-yt-preview { margin-top: 8px; border-radius: 8px; overflow: hidden; border: 1px solid var(--zc-border); background: #000; cursor: pointer; position: relative; width: 100%; max-width: 320px; }
+        .zc-yt-thumb-wrap { position: relative; padding-top: 56.25%; }
+        .zc-yt-thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        .zc-yt-play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+        .zc-yt-play-icon { width: 48px; height: 48px; background: var(--zc-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 4px 20px rgba(255,69,0,0.4); }
+        .zc-yt-play-icon::after { content: ''; width: 0; height: 0; border-style: solid; border-width: 8px 0 8px 12px; border-color: transparent transparent transparent #ffffff; margin-left: 4px; }
+
+        /* ACTIONS: ЛАЙКИ И ОТВЕТЫ */
+        .zc-msg-actions {
+            display: flex; align-items: center; gap: 12px; margin-top: 6px;
+            opacity: 0.6; transition: opacity 0.2s;
         }
+        .zc-msg-row:hover .zc-msg-actions { opacity: 1; }
+        .zc-own .zc-msg-actions { flex-direction: row-reverse; }
         
-        /* === УБИРАЕМ ФОН У БОЛЬШИХ ЭМОДЗИ === */
-        .zc-msg-content-wrap.is-emoji {
-            background: transparent !important;
-            border: none !important;
-            padding: 0 !important;
+        .zc-btn-action {
+            background: none; border: none; color: #a1a1aa; font-size: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 4px; cursor: pointer; padding: 2px 6px;
+            border-radius: 4px; transition: 0.2s; font-family: var(--zc-font);
         }
-        .zc-msg-text.zc-emoji-big {
-            font-size: 42px;
-            line-height: 1.1;
-        }
+        .zc-btn-action:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .zc-btn-action svg { width: 14px; height: 14px; fill: currentColor; }
+        
+        /* Лайкнутое состояние */
+        .zc-btn-like.liked { color: #ff3366; }
+        .zc-btn-like.liked svg { fill: #ff3366; }
 
-        /* === YOUTUBE КАРТОЧКА === */
-        .zc-yt-preview {
-            margin-top: 8px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--zc-border);
-            background: #000;
-            cursor: pointer;
-            position: relative;
-            width: 100%;
-            max-width: 320px;
-            transition: border-color 0.2s;
+        /* ПАНЕЛЬ ОТВЕТА (НАД ИНПУТОМ) */
+        .zc-reply-bar {
+            background: rgba(18, 18, 20, 0.95); padding: 8px 24px;
+            border-top: 1px solid var(--zc-border); display: none;
+            align-items: center; justify-content: space-between;
+            font-size: 12px; color: var(--zc-text-muted);
         }
-        .zc-yt-preview:hover { border-color: var(--zc-accent); }
-        .zc-yt-thumb-wrap {
-            position: relative;
-            padding-top: 56.25%;
-        }
-        .zc-yt-thumb {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-        .zc-yt-preview:hover .zc-yt-thumb { opacity: 1; }
-        .zc-yt-play-btn {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .zc-yt-play-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--zc-accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(255,69,0,0.4);
-            transition: transform 0.2s;
-        }
-        .zc-yt-play-icon::after {
-            content: '';
-            width: 0; height: 0;
-            border-style: solid;
-            border-width: 8px 0 8px 12px;
-            border-color: transparent transparent transparent #ffffff;
-            margin-left: 4px;
-        }
-        .zc-yt-preview:hover .zc-yt-play-icon { transform: scale(1.1); }
+        .zc-reply-bar.active { display: flex; }
+        .zc-reply-bar-content { display: flex; flex-direction: column; overflow: hidden; }
+        .zc-reply-bar-title { color: var(--zc-accent); font-weight: 700; margin-bottom: 2px; }
+        .zc-reply-bar-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px; color: #fff; }
+        .zc-reply-bar-close { background: none; border: none; color: #a1a1aa; cursor: pointer; font-size: 16px; padding: 4px; }
+        .zc-reply-bar-close:hover { color: #fff; }
 
-        /* === ЭМОДЗИ-ПАНЕЛЬ === */
-        .zc-emoji-panel {
-            background: var(--zc-surface);
-            border-top: 1px solid var(--zc-border);
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
+        /* ИНПУТ-БАР */
+        .zc-input-bar { padding: 16px 24px; background: rgba(18, 18, 20, 0.6); backdrop-filter: blur(16px); border-top: 1px solid var(--zc-border); display: flex; align-items: flex-end; gap: 12px; z-index: 10; }
+        .zc-input-btn { width: 44px; height: 44px; border-radius: 12px; background: var(--zc-surface); border: 1px solid var(--zc-border); color: var(--zc-text-muted); cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .zc-input-field-wrap { flex: 1; background: var(--zc-bg); border: 1px solid var(--zc-border); border-radius: 12px; display: flex; align-items: center; padding: 0 16px; }
+        #zc-input { width: 100%; background: transparent; border: none; color: var(--zc-text); font-size: 14px; padding: 14px 0; outline: none; font-family: var(--zc-font); }
+        .zc-send-btn { width: 44px; height: 44px; border-radius: 12px; background: var(--zc-accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+        
+        /* ЭМОДЗИ ПАНЕЛЬ */
+        .zc-emoji-panel { background: var(--zc-surface); border-top: 1px solid var(--zc-border); max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
         .zc-emoji-panel.open { max-height: 300px; }
-        .zc-emoji-tabs {
-            display: flex;
-            padding: 0 8px;
-            border-bottom: 1px solid var(--zc-border);
-            background: rgba(0,0,0,0.2);
-        }
-        .zc-emoji-tab {
-            padding: 12px 16px;
-            font-size: 16px;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: 0.2s;
-            border-bottom: 2px solid transparent;
-        }
+        .zc-emoji-tabs { display: flex; padding: 0 8px; border-bottom: 1px solid var(--zc-border); background: rgba(0,0,0,0.2); }
+        .zc-emoji-tab { padding: 12px 16px; font-size: 16px; cursor: pointer; opacity: 0.5; border-bottom: 2px solid transparent; }
         .zc-emoji-tab.active, .zc-emoji-tab:hover { opacity: 1; border-bottom-color: var(--zc-accent); }
         .zc-emoji-search { padding: 12px 16px 4px; }
-        .zc-emoji-search input {
-            width: 100%;
-            background: var(--zc-bg);
-            border: 1px solid var(--zc-border);
-            border-radius: 6px;
-            padding: 8px 12px;
-            color: var(--zc-text);
-            outline: none;
-        }
-        .zc-emoji-search input:focus { border-color: var(--zc-accent); }
-        .zc-emoji-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
-            gap: 4px;
-            padding: 12px 16px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .zc-emoji-btn {
-            font-size: 22px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 6px;
-            transition: background 0.15s;
-        }
-        .zc-emoji-btn:hover { background: var(--zc-surface-hover); }
+        .zc-emoji-search input { width: 100%; background: var(--zc-bg); border: 1px solid var(--zc-border); border-radius: 6px; padding: 8px 12px; color: var(--zc-text); outline: none; }
+        .zc-emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; padding: 12px 16px; max-height: 200px; overflow-y: auto; }
+        .zc-emoji-btn { font-size: 22px; background: transparent; border: none; cursor: pointer; padding: 4px; border-radius: 6px; }
 
-        /* === ИНПУТ-БАР (Глассморфизм) === */
-        .zc-input-bar {
-            padding: 16px 24px;
-            background: rgba(18, 18, 20, 0.6);
-            backdrop-filter: blur(16px);
-            border-top: 1px solid var(--zc-border);
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            z-index: 10;
-        }
-        .zc-input-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--zc-surface);
-            border: 1px solid var(--zc-border);
-            color: var(--zc-text-muted);
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            flex-shrink: 0;
-        }
-        .zc-input-btn:hover, .zc-input-btn.active {
-            background: rgba(255, 69, 0, 0.1);
-            color: var(--zc-accent);
-            border-color: var(--zc-accent);
-        }
-        .zc-input-field-wrap {
-            flex: 1;
-            background: var(--zc-bg);
-            border: 1px solid var(--zc-border);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            transition: border-color 0.2s;
-        }
-        .zc-input-field-wrap:focus-within { border-color: var(--zc-accent); }
-        #zc-input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: var(--zc-text);
-            font-size: 14px;
-            padding: 14px 0;
-            outline: none;
-            font-family: var(--zc-font);
-        }
-        #zc-input::placeholder { color: #52525b; }
-        .zc-send-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--zc-accent);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            transition: 0.2s;
-            flex-shrink: 0;
-        }
-        .zc-send-btn svg { width: 20px; height: 20px; fill: currentColor; margin-left: 2px; }
-        .zc-send-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        /* ИНДИКАТОР ПЕЧАТАНИЯ */
+        .zc-typing-bar { position: absolute; bottom: 80px; left: 24px; font-size: 11px; color: var(--zc-text-muted); background: rgba(9, 9, 11, 0.9); padding: 4px 12px; border-radius: 12px; border: 1px solid var(--zc-border); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 5; }
 
-        /* === ИНДИКАТОР ПЕЧАТАНИЯ === */
-        .zc-typing-bar {
-            position: absolute;
-            bottom: 80px;
-            left: 24px;
-            font-size: 11px;
-            color: var(--zc-text-muted);
-            background: rgba(9, 9, 11, 0.9);
-            padding: 4px 12px;
-            border-radius: 12px;
-            border: 1px solid var(--zc-border);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 5;
+        /* АНИМАЦИЯ СЕРДЕЧЕК ПРИ ЛАЙКЕ */
+        .zc-flying-heart {
+            position: fixed; font-size: 24px; pointer-events: none; z-index: 9999;
+            animation: zc-fly-up 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        @keyframes zc-fly-up {
+            0% { transform: translateY(0) scale(0.5); opacity: 1; }
+            50% { transform: translateY(-40px) scale(1.2); opacity: 0.8; }
+            100% { transform: translateY(-80px) scale(1); opacity: 0; }
         }
 
-        /* === СКРОЛЛБАР === */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--zc-border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
-
-        @keyframes zc-msg-in {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @media (max-width: 600px) {
-            .zc-sidebar { display: none; }
-            .zc-header { padding: 12px 16px; }
-            .zc-messages { padding: 16px; }
-            .zc-input-bar { padding: 12px 16px; }
-        }
+        @media (max-width: 600px) { .zc-sidebar { display: none; } .zc-header { padding: 12px 16px; } .zc-messages { padding: 16px; } .zc-input-bar { padding: 12px 16px; } .zc-reply-bar { padding: 8px 16px; } }
     `;
     document.head.appendChild(style);
 }
@@ -617,30 +285,33 @@ function buildChatHTML() {
             <div class="zc-sidebar-title">👥 В эфире</div>
             <div class="zc-users-list" id="zc-users-list"></div>
         </div>
-
         <div class="zc-main">
             <div class="zc-header">
                 <div class="zc-header-left">
                     <div>
-                        <div class="zc-header-title">ZARBA LIVE</div>
+                        <div class="zc-header-title"><div class="zc-live-dot"></div> ZARBA LIVE</div>
                         <div class="zc-header-sub">Таджикский рэп • Говори громче</div>
                     </div>
                 </div>
-                <div class="zc-online-count">
-                    <span id="zc-online-num">4</span> ОНЛАЙН
-                </div>
+                <div class="zc-online-count"><span id="zc-online-num">4</span> ОНЛАЙН</div>
             </div>
 
             <div class="zc-messages" id="zc-messages"></div>
 
-            <div class="zc-typing-bar" id="zc-typing-bar">
-                <span id="zc-typing-text"></span>
-            </div>
+            <div class="zc-typing-bar" id="zc-typing-bar"><span id="zc-typing-text"></span></div>
 
             <div class="zc-emoji-panel" id="zc-emoji-panel">
                 <div class="zc-emoji-tabs" id="zc-emoji-tabs"></div>
                 <div class="zc-emoji-search"><input type="text" placeholder="Поиск эмодзи..." oninput="window._zcSearchEmoji(this.value)" id="zc-emoji-search"></div>
                 <div class="zc-emoji-grid" id="zc-emoji-grid"></div>
+            </div>
+
+            <div class="zc-reply-bar" id="zc-reply-bar">
+                <div class="zc-reply-bar-content">
+                    <div class="zc-reply-bar-title">Ответ для <span id="zc-reply-name">Имя</span></div>
+                    <div class="zc-reply-bar-text" id="zc-reply-text">Текст сообщения...</div>
+                </div>
+                <button class="zc-reply-bar-close" onclick="window._zcCancelReply()">✖</button>
             </div>
 
             <div class="zc-input-bar">
@@ -657,15 +328,17 @@ function buildChatHTML() {
     `;
 }
 
-// ── РЕНДЕР ПОЛЬЗОВАТЕЛЕЙ ──────────────────────────────────
+// ── РЕНДЕР ПОЛЬЗОВАТЕЛЕЙ И ЭМОДЗИ ─────────────────────────
 function renderUsers() {
     const list = document.getElementById('zc-users-list');
     if (!list) return;
     const allUsers = [currentUser, ...DEMO_USERS];
-    list.innerHTML = allUsers.map(u => `
+    list.innerHTML = allUsers.map(u => {
+        const userColor = getUserColor(u.role);
+        return `
         <div class="zc-user-item">
             <div class="zc-user-avatar-wrap">
-                <div class="zc-user-avatar" style="color:${u.color}; border: 1px solid ${u.color}44; background: ${u.color}11;">
+                <div class="zc-user-avatar" style="color:${userColor}; border: 1px solid ${userColor}44; background: ${userColor}11;">
                     ${typeof u.avatar === 'string' && u.avatar.length <= 2 ? u.avatar : u.name[0]}
                 </div>
                 <div class="zc-status-dot ${u.online ? 'online' : ''}"></div>
@@ -675,31 +348,23 @@ function renderUsers() {
                 <div class="zc-user-role-mini">${u.role === 'artist' ? 'Артист' : u.role === 'mod' ? 'Модератор' : 'Фанат'}</div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
-// ── РЕНДЕР ЭМОДЗИ-ТАБОВ ───────────────────────────────────
+
 function renderEmojiPanel(emojiList) {
     const tabs = document.getElementById('zc-emoji-tabs');
     const grid = document.getElementById('zc-emoji-grid');
     if (!tabs || !grid) return;
-
     tabs.innerHTML = Object.keys(EMOJI_PACKS).map(pack =>
-        `<div class="zc-emoji-tab ${pack === currentEmojiPack ? 'active' : ''}" 
-             onclick="window._zcSwitchEmojiPack('${pack}')">${pack}</div>`
+        `<div class="zc-emoji-tab ${pack === currentEmojiPack ? 'active' : ''}" onclick="window._zcSwitchEmojiPack('${pack}')">${pack}</div>`
     ).join('');
-
     const list = emojiList !== undefined ? emojiList : EMOJI_PACKS[currentEmojiPack];
-    grid.innerHTML = list.map(e =>
-        `<button class="zc-emoji-btn" onclick="window._zcInsertEmoji('${e}')">${e}</button>`
-    ).join('');
+    grid.innerHTML = list.map(e => `<button class="zc-emoji-btn" onclick="window._zcInsertEmoji('${e}')">${e}</button>`).join('');
 }
-
 window._zcSearchEmoji = function(query) {
     emojiSearchQuery = query.trim();
-    if (!emojiSearchQuery) {
-        renderEmojiPanel();
-        return;
-    }
+    if (!emojiSearchQuery) { renderEmojiPanel(); return; }
     const results = ALL_EMOJI_LIST.filter(e => e.includes(emojiSearchQuery)).slice(0, 80);
     renderEmojiPanel(results);
 };
@@ -719,18 +384,18 @@ function renderMessage(msg) {
     }
 
     const user = msg.userId === 'you' ? currentUser : getUserById(msg.userId);
+    const userColor = getUserColor(user.role);
     const isOwn = msg.userId === 'you';
     const ytId = extractYouTubeId(msg.text);
     const isBigEmoji = isOnlyEmoji(msg.text);
 
     const row = document.createElement('div');
     row.className = `zc-msg-row${isOwn ? ' zc-own' : ''}`;
-    row.dataset.msgId = msg.id || Date.now();
+    row.dataset.msgId = msg.id;
 
     let contentHTML = '';
     let ytHTML = '';
 
-    // Генерируем карточку ютуба, если есть ссылка
     if (ytId) {
         const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
         const url = msg.text.trim();
@@ -744,9 +409,7 @@ function renderMessage(msg) {
         `;
     }
 
-    // Собираем текст и ютуб вместе (исправление бага)
     const rawText = msg.text.replace(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/[^\s]+/g, '').trim();
-    
     let textDiv = '';
     if (rawText) {
         textDiv = `<div class="zc-msg-text${isBigEmoji ? ' zc-emoji-big' : ''}">${rawText}</div>`;
@@ -754,20 +417,41 @@ function renderMessage(msg) {
         textDiv = `<div class="zc-msg-text${isBigEmoji ? ' zc-emoji-big' : ''}">${msg.text}</div>`;
     }
 
+    // Если это ответ (Reply), добавляем блок цитаты
+    let replyBlock = '';
+    if (msg.replyTo) {
+        replyBlock = `<div class="zc-msg-quoted">Ответ <b>${msg.replyTo.name}</b>: ${msg.replyTo.text}</div>`;
+    }
+
+    const safeText = msg.text.replace(/'/g, "\\'"); // Защита для JS вызова
+    const likesCount = msg.likes || 0;
+
     contentHTML = `
         <div class="zc-msg-content-wrap ${isBigEmoji && !ytId ? 'is-emoji' : ''}">
+            ${replyBlock}
             ${textDiv}
             ${ytHTML}
+        </div>
+        
+        <div class="zc-msg-actions">
+            <button class="zc-btn-action zc-btn-like ${likesCount > 0 ? 'liked' : ''}" onclick="window._zcLikeMessage('${msg.id}', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="zc-like-count">${likesCount > 0 ? likesCount : 'Лайк'}</span>
+            </button>
+            <button class="zc-btn-action zc-btn-reply" onclick="window._zcInitReply('${msg.id}', '${user.name}', '${safeText}')">
+                <svg viewBox="0 0 24 24"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>
+                Ответить
+            </button>
         </div>
     `;
 
     row.innerHTML = `
-        <div class="zc-msg-avatar" style="color:${user.color}">
+        <div class="zc-msg-avatar" style="color:${userColor}">
             ${user.name[0]}
         </div>
         <div class="zc-msg-body">
             <div class="zc-msg-meta">
-                <span class="zc-msg-author" style="color:${user.color}">${user.name}</span>
+                <span class="zc-msg-author" style="color:${userColor}">${user.name}</span>
                 ${getRoleBadge(user.role)}
                 <span class="zc-msg-time">${formatTime(msg.time)}</span>
             </div>
@@ -779,15 +463,12 @@ function renderMessage(msg) {
     scrollIfNeeded(box);
 }
 
-// ── ИНИЦИАЛИЗАЦИЯ ДЕМО-СООБЩЕНИЙ ─────────────────────────
 function renderAllMessages() {
     const box = document.getElementById('zc-messages');
     if (!box) return;
     box.innerHTML = '';
     messages.forEach(m => renderMessage(m));
 }
-
-// ── СКРОЛЛ ────────────────────────────────────────────────
 function scrollIfNeeded(box) {
     const distFromBottom = box.scrollHeight - box.scrollTop - box.clientHeight;
     if (distFromBottom < CHAT_CONFIG.autoScrollThreshold || autoScroll) {
@@ -796,7 +477,21 @@ function scrollIfNeeded(box) {
     }
 }
 
-// ── ОТПРАВКА ──────────────────────────────────────────────
+// ── ОТПРАВКА И ОТВЕТЫ ─────────────────────────────────────
+window._zcInitReply = function(msgId, name, text) {
+    currentReplyTo = { id: msgId, name: name, text: text };
+    document.getElementById('zc-reply-name').innerText = name;
+    document.getElementById('zc-reply-text').innerText = text;
+    document.getElementById('zc-reply-bar').classList.add('active');
+    document.getElementById('zc-input').focus();
+};
+
+window._zcCancelReply = function() {
+    currentReplyTo = null;
+    const bar = document.getElementById('zc-reply-bar');
+    if (bar) bar.classList.remove('active');
+};
+
 window._zcSend = function() {
     const input = document.getElementById('zc-input');
     if (!input || !input.value.trim()) return;
@@ -810,12 +505,47 @@ window._zcSend = function() {
         text: text,
         type: 'text',
         time: Date.now(),
+        likes: 0,
+        replyTo: currentReplyTo ? { ...currentReplyTo } : null
     };
 
     messages.push(msg);
     autoScroll = true;
     renderMessage(msg);
+    window._zcCancelReply(); // Сброс цитаты после отправки
     simulateResponse(text);
+};
+
+// ── ЛАЙКИ И АНИМАЦИЯ ──────────────────────────────────────
+window._zcLikeMessage = function(msgId, btnElement) {
+    const msg = messages.find(m => m.id === msgId);
+    if (!msg) return;
+    
+    msg.likes = (msg.likes || 0) + 1;
+    
+    // Обновляем счетчик
+    const counter = btnElement.querySelector('.zc-like-count');
+    if (counter) counter.innerText = msg.likes;
+    btnElement.classList.add('liked');
+
+    // Анимация разлетающихся сердечек
+    const rect = btnElement.getBoundingClientRect();
+    for(let i = 0; i < 5; i++) {
+        const heart = document.createElement('div');
+        heart.innerHTML = '❤️';
+        heart.className = 'zc-flying-heart';
+        
+        // Разброс по X
+        const offsetX = (Math.random() - 0.5) * 40;
+        heart.style.left = (rect.left + rect.width / 2 + offsetX - 12) + 'px';
+        heart.style.top = (rect.top) + 'px';
+        
+        // Рандомная скорость
+        heart.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+        
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1500);
+    }
 };
 
 // ── СИМУЛЯЦИЯ ОТВЕТОВ ─────────────────────────────────────
@@ -824,47 +554,31 @@ const AUTO_REPLIES = [
     { userId: 'u2', text: 'ОГОНЬ!' },
     { userId: 'u4', text: 'ZARBA — это жизнь 🎤💯' },
     { userId: 'u5', text: '❤️ 🇹🇯' },
-    { userId: 'u2', text: 'Уважаю 🫡' },
 ];
-
 function simulateResponse(inputText) {
     const responder = DEMO_USERS[Math.floor(Math.random() * DEMO_USERS.length)];
     setTimeout(() => { showTyping(responder.name); }, 600);
     setTimeout(() => {
         hideTyping(responder.name);
-        const reply = { ...AUTO_REPLIES[Math.floor(Math.random() * AUTO_REPLIES.length)], type: 'text', time: Date.now() };
+        const reply = { ...AUTO_REPLIES[Math.floor(Math.random() * AUTO_REPLIES.length)], id: 'msg_' + Date.now(), type: 'text', time: Date.now(), likes: 0 };
         messages.push(reply);
         renderMessage(reply);
     }, 1800 + Math.random() * 1200);
 }
 
 // ── СТАТУС ПЕЧАТАНИЯ ──────────────────────────────────────
-function showTyping(name) {
-    typingUsers.add(name);
-    updateTypingUI();
-}
-
-function hideTyping(name) {
-    typingUsers.delete(name);
-    updateTypingUI();
-}
-
+function showTyping(name) { typingUsers.add(name); updateTypingUI(); }
+function hideTyping(name) { typingUsers.delete(name); updateTypingUI(); }
 function updateTypingUI() {
     const bar = document.getElementById('zc-typing-text');
     const typingBar = document.getElementById('zc-typing-bar');
     if (!bar || !typingBar) return;
-    
-    if (typingUsers.size === 0) {
-        typingBar.style.opacity = '0';
-        bar.innerHTML = '';
-        return;
-    }
+    if (typingUsers.size === 0) { typingBar.style.opacity = '0'; bar.innerHTML = ''; return; }
     typingBar.style.opacity = '1';
-    const names = [...typingUsers].join(', ');
-    bar.innerHTML = `${names} ${typingUsers.size === 1 ? 'печатает' : 'печатают'}...`;
+    bar.innerHTML = `${[...typingUsers].join(', ')} ${typingUsers.size === 1 ? 'печатает' : 'печатают'}...`;
 }
 
-// ── ЭМОДЗИ ────────────────────────────────────────────────
+// ── ЭМОДЗИ И КЛАВИАТУРА ───────────────────────────────────
 window._zcToggleEmoji = function() {
     const panel = document.getElementById('zc-emoji-panel');
     const btn = document.getElementById('zc-emoji-toggle-btn');
@@ -874,54 +588,31 @@ window._zcToggleEmoji = function() {
     if (btn) btn.classList.toggle('active', emojiPanelOpen);
     if (emojiPanelOpen) renderEmojiPanel();
 };
-
-window._zcSwitchEmojiPack = function(pack) {
-    currentEmojiPack = pack;
-    renderEmojiPanel();
-};
-
+window._zcSwitchEmojiPack = function(pack) { currentEmojiPack = pack; renderEmojiPanel(); };
 window._zcInsertEmoji = function(emoji) {
     const input = document.getElementById('zc-input');
-    if (input) {
-        input.value += emoji;
-        input.focus();
-    }
+    if (input) { input.value += emoji; input.focus(); }
 };
 
-// ── KEYBOARD ──────────────────────────────────────────────
 function setupKeyboard() {
     const input = document.getElementById('zc-input');
     if (!input) return;
     input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            window._zcSend();
-        }
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window._zcSend(); }
     });
     input.addEventListener('input', () => {
         if (!isTyping) isTyping = true;
         clearTimeout(typingTimer);
         typingTimer = setTimeout(() => { isTyping = false; }, CHAT_CONFIG.typingTimeout);
     });
-
     const box = document.getElementById('zc-messages');
-    if (box) {
-        box.addEventListener('scroll', () => {
-            const distFromBottom = box.scrollHeight - box.scrollTop - box.clientHeight;
-            autoScroll = distFromBottom < 60;
-        });
-    }
+    if (box) box.addEventListener('scroll', () => { autoScroll = (box.scrollHeight - box.scrollTop - box.clientHeight) < 60; });
 }
 
 // ── ИНИЦИАЛИЗАЦИЯ ─────────────────────────────────────────
 window.initChat = function() {
     if (document.getElementById('z-chat-container')) return;
-
-    const player = document.querySelector('.radio-section')
-        || document.querySelector('.z-capsule')
-        || document.getElementById('app-content')
-        || document.body;
-
+    const player = document.querySelector('.radio-section') || document.querySelector('.z-capsule') || document.getElementById('app-content') || document.body;
     if (!player) return;
 
     const chatWrap = document.createElement('div');
@@ -937,27 +628,13 @@ window.initChat = function() {
 
 window.toggleChat = function() {
     const chat = document.getElementById('z-chat-container');
-
     if (!chat) {
         window.initChat();
-        setTimeout(function() {
-            const nc = document.getElementById('z-chat-container');
-            if (nc) {
-                nc.classList.add('open');
-                const box = document.getElementById('zc-messages');
-                if (box) box.scrollTop = box.scrollHeight;
-            }
-        }, 60);
+        setTimeout(() => { const nc = document.getElementById('z-chat-container'); if (nc) { nc.classList.add('open'); const box = document.getElementById('zc-messages'); if (box) box.scrollTop = box.scrollHeight; } }, 60);
         return;
     }
-
     chat.classList.toggle('open');
-    if (chat.classList.contains('open')) {
-        setTimeout(function() {
-            const box = document.getElementById('zc-messages');
-            if (box) box.scrollTop = box.scrollHeight;
-        }, 300);
-    }
+    if (chat.classList.contains('open')) setTimeout(() => { const box = document.getElementById('zc-messages'); if (box) box.scrollTop = box.scrollHeight; }, 300);
 };
 
 window.sendChatMessage = window._zcSend;

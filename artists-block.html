@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZARBA — Топовые Артисты</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --or: #FF4500;
+  --or2: #FF6B00;
+  --dark: #0d0d0d;
+  --dark2: #161616;
+  --dark3: #1e1e1e;
+  --grey: #666;
+}
+
+body {
+  background: var(--dark);
+  font-family: 'Rajdhani', sans-serif;
+  color: #fff;
+  /* max-width убери если встраиваешь в сайт */
+  max-width: 520px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+/* ─── SECTION HEADER ─── */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 20px 16px;
+}
+.sec-bar {
+  width: 3px; height: 22px;
+  background: var(--or);
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--or);
+  flex-shrink: 0;
+}
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+.sec-title span { color: var(--or); }
+.sec-counter {
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--grey);
+  text-transform: uppercase;
+}
+
+/* ─── STACK CARD ─── */
+.stack-wrap {
+  position: relative;
+  height: 200px;
+  margin: 0 20px;
+  user-select: none;
+}
+
+.art-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: grab;
+  will-change: transform;
+  touch-action: pan-y;
+}
+.art-card:active { cursor: grabbing; }
+
+.art-card > img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  pointer-events: none;
+}
+
+.art-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top,
+    rgba(0,0,0,.93) 0%,
+    rgba(0,0,0,.28) 45%,
+    rgba(255,69,0,.10) 100%);
+  pointer-events: none;
+}
+
+.art-accent {
+  position: absolute;
+  left: 0; top: 18%; bottom: 18%;
+  width: 3px;
+  background: linear-gradient(180deg, transparent, var(--or), transparent);
+  border-radius: 2px;
+}
+
+.art-namebar {
+  position: absolute;
+  bottom: 13px; left: 15px; right: 15px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.art-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 3px;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0,0,0,.8);
+}
+.art-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  color: rgba(255,69,0,.22);
+  line-height: 1;
+}
+
+/* ─── NAV DOTS ─── */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 10px 20px 0;
+}
+.nav-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(255,69,0,.35);
+  color: var(--or);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.nav-btn:hover, .nav-btn:active {
+  background: var(--or); color: #fff;
+  box-shadow: 0 0 14px rgba(255,69,0,.5);
+}
+.dots-wrap { display: flex; gap: 6px; align-items: center; }
+.dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(255,69,0,.25);
+  cursor: pointer;
+  transition: all .3s;
+}
+.dot.on {
+  width: 18px; border-radius: 3px;
+  background: var(--or);
+  box-shadow: 0 0 8px var(--or);
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  height: 1px;
+  margin: 22px 20px 0;
+  background: linear-gradient(90deg, var(--or), rgba(255,69,0,.1), transparent);
+}
+
+/* ─── VOTING ─── */
+.vote-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+}
+.vote-head-left { display: flex; align-items: center; gap: 10px; }
+.vote-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 3px;
+}
+.vote-title span { color: var(--or); }
+.vote-pill {
+  background: rgba(255,69,0,.12);
+  border: 1px solid rgba(255,69,0,.3);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--or);
+  white-space: nowrap;
+}
+
+/* ─── VOTE LIST ─── */
+.vote-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 0 20px;
+}
+
+.vote-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: var(--dark2);
+  border-radius: 10px;
+  padding: 9px 11px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: border-color .3s, background .3s, transform .15s;
+  position: relative;
+  overflow: hidden;
+}
+.vote-row:active { transform: scale(.98); }
+.vote-row.voted {
+  border-color: var(--or);
+  background: rgba(255,69,0,.07);
+}
+
+.vr-bg {
+  position: absolute;
+  left:0; top:0; bottom:0;
+  background: rgba(255,69,0,.055);
+  border-radius: 10px;
+  width: 0%;
+  transition: width 1s cubic-bezier(.23,1,.32,1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.vr-avatar {
+  width: 42px; height: 42px;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: top;
+  flex-shrink: 0;
+  position: relative; z-index: 1;
+  filter: saturate(.65);
+  transition: filter .3s;
+}
+.vote-row.voted .vr-avatar { filter: saturate(1); }
+
+.vr-info {
+  flex: 1; min-width: 0;
+  position: relative; z-index: 1;
+}
+.vr-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 2px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vr-bar-wrap {
+  margin-top: 5px; height: 2px;
+  background: rgba(255,255,255,.07);
+  border-radius: 2px; overflow: hidden;
+}
+.vr-bar {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--or), var(--or2));
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--or);
+  transition: width 1s cubic-bezier(.23,1,.32,1);
+}
+.vr-pct {
+  font-size: 10px; letter-spacing: 1px;
+  color: var(--grey); margin-top: 3px;
+}
+.vote-row.voted .vr-pct { color: var(--or); }
+
+.vr-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,69,0,.35);
+  background: transparent;
+  color: var(--or); font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  position: relative; z-index: 1;
+  transition: all .25s;
+}
+.vote-row.voted .vr-icon {
+  background: var(--or); color: #fff;
+  border-color: var(--or);
+  box-shadow: 0 0 12px rgba(255,69,0,.5);
+}
+
+.vr-corner {
+  position: absolute; top:0; right:0;
+  width:0; height:0;
+  border-top: 24px solid var(--or);
+  border-left: 24px solid transparent;
+  border-radius: 0 10px 0 0;
+  opacity: 0; z-index: 2;
+  transition: opacity .3s;
+}
+.vr-corner::after {
+  content:'✓';
+  position: absolute;
+  top:-22px; right:2px;
+  font-size: 9px; color:#fff; font-weight:700;
+}
+.vote-row.voted .vr-corner { opacity: 1; }
+
+@keyframes vFlash {
+  0%   { background: rgba(255,69,0,.22); }
+  100% { background: rgba(255,69,0,.07); }
+}
+.vote-row.vflash { animation: vFlash .4s ease-out; }
+</style>
+</head>
+<body>
+
+<!-- ══ ТОПОВЫЕ АРТИСТЫ ══ -->
+<div class="sec-head">
+  <div class="sec-bar"></div>
+  <div class="sec-title">ТОПОВЫЕ <span>АРТИСТЫ</span></div>
+  <div class="sec-counter" id="artCounter">1 / 7</div>
+</div>
+
+<div class="stack-wrap" id="stackWrap"></div>
+
+<div class="nav-row">
+  <button class="nav-btn" id="prevBtn">←</button>
+  <div class="dots-wrap" id="dotsWrap"></div>
+  <button class="nav-btn" id="nextBtn">→</button>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══ ГОЛОСОВАНИЕ ══ -->
+<div class="vote-head">
+  <div class="vote-head-left">
+    <div class="sec-bar"></div>
+    <div class="vote-title">КТО ЛУЧШИЙ <span>АРТИСТ?</span></div>
+  </div>
+  <div class="vote-pill" id="totalPill">0 голосов</div>
+</div>
+
+<div class="vote-list" id="voteList"></div>
+
+<script>
+/* ── ДАННЫЕ ── */
+const IMG = 'assets/TOP ARTIST/';
+const ARTISTS = [
+  { name:'RYDER',          file:'ryder.jpg',        votes:342 },
+  { name:'CORLEONE',       file:'corleone.png',      votes:287 },
+  { name:'FARUKH HASANOV', file:'farukhhasanov.jpg', votes:519 },
+  { name:'SAFARMUHAMMAD',  file:'safarmuhammad.jpg', votes:198 },
+  { name:'BAKHA 84',       file:'baha84.jpg',        votes:403 },
+  { name:'BARON TJK',      file:'barontjk.jpg',      votes:156 },
+  { name:'ABADA',          file:'abada.png',         votes:134 },
+];
+
+let cur = 0;
+let voted = null;
+let counts = ARTISTS.map(a => a.votes);
+
+/* ══════════════════════════
+   STACK SLIDER
+══════════════════════════ */
+const wrap  = document.getElementById('stackWrap');
+const cards = [];
+
+function getT(i) {
+  const d = i - cur;
+  if (d === 0) return { y:0,   s:1,    o:1,   z:10 };
+  if (d === 1) return { y:-10, s:.93,  o:.7,  z:9  };
+  if (d === 2) return { y:-18, s:.87,  o:.4,  z:8  };
+  if (d < 0)   return { y:160, s:.9,   o:0,   z:1  };
+  return             { y:-24, s:.83,  o:0,   z:7  };
+}
+
+function apply(animated) {
+  cards.forEach((el, i) => {
+    const t = getT(i);
+    el.style.transition = animated
+      ? 'transform .45s cubic-bezier(.23,1,.32,1), opacity .45s ease'
+      : 'none';
+    el.style.transform = `translateY(${t.y}px) scale(${t.s})`;
+    el.style.opacity   = t.o;
+    el.style.zIndex    = t.z;
+  });
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i === cur));
+  document.getElementById('artCounter').textContent = `${cur+1} / ${ARTISTS.length}`;
+}
+
+ARTISTS.forEach((a, i) => {
+  const el = document.createElement('div');
+  el.className = 'art-card';
+  el.innerHTML = `
+    <img src="${IMG}${a.file}" alt="${a.name}" onerror="this.style.background='#1e1e1e'">
+    <div class="art-overlay"></div>
+    <div class="art-accent"></div>
+    <div class="art-namebar">
+      <div class="art-name">${a.name}</div>
+      <div class="art-num">${String(i+1).padStart(2,'0')}</div>
+    </div>`;
+
+  let sx=0, dx=0, drag=false;
+
+  el.addEventListener('pointerdown', e => {
+    if (i !== cur) return;
+    sx=e.clientX; dx=0; drag=true;
+    el.setPointerCapture(e.pointerId);
+    el.style.transition = 'none';
+  });
+  el.addEventListener('pointermove', e => {
+    if (!drag) return;
+    dx = e.clientX - sx;
+    el.style.transform = `translateY(0) scale(1) translateX(${dx}px) rotate(${dx*.04}deg)`;
+  });
+  el.addEventListener('pointerup', () => {
+    if (!drag) return; drag=false;
+    if      (dx < -60 && cur < ARTISTS.length-1) cur++;
+    else if (dx >  60 && cur > 0)                cur--;
+    apply(true);
+  });
+  el.addEventListener('pointercancel', () => { drag=false; apply(true); });
+
+  wrap.appendChild(el);
+  cards.push(el);
+});
+
+/* dots */
+const dotsWrap = document.getElementById('dotsWrap');
+ARTISTS.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0?' on':'');
+  d.addEventListener('click', () => { cur=i; apply(true); });
+  dotsWrap.appendChild(d);
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => { if(cur>0){cur--;apply(true);} });
+document.getElementById('nextBtn').addEventListener('click', () => { if(cur<ARTISTS.length-1){cur++;apply(true);} });
+
+apply(false);
+
+/* ══════════════════════════
+   VOTING
+══════════════════════════ */
+function total() { return counts.reduce((s,v) => s+v, 0); }
+
+function buildVoting() {
+  const list = document.getElementById('voteList');
+  document.getElementById('totalPill').textContent = total().toLocaleString() + ' голосов';
+  list.innerHTML = '';
+
+  ARTISTS.forEach((a, i) => {
+    const pct = Math.round(counts[i] / total() * 100);
+    const row = document.createElement('div');
+    row.className = 'vote-row' + (voted===i?' voted':'');
+    row.id = `vr-${i}`;
+    row.innerHTML = `
+      <div class="vr-bg" id="vbg-${i}"></div>
+      <div class="vr-corner"></div>
+      <img class="vr-avatar" src="${IMG}${a.file}" alt="${a.name}" onerror="this.style.background='#222'">
+      <div class="vr-info">
+        <div class="vr-name">${a.name}</div>
+        <div class="vr-bar-wrap"><div class="vr-bar" id="vbar-${i}"></div></div>
+        <div class="vr-pct" id="vpct-${i}">0%</div>
+      </div>
+      <div class="vr-icon">${voted===i?'✓':'♥'}</div>`;
+
+    row.addEventListener('click', () => vote(i));
+    list.appendChild(row);
+
+    /* анимированный старт баров */
+    setTimeout(() => {
+      const bar = document.getElementById(`vbar-${i}`);
+      const bg  = document.getElementById(`vbg-${i}`);
+      const pctEl = document.getElementById(`vpct-${i}`);
+      if (bar)   bar.style.width   = pct + '%';
+      if (bg)    bg.style.width    = pct + '%';
+      if (pctEl) pctEl.textContent = pct + '%';
+    }, 120 + i * 65);
+  });
+}
+
+function vote(idx) {
+  if (voted === idx) return;
+  if (voted !== null) counts[voted]--;
+  voted = idx;
+  counts[idx]++;
+
+  const t = total();
+  document.getElementById('totalPill').textContent = t.toLocaleString() + ' голосов';
+
+  ARTISTS.forEach((_, i) => {
+    const pct   = Math.round(counts[i] / t * 100);
+    const row   = document.getElementById(`vr-${i}`);
+    const bar   = document.getElementById(`vbar-${i}`);
+    const bg    = document.getElementById(`vbg-${i}`);
+    const pctEl = document.getElementById(`vpct-${i}`);
+    const icon  = row && row.querySelector('.vr-icon');
+
+    if (!row) return;
+    row.classList.toggle('voted', i === idx);
+    if (i === idx) {
+      row.classList.add('vflash');
+      setTimeout(() => row.classList.remove('vflash'), 400);
+    }
+    if (bar)   bar.style.width   = pct + '%';
+    if (bg)    bg.style.width    = pct + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
+    if (icon)  icon.textContent  = i === idx ? '✓' : '♥';
+  });
+}
+
+buildVoting();
+</script>
+</body>
+</html>

@@ -24,33 +24,18 @@ jobs:
 
           async function go() {
             const snap = await db.collection('tracks').get();
-            const now = Date.now();
-            const checkInterval = 15 * 60 * 1000; 
-
             if (snap.empty) {
-              console.log('Коллекция пуста');
+              console.log('Пока пусто');
               return;
             }
+
+            const now = Date.now();
+            const checkInterval = 15 * 60 * 1000; 
 
             for (const doc of snap.docs) {
               const t = doc.data();
               if (!t.createdAt) continue;
 
-              // Обработка даты (Timestamp или Date)
               let trackDate = t.createdAt.seconds ? t.createdAt.seconds * 1000 : new Date(t.createdAt).getTime();
               
-              if (now - trackDate < checkInterval) {
-                const msg = '<b>🔥 НОВЫЙ ТРЕК НА ZARBA!</b>\n\n' +
-                            '🎵 Артист: <b>' + (t.artist || '...') + '</b>\n' +
-                            '🎶 Трек: <b>' + (t.title || '...') + '</b>\n\n' +
-                            '🔗 <a href=\"https://zarba.ru\">Открыть ZARBA</a>';
-                
-                await axios.post('https://api.telegram.org/bot' + process.env.TG_TOKEN + '/sendMessage', {
-                  chat_id: process.env.TG_ID,
-                  text: msg,
-                  parse_mode: 'HTML'
-                });
-              }
-            }
-          }
-          go().catch(console.error);"
+              if (now - trackDate < checkInterval)
