@@ -528,7 +528,7 @@ window.renderHome = function(container) {
     // ══════════════════════════════════════════
     //  TOP ARTISTS STACK + VOTING
     // ══════════════════════════════════════════
-    const ART_IMG = 'assets/TOP ARTIST/';
+    const ART_IMG = 'assets/top-artist/';
     const ARTISTS = [
         { name:'RYDER',          file:'ryder.jpg',          id:'ryder'          },
         { name:'CORLEONE',       file:'corleone.jpg',       id:'corleone'       },
