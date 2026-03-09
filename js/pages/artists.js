@@ -469,9 +469,9 @@ window.shareArtist = function() {
   // (Telegram, WhatsApp, VK) получили красивые OG-теги с фото артиста.
   // Живые пользователи автоматически редиректятся на zarba.tj
   const WORKER_URL = 'https://zarba-radio-logic.levakandproduction.workers.dev';
-  const shareUrl = a.atHandle
-    ? `${WORKER_URL}/?og=${a.atHandle}`
-    : `${siteBase}/artists?id=${a.id}`;
+const shareUrl = a.atHandle
+    ? `https://zarba.ru/artists/${a.atHandle}`
+    : `https://zarba.ru/artists?id=${a.id}`;
 
   window._shareUrl = shareUrl;
   window._shareArtistData = a;
