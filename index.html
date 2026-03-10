@@ -299,88 +299,172 @@
         /* ══════════════════════════════════════════
            АДАПТИВ ШАПКИ И МЕНЮ (МОБИЛКИ)
         ══════════════════════════════════════════ */
+        /* ══ HAMBURGER BUTTON ══ */
         .hamburger {
             display: none;
-            background: none;
-            border: none;
+            position: relative;
+            width: 42px;
+            height: 42px;
+            background: rgba(255,69,0,0.08);
+            border: 1px solid rgba(255,69,0,0.3);
+            border-radius: 10px;
             cursor: pointer;
-            padding: 5px;
+            padding: 0;
             z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+            transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+            flex-shrink: 0;
+        }
+        .hamburger:hover {
+            background: rgba(255,69,0,0.18);
+            border-color: rgba(255,69,0,0.6);
+            box-shadow: 0 0 16px rgba(255,69,0,0.25);
         }
         .hamburger span {
             display: block;
-            width: 24px;
-            height: 3px;
-            background-color: #fff;
-            margin: 5px 0;
-            transition: all 0.3s ease;
+            width: 20px;
+            height: 2px;
+            background: #ff4500;
             border-radius: 2px;
+            transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
+            transform-origin: center;
+        }
+        .hamburger span:nth-child(1) { width: 20px; }
+        .hamburger span:nth-child(2) { width: 14px; margin-left: -6px; }
+        .hamburger span:nth-child(3) { width: 20px; }
+        .hamburger:hover span:nth-child(2) { width: 20px; margin-left: 0; }
+
+        /* Открыт — крестик */
+        .hamburger.open {
+            background: rgba(255,69,0,0.15);
+            border-color: rgba(255,69,0,0.7);
+            box-shadow: 0 0 20px rgba(255,69,0,0.3);
+        }
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+            width: 20px;
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0; transform: scaleX(0);
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+            width: 20px;
         }
 
         @media (max-width: 900px) {
             .hamburger {
-                display: block;
-                order: 3; /* Ставим гамбургер самым правым */
-                margin-left: 15px;
+                display: flex;
+                order: 3;
+                margin-left: 12px;
             }
             #auth-section {
-                order: 2; /* Кнопка входа перед гамбургером */
+                order: 2;
                 margin-left: auto;
             }
-            .main-header {
-                padding: 0 15px; /* Уменьшаем отступы по краям */
-            }
-            .logo-main {
-                font-size: 22px !important; /* Чуть уменьшим лого на мобилке */
-            }
-            .logo-tagline {
-                display: none; /* Скроем длинный слоган в шапке на мобилке */
-            }
+            .main-header { padding: 0 15px; }
+            .logo-main { font-size: 22px !important; }
+            .logo-tagline { display: none; }
+
+            /* ══ БОКОВОЕ МЕНЮ ══ */
             .main-nav {
                 position: fixed;
-                top: 0;
-                right: -100%;
-                width: 280px;
+                top: 0; right: -100%;
+                width: 270px;
                 height: 100vh;
-                background: rgba(5, 5, 5, 0.98);
-                backdrop-filter: blur(15px);
-                border-left: 1px solid #1a1a1a;
+                background: linear-gradient(160deg, #0a0a0a 0%, #070707 100%);
+                border-left: 1px solid rgba(255,69,0,0.15);
                 display: flex;
                 flex-direction: column;
-                padding-top: 80px;
-                transition: right 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                padding-top: 0;
+                transition: right 0.38s cubic-bezier(0.23,1,0.32,1);
                 z-index: 1500;
-                margin: 0 !important; /* перебиваем инлайновый margin-left:auto */
+                margin: 0 !important;
+                overflow: hidden;
             }
+
+            /* Оранжевая полоса сверху */
+            .main-nav::before {
+                content: '';
+                position: absolute; top: 0; left: 0; right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #ff4500, #ff8c00, transparent);
+            }
+            /* Неоновый ореол слева */
+            .main-nav::after {
+                content: '';
+                position: absolute; top: 0; left: 0; bottom: 0;
+                width: 1px;
+                background: linear-gradient(180deg, transparent, rgba(255,69,0,0.6) 30%, rgba(255,69,0,0.6) 70%, transparent);
+                box-shadow: 0 0 12px rgba(255,69,0,0.4);
+            }
+
             .main-nav.open {
                 right: 0;
-                box-shadow: -10px 0 40px rgba(0,0,0,0.8);
+                box-shadow: -20px 0 60px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,69,0,0.1);
             }
+
+            /* Шапка внутри меню */
+            .main-nav::before {
+                content: 'МЕНЮ';
+                position: absolute; top: 0; left: 0; right: 0;
+                height: 58px;
+                background: rgba(255,69,0,0.06);
+                border-bottom: 1px solid rgba(255,69,0,0.12);
+                display: flex; align-items: center;
+                padding: 0 24px;
+                font-family: 'Bebas Neue', 'ZARBA', sans-serif;
+                font-size: 13px; letter-spacing: 4px;
+                color: rgba(255,69,0,0.7);
+                font-weight: 900;
+            }
+
+            /* Кнопки меню */
             .main-nav button {
-                margin: 5px 20px;
-                padding: 15px 0;
-                border-bottom: 1px solid rgba(255,255,255,0.05);
-                text-align: left;
-                font-size: 14px !important;
-                display: block;
-                width: calc(100% - 40px);
+                margin: 0 !important;
+                padding: 15px 24px !important;
+                border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+                border-radius: 0 !important;
+                text-align: left !important;
+                font-size: 13px !important;
+                font-weight: 700 !important;
+                letter-spacing: 2px !important;
+                display: flex !important;
+                align-items: center !important;
+                width: 100% !important;
+                background: transparent !important;
+                color: rgba(255,255,255,0.65) !important;
+                transition: background 0.2s, color 0.2s, padding-left 0.2s !important;
+                position: relative !important;
+                margin-top: 58px !important;
             }
-            .main-nav button::after {
-                display: none; /* Убираем полоску подчеркивания при наведении для мобилок */
+            /* Сдвигаем только первую кнопку (остальные margin-top 0) */
+            .main-nav button:not(:first-child) { margin-top: 0 !important; }
+
+            .main-nav button:hover,
+            .main-nav button.active {
+                background: rgba(255,69,0,0.08) !important;
+                color: #fff !important;
+                padding-left: 30px !important;
             }
-            
-            /* Анимация крестика для гамбургера */
-            .hamburger.open span:nth-child(1) {
-                transform: translateY(8px) rotate(45deg);
-                background-color: #FF4500;
+            .main-nav button.active {
+                color: #ff8c00 !important;
+                border-left: 3px solid #ff4500 !important;
             }
-            .hamburger.open span:nth-child(2) {
-                opacity: 0;
+            .main-nav button::after { display: none !important; }
+
+            /* Оверлей — затемнение за меню */
+            .nav-overlay {
+                display: none;
+                position: fixed; inset: 0;
+                background: rgba(0,0,0,0.6);
+                z-index: 1400;
+                backdrop-filter: blur(2px);
             }
-            .hamburger.open span:nth-child(3) {
-                transform: translateY(-8px) rotate(-45deg);
-                background-color: #FF4500;
-            }
+            .nav-overlay.open { display: block; }
         }
 
         /* Адаптив футера */
@@ -411,6 +495,7 @@
         <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Меню">
             <span></span><span></span><span></span>
         </button>
+        <div class="nav-overlay" id="nav-overlay" onclick="toggleMobileMenu()"></div>
         
         <nav class="main-nav" id="main-nav" style="margin-left:auto;">
             <button onclick="showPage('home')">ГЛАВНАЯ</button>
@@ -670,9 +755,11 @@
 function toggleMobileMenu() {
     const nav = document.getElementById('main-nav');
     const btn = document.getElementById('hamburger');
-    nav.classList.toggle('open');
+    const overlay = document.getElementById('nav-overlay');
+    const isOpen = nav.classList.toggle('open');
     btn.classList.toggle('open');
-    document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+    if (overlay) overlay.classList.toggle('open');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
 }
 // Закрывать меню при клике на пункт
 document.addEventListener('DOMContentLoaded', function() {
@@ -680,6 +767,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             document.getElementById('main-nav').classList.remove('open');
             document.getElementById('hamburger').classList.remove('open');
+            const ov = document.getElementById('nav-overlay'); if (ov) ov.classList.remove('open');
             document.body.style.overflow = '';
         });
     });

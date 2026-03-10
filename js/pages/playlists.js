@@ -5,11 +5,82 @@
 (function () {
 
 function renderPlaylists(container) {
-  container.innerHTML = '';
-  container.id = 'pl-page';
-  injectCSS();
-  container.innerHTML = getHTML();
-  initLogic(container);
+  // ── ЗАГРУЗОЧНЫЙ ЭКРАН ПЛЕЙЛИСТЫ ──
+  container.innerHTML = `
+<div id="pl-loader" style="
+  position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  height:80vh;background:#060606;overflow:hidden;
+">
+<style>
+  @keyframes pl-ld-orb { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(6vw,10vh) scale(1.1)} 100%{transform:translate(-4vw,12vh) scale(.9)} }
+  @keyframes pl-ld-pulse {
+    0%,100% { filter:drop-shadow(0 0 0px #FF4500) brightness(1);   transform:scale(1); }
+    50%      { filter:drop-shadow(0 0 26px #FF4500) drop-shadow(0 0 55px rgba(255,69,0,.45)) brightness(1.25); transform:scale(1.08); }
+  }
+  @keyframes pl-ld-cw   { to { transform:rotate(360deg);  } }
+  @keyframes pl-ld-ccw  { to { transform:rotate(-360deg); } }
+  @keyframes pl-ld-bar  { 0%{width:0%} 20%{width:12%} 50%{width:58%} 85%{width:90%} 100%{width:100%} }
+  @keyframes pl-ld-title { from{opacity:0;letter-spacing:20px} to{opacity:1;letter-spacing:6px} }
+  @keyframes pl-ld-sub   { from{opacity:0;transform:translateY(8px)} to{opacity:.6;transform:translateY(0)} }
+  @keyframes pl-ld-note  { 0%,100%{transform:translateY(0) rotate(-8deg)} 50%{transform:translateY(-8px) rotate(8deg)} }
+  .plld-bg { position:absolute;inset:0; }
+  .plld-orb1 { position:absolute;width:50vw;height:50vw;border-radius:50%;background:#FF4500;top:-15%;left:-15%;filter:blur(120px);opacity:.08;animation:pl-ld-orb 18s infinite alternate ease-in-out; }
+  .plld-orb2 { position:absolute;width:55vw;height:55vw;border-radius:50%;background:#6a0dad;bottom:-20%;right:-10%;filter:blur(140px);opacity:.06;animation:pl-ld-orb 24s infinite alternate-reverse ease-in-out; }
+  .plld-noise { position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.01) 2px,rgba(255,255,255,.01) 4px); }
+  .plld-vig { position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.75) 100%); }
+  .plld-wrap { position:relative;z-index:2;display:flex;flex-direction:column;align-items:center; }
+  .plld-rings { position:relative;width:165px;height:165px;display:flex;align-items:center;justify-content:center; }
+  .plld-r1,.plld-r2,.plld-r3 { position:absolute;border-radius:50%; }
+  .plld-r1 { width:165px;height:165px; border:1px solid rgba(255,69,0,.12); border-top:2px solid #FF4500; animation:pl-ld-cw 1.3s linear infinite; }
+  .plld-r2 { width:130px;height:130px; border:1px solid rgba(255,69,0,.08); border-right:1px solid rgba(255,69,0,.4); animation:pl-ld-ccw 2s linear infinite; }
+  .plld-r3 { width:96px;height:96px;   border:1px dashed rgba(106,13,173,.25); border-bottom:2px dashed rgba(106,13,173,.4); animation:pl-ld-cw 3.5s linear infinite; }
+  .plld-logo { position:relative;z-index:2;width:56px;height:56px;object-fit:contain; animation:pl-ld-pulse 2s ease-in-out infinite; }
+  .plld-logo-fb { position:relative;z-index:2;font-family:'Bebas Neue',sans-serif;font-size:52px;color:#FF4500;line-height:1; animation:pl-ld-pulse 2s ease-in-out infinite;display:none; }
+  .plld-notes { display:flex;gap:20px;margin-top:18px;opacity:.35; }
+  .plld-note { font-size:22px;animation:pl-ld-note 2s ease-in-out infinite; }
+  .plld-note:nth-child(2){animation-delay:.4s}.plld-note:nth-child(3){animation-delay:.8s}
+  .plld-tag  { font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:7px;color:#FF4500;text-transform:uppercase;margin-top:14px;opacity:.9; }
+  .plld-title { font-family:'Bebas Neue',sans-serif;font-size:50px;letter-spacing:6px;color:#fff;margin-top:4px;line-height:1; animation:pl-ld-title 1s .3s ease both; }
+  .plld-title span { color:#FF4500; }
+  .plld-sub  { font-family:sans-serif;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:6px; animation:pl-ld-sub .8s .6s ease both; }
+  .plld-count { font-family:'Bebas Neue',sans-serif;font-size:28px;color:rgba(255,255,255,.12);letter-spacing:4px;margin-top:8px; animation:pl-ld-sub .8s .8s ease both; }
+  .plld-bar-wrap { width:165px;height:1px;background:rgba(255,255,255,.07);margin-top:18px;overflow:hidden; }
+  .plld-bar  { height:100%;background:linear-gradient(90deg,#FF4500,#6a0dad); animation:pl-ld-bar 2s ease forwards; }
+  .plld-dots { display:flex;gap:8px;margin-top:14px; }
+  .plld-dot  { width:4px;height:4px;border-radius:50%;background:#FF4500; animation:plld-dsq 1.4s ease-in-out infinite; }
+  .plld-dot:nth-child(2){animation-delay:.22s} .plld-dot:nth-child(3){animation-delay:.44s}
+  @keyframes plld-dsq{0%,80%,100%{transform:scale(0);opacity:0}40%{transform:scale(1);opacity:1}}
+</style>
+<div class="plld-bg">
+  <div class="plld-orb1"></div><div class="plld-orb2"></div>
+  <div class="plld-noise"></div>
+</div>
+<div class="plld-vig"></div>
+<div class="plld-wrap">
+  <div class="plld-rings">
+    <div class="plld-r1"></div><div class="plld-r2"></div><div class="plld-r3"></div>
+    <img class="plld-logo" src="assets/logo-white-big.png"
+      onerror="this.style.display='none';document.getElementById('plld-fb').style.display='block'">
+    <div id="plld-fb" class="plld-logo-fb">Z</div>
+  </div>
+  <div class="plld-notes"><div class="plld-note">♪</div><div class="plld-note">♫</div><div class="plld-note">♪</div></div>
+  <div class="plld-tag">Z · REDACTION</div>
+  <div class="plld-title">ПЛЕЙ<span>ЛИСТЫ</span></div>
+  <div class="plld-sub">Редакционные подборки ZARBA</div>
+  <div class="plld-count">11 ПЛЕЙЛИСТОВ</div>
+  <div class="plld-bar-wrap"><div class="plld-bar"></div></div>
+  <div class="plld-dots"><div class="plld-dot"></div><div class="plld-dot"></div><div class="plld-dot"></div></div>
+</div>
+</div>`;
+
+  setTimeout(() => {
+    container.innerHTML = '';
+    container.id = 'pl-page';
+    injectCSS();
+    container.innerHTML = getHTML();
+    initLogic(container);
+  }, 1900);
 }
 
 // ─── CSS (БЕЗ ИЗМЕНЕНИЙ) ──────────────────
@@ -34,7 +105,7 @@ function injectCSS() {
 
 .pl-hero { position: relative; z-index: 1; padding: 64px 56px 48px; border-bottom: 1px solid #111; overflow: hidden; }
 .pl-hero::before { content: 'ПЛЕЙЛИСТЫ'; position: absolute; right: -20px; top: -10px; font-family: 'fut', sans-serif; font-size: 180px; color: rgba(255,69,0,.025); letter-spacing: 8px; pointer-events: none; white-space: nowrap; }
-.pl-hero-label { font-family: var(--mono); font-size: 10px; letter-spacing: 6px; color: var(--red); text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; margin-left: 420px; }
+.pl-hero-label { font-family: var(--mono); font-size: 10px; letter-spacing: 6px; color: var(--red); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
 .pl-hero-label::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--red); }
 .pl-hero-title { font-family: 'fut', sans-serif; font-size: clamp(56px, 7vw, 96px); letter-spacing: 4px; line-height: 0.9; color: #fff; margin-bottom: 16px; }
 .pl-hero-title span { color: var(--red); }
@@ -147,6 +218,112 @@ function injectCSS() {
 .pl-toast { position: fixed; bottom: 28px; right: 28px; background: #0e0e0e; border: 1px solid #1e1e1e; border-left: 3px solid var(--red); padding: 14px 20px; font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: #fff; text-transform: uppercase; transform: translateY(80px); opacity: 0; transition: all .3s; z-index: 9999; pointer-events: none; }
 .pl-toast.show { transform: translateY(0); opacity: 1; }
 .pl-track-progress-inner { position: absolute; bottom: 0; left: 0; height: 2px; background: var(--red); width: 0%; transition: width 0.1s linear; box-shadow: 0 0 10px rgba(255,69,0,0.5); pointer-events: none; z-index: 5; }
+
+/* ════════════════════════════════════════
+   PLAYLISTS — ЯРКИЕ СЕРЫЕ (GLOBAL)
+════════════════════════════════════════ */
+/* Все тусклые серые — подняты */
+.pl-hstat-l     { color: #bbb !important; }
+.pl-card-desc   { color: #ccc !important; }
+.pl-in-info-bar { color: #bbb !important; }
+.pl-now-artist,
+.pl-now-dur,
+.pl-in-stat span,
+.pl-track-idx,
+.pl-track-artist,
+.pl-track-dur   { color: #999 !important; }
+.pl-in-shuffle  { color: #bbb !important; }
+.pl-card-tcount { color: #bbb !important; }
+.pl-cover-plays { color: rgba(255,255,255,.9) !important; }
+.pl-in-desc     { color: rgba(255,255,255,.9) !important; }
+.pl-btn-share   { color: #bbb !important; }
+
+/* ════════════════════════════════════════
+   PLAYLISTS — МОБИЛЬ ≤600px
+════════════════════════════════════════ */
+@media(max-width:600px) {
+
+  /* ── HERO ── */
+  .pl-hero { padding: 18px 16px 28px !important; overflow: hidden; }
+  .pl-hero::before { font-size: 80px !important; right: -8px !important; top: 0 !important; }
+  .pl-hero { display: block !important; }
+  .pl-hero-label { font-size: 8px !important; letter-spacing: 3px !important; margin-bottom: 24px !important; }
+  .pl-hero-title { font-size: 36px !important; letter-spacing: 2px !important; order: 0 !important; }
+  .pl-hero-sub   { font-size: 13px !important; }
+  .pl-hero-stats { gap: 20px !important; margin-top: 20px !important; flex-wrap: wrap; }
+  .pl-hstat-n    { font-size: 36px !important; }
+  .pl-hstat-l    { font-size: 8px !important; letter-spacing: 2px !important; }
+
+  /* ── GRID — 2 колонки ── */
+  .pl-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; margin: 20px 12px !important; }
+
+  /* ── КАРТОЧКА ── */
+  .pl-card { border-radius: 10px !important; }
+  .pl-card:hover { transform: none !important; }
+  .pl-cover { border-radius: 10px 10px 0 0 !important; }
+  .pl-cover-badge { font-size: 7px !important; letter-spacing: 2px !important; padding: 3px 7px !important; top: 8px !important; left: 8px !important; }
+  .pl-cover-num { font-size: 24px !important; }
+  .pl-cover-plays { font-size: 8px !important; }
+  .pl-card-info { padding: 12px 12px 14px !important; }
+  .pl-card-name { font-size: 16px !important; letter-spacing: 1px !important; margin-bottom: 4px !important; }
+  .pl-card-desc { font-size: 11px !important; margin-bottom: 10px !important; line-height: 1.4 !important;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pl-card-actions { gap: 6px !important; }
+  .pl-btn-listen {
+    font-size: 10px !important;
+    letter-spacing: 2px !important;
+    padding: 8px 0 !important;
+    clip-path: none !important;
+    border-radius: 3px !important;
+    background: rgba(255,69,0,.85) !important;
+  }
+  .pl-btn-share  { width: 34px !important; height: 34px !important; font-size: 11px !important; }
+  .pl-card-tcount { font-size: 8px !important; }
+
+  /* ── INNER VIEW — полный экран ── */
+  .pl-in-head { height: 220px !important; }
+  .pl-in-content { padding: 16px 16px !important; gap: 14px !important; align-items: flex-end !important; }
+  .pl-in-cover { width: 90px !important; height: 90px !important; flex-shrink: 0 !important; }
+  .pl-in-eyebrow { font-size: 8px !important; letter-spacing: 3px !important; margin-bottom: 6px !important; }
+  .pl-in-title { font-size: clamp(26px, 8vw, 40px) !important; letter-spacing: 2px !important; margin-bottom: 8px !important; }
+  .pl-in-desc { font-size: 12px !important; padding-left: 10px !important; margin-bottom: 12px !important; border-left-width: 2px !important;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pl-in-stats { gap: 16px !important; }
+  .pl-in-stat strong { font-size: 18px !important; }
+  .pl-in-stat span   { font-size: 8px !important; letter-spacing: 2px !important; }
+  .pl-in-back { top: 10px !important; right: 10px !important; padding: 7px 12px !important; font-size: 9px !important; letter-spacing: 2px !important; }
+
+  /* ── CONTROLS ── */
+  .pl-in-controls { padding: 10px 14px !important; gap: 8px !important; flex-wrap: wrap !important; }
+  .pl-in-play-all { font-size: 14px !important; letter-spacing: 2px !important; padding: 10px 20px !important; }
+  .pl-in-shuffle  { font-size: 8px !important; letter-spacing: 2px !important; padding: 9px 14px !important; }
+  .pl-in-info-bar { font-size: 8px !important; margin-left: 0 !important; }
+
+  /* ── ВИЗУАЛИЗАТОР ── */
+  .pl-viz-wrap { padding: 0 14px !important; margin: 8px 0 6px !important; }
+  .pl-viz-box  { height: 60px !important; }
+
+  /* ── NOW BAR ── */
+  .pl-now-bar { padding: 8px 14px !important; gap: 10px !important; }
+  .pl-now-name   { font-size: 14px !important; }
+  .pl-now-artist { font-size: 8px !important; }
+  .pl-now-dur    { font-size: 8px !important; }
+
+  /* ── TRACKLIST ── */
+  .pl-tracklist-scroll { padding: 0 14px 60px !important; }
+  .pl-track-row { grid-template-columns: 36px 1fr auto !important; gap: 10px !important; padding: 14px 0 !important; }
+  .pl-track-row.active { padding-left: 10px !important; margin: 0 -10px !important; }
+  .pl-track-row:hover  { padding-left: 6px !important; margin: 0 -6px !important; }
+  .pl-track-left  { width: 36px !important; }
+  .pl-track-idx   { font-size: 10px !important; }
+  .pl-track-name  { font-size: 13px !important; }
+  .pl-track-artist{ font-size: 9px !important; }
+  .pl-track-dur   { font-size: 9px !important; width: 28px !important; }
+
+  /* ── TOAST ── */
+  .pl-toast { right: 12px !important; bottom: 14px !important; left: 12px !important;
+    font-size: 9px !important; letter-spacing: 2px !important; padding: 12px 14px !important; }
+}
 `;
   document.head.appendChild(s);
 }

@@ -3,9 +3,142 @@
 // ============================================================
 
 function renderBazar(container) {
-  container.innerHTML = '';
-  document.body.setAttribute('style', 'background: radial-gradient(ellipse 120% 60% at 50% 100%, rgba(140,0,0,0.4) 0%, rgba(60,0,0,0.2) 45%, #050505 70%) !important; background-attachment: fixed !important;');
-  injectBazarCSS();
+  // ── ЗАГРУЗОЧНЫЙ ЭКРАН BAZAR ──
+  container.innerHTML = `
+<div id="bz-loader" style="
+  position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  height:80vh;background:#050505;overflow:hidden;
+">
+<style>
+  @keyframes bz-grid-move { to { background-position: 0 60px; } }
+  @keyframes bz-logo-pulse {
+    0%,100% { filter:drop-shadow(0 0 0px #FF4500) brightness(1); transform:scale(1); }
+    50%      { filter:drop-shadow(0 0 28px #FF4500) drop-shadow(0 0 60px rgba(255,69,0,.45)) brightness(1.25); transform:scale(1.08); }
+  }
+  @keyframes bz-ring-cw  { to { transform:rotate(360deg); } }
+  @keyframes bz-ring-ccw { to { transform:rotate(-360deg); } }
+  @keyframes bz-bar-fill { 0%{width:0%} 25%{width:18%} 55%{width:60%} 85%{width:88%} 100%{width:100%} }
+  @keyframes bz-title-in { from{opacity:0;letter-spacing:20px} to{opacity:1;letter-spacing:6px} }
+  @keyframes bz-sub-in   { from{opacity:0;transform:translateY(10px)} to{opacity:.65;transform:translateY(0)} }
+  @keyframes bz-tag-blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .bz-ld-grid {
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,69,0,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,69,0,.04) 1px,transparent 1px);
+    background-size:60px 60px;
+    animation:bz-grid-move 10s linear infinite;
+    pointer-events:none;
+  }
+  .bz-ld-vignette {
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.75) 100%);
+    pointer-events:none;
+  }
+  .bz-ld-glow {
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:320px;height:320px;border-radius:50%;
+    background:radial-gradient(ellipse,rgba(255,69,0,.12) 0%,transparent 70%);
+    pointer-events:none;
+  }
+  .bz-ld-wrap { position:relative;z-index:2;display:flex;flex-direction:column;align-items:center; }
+  .bz-ld-rings { position:relative;width:170px;height:170px;display:flex;align-items:center;justify-content:center; }
+  .bz-ld-r1,.bz-ld-r2,.bz-ld-r3 { position:absolute;border-radius:50%; }
+  .bz-ld-r1 {
+    width:170px;height:170px;
+    border:1px solid rgba(255,69,0,.1);
+    border-top:2px solid #FF4500;
+    animation:bz-ring-cw 1.3s linear infinite;
+  }
+  .bz-ld-r2 {
+    width:134px;height:134px;
+    border:1px solid rgba(255,69,0,.07);
+    border-right:1px solid rgba(255,69,0,.38);
+    animation:bz-ring-ccw 2s linear infinite;
+  }
+  .bz-ld-r3 {
+    width:100px;height:100px;
+    border:1px dashed rgba(255,69,0,.05);
+    border-bottom:1px solid rgba(255,69,0,.18);
+    animation:bz-ring-cw 3.5s linear infinite;
+  }
+  .bz-ld-logo {
+    position:relative;z-index:2;
+    width:58px;height:58px;object-fit:contain;
+    animation:bz-logo-pulse 2.2s ease-in-out infinite;
+  }
+  .bz-ld-logo-fb {
+    position:relative;z-index:2;
+    font-family:'Bebas Neue',sans-serif;
+    font-size:54px;color:#FF4500;line-height:1;
+    animation:bz-logo-pulse 2.2s ease-in-out infinite;
+    display:none;
+  }
+  .bz-ld-tag {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:10px;letter-spacing:8px;color:#FF4500;
+    margin-top:22px;
+    animation:bz-tag-blink 2s ease-in-out infinite;
+  }
+  .bz-ld-title {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:52px;letter-spacing:6px;color:#fff;
+    margin-top:4px;line-height:1;
+    animation:bz-title-in 1s .3s ease both;
+  }
+  .bz-ld-title span { color:#FF4500; }
+  .bz-ld-sub {
+    font-size:9px;letter-spacing:4px;text-transform:uppercase;
+    color:rgba(255,255,255,.5);margin-top:6px;
+    animation:bz-sub-in .8s .6s ease both;
+    font-family:sans-serif;
+  }
+  .bz-ld-bar-wrap {
+    width:170px;height:1px;background:rgba(255,255,255,.07);
+    margin-top:22px;overflow:hidden;
+  }
+  .bz-ld-bar {
+    height:100%;background:linear-gradient(90deg,#FF4500,#FFD700);
+    animation:bz-bar-fill 1.9s ease forwards;
+  }
+  .bz-ld-dots { display:flex;gap:10px;margin-top:14px; }
+  .bz-ld-dot {
+    width:4px;height:4px;border-radius:50%;background:#FF4500;
+    animation:bz-dot-sq 1.4s ease-in-out infinite;
+  }
+  .bz-ld-dot:nth-child(2){animation-delay:.22s}
+  .bz-ld-dot:nth-child(3){animation-delay:.44s}
+  @keyframes bz-dot-sq{0%,80%,100%{transform:scale(0);opacity:0}40%{transform:scale(1);opacity:1}}
+</style>
+<div class="bz-ld-grid"></div>
+<div class="bz-ld-vignette"></div>
+<div class="bz-ld-glow"></div>
+<div class="bz-ld-wrap">
+  <div class="bz-ld-rings">
+    <div class="bz-ld-r1"></div>
+    <div class="bz-ld-r2"></div>
+    <div class="bz-ld-r3"></div>
+    <img class="bz-ld-logo" src="assets/logo-white-big.png"
+      onerror="this.style.display='none';document.getElementById('bz-ld-fb').style.display='block'">
+    <div id="bz-ld-fb" class="bz-ld-logo-fb">Z</div>
+  </div>
+  <div class="bz-ld-tag">Z · SERVICES</div>
+  <div class="bz-ld-title">BA<span>ZAR</span></div>
+  <div class="bz-ld-sub">Мерч · Студия · Биты · Дистрибуция</div>
+  <div class="bz-ld-bar-wrap"><div class="bz-ld-bar"></div></div>
+  <div class="bz-ld-dots">
+    <div class="bz-ld-dot"></div>
+    <div class="bz-ld-dot"></div>
+    <div class="bz-ld-dot"></div>
+  </div>
+</div>
+</div>`;
+
+  setTimeout(() => {
+    container.innerHTML = '';
+    document.body.setAttribute('style', 'background: radial-gradient(ellipse 120% 60% at 50% 100%, rgba(140,0,0,0.4) 0%, rgba(60,0,0,0.2) 45%, #050505 70%) !important; background-attachment: fixed !important;');
+    injectBazarCSS();
 
   const bazarHTML = `
     <div class="bz-page">
@@ -672,6 +805,7 @@ function renderBazar(container) {
 
   container.innerHTML = bazarHTML;
   initBazarLogic(container);
+  }, 2000); // конец setTimeout загрузки
 }
 
 // ─── LOGIC ──────────────────────────────────────────────────
@@ -813,7 +947,7 @@ function injectBazarCSS() {
       background: #050505 !important;
     }
     .bz-container { padding: 0 60px; max-width: 1440px; margin: 0 auto; }
-    .bz-img-ph { background: #1c1c1c; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; color: #888; letter-spacing: 4px; text-transform: uppercase; border: 1px dashed #444; }
+    .bz-img-ph { background: #1c1c1c; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; color: #aaa; letter-spacing: 4px; text-transform: uppercase; border: 1px dashed #444; }
     .bz-img-ph.tall { height: 100%; width: 100%; }
     .bz-img-ph.square { width: 100%; height: 100%; }
     .bz-img-ph.sq { width: 100%; height: 100%; aspect-ratio: 1; }
@@ -828,10 +962,10 @@ function injectBazarCSS() {
     .bz-dot { width: 4px; height: 4px; background: #FF4500; border-radius: 50%; display: inline-block; }
     .bz-hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 130px; line-height: 0.85; margin: 0 0 25px; letter-spacing: -2px; }
     .bz-hero-title span { color: #FF4500; }
-    .bz-hero-sub { font-size: 15px; color: #888; max-width: 480px; line-height: 1.7; margin-bottom: 40px; }
+    .bz-hero-sub { font-size: 15px; color: #aaa; max-width: 480px; line-height: 1.7; margin-bottom: 40px; }
     .bz-hero-line { width: 60px; height: 2px; background: #FF4500; margin-bottom: 40px; }
     .bz-nav-pills { display: flex; flex-wrap: wrap; gap: 10px; }
-    .bz-pill { font-size: 10px; letter-spacing: 3px; border: 1px solid #3a3a3a; color: #999; text-decoration: none; padding: 10px 20px; transition: 0.25s; }
+    .bz-pill { font-size: 10px; letter-spacing: 3px; border: 1px solid #3a3a3a; color: #bbb; text-decoration: none; padding: 10px 20px; transition: 0.25s; }
     .bz-pill:hover, .bz-pill.active { border-color: #FF4500; color: #fff; background: rgba(255,69,0,0.08); }
    /* ─── SECTIONS ─── */
     .bz-section { padding: 120px 0; border-bottom: 1px solid #1a1a1a; }
@@ -839,7 +973,7 @@ function injectBazarCSS() {
     .bz-sec-num { font-family: 'Bebas Neue', sans-serif; font-size: 80px; color: #333; line-height: 1; flex-shrink: 0; }
     .bz-sec-titles { display: flex; flex-direction: column; gap: 4px; }
     .bz-sec-title { font-family: 'Bebas Neue', sans-serif; font-size: 52px; margin: 0; line-height: 1; letter-spacing: 1px; text-shadow: 0 5px 20px rgba(0,0,0,0.8); }
-    .bz-sec-sub { font-size: 11px; font-weight: bold; letter-spacing: 4px; color: #888; text-transform: uppercase; }
+    .bz-sec-sub { font-size: 11px; font-weight: bold; letter-spacing: 4px; color: #aaa; text-transform: uppercase; }
     .bz-sec-line { flex: 1; height: 2px; background: linear-gradient(90deg, #333 0%, transparent 100%); margin-bottom: 14px; }
 
     /* ─── SHOP ─── */
@@ -848,7 +982,7 @@ function injectBazarCSS() {
     .bz-store-icon { font-size: 24px; }
     .bz-store-info { display: flex; flex-direction: column; gap: 4px; }
     .bz-store-info strong { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
-    .bz-store-info span { font-size: 11px; color: #555; }
+    .bz-store-info span { font-size: 11px; color: #aaa; }
     .bz-shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2px; }
     .bz-shop-card { background: #0a0a0a; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,0,0,0.6); transition: 0.35s; }
     .bz-shop-card:hover { border-color: #FF4500; transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
@@ -861,12 +995,12 @@ function injectBazarCSS() {
     .bz-shop-badge.sale { background: #FFD700; color: #000; }
     .bz-shop-body { padding: 28px; }
     .bz-shop-name { font-family: 'Bebas Neue', sans-serif; font-size: 26px; margin: 0 0 10px; letter-spacing: 1px; }
-    .bz-shop-desc { font-size: 13px; color: #888; line-height: 1.7; margin-bottom: 24px; }
+    .bz-shop-desc { font-size: 13px; color: #aaa; line-height: 1.7; margin-bottom: 24px; }
     .bz-shop-footer { display: flex; align-items: center; justify-content: space-between; }
     .bz-shop-price { font-family: 'Bebas Neue', sans-serif; font-size: 34px; }
     .bz-shop-price span { font-size: 14px; color: #FF4500; }
     .bz-shop-btns { display: flex; gap: 8px; }
-    .bz-slink { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; background: #111; border: 1px solid #1e1e1e; text-decoration: none; color: #888; font-size: 9px; letter-spacing: 1px; transition: 0.25s; }
+    .bz-slink { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; background: #111; border: 1px solid #1e1e1e; text-decoration: none; color: #aaa; font-size: 9px; letter-spacing: 1px; transition: 0.25s; }
     .bz-slink svg { width: 14px; height: 14px; }
     .bz-slink:hover { color: #fff; border-color: #FF4500; }
     .bz-slink.tg:hover { background: rgba(41,182,246,0.1); border-color: #29b6f6; }
@@ -884,24 +1018,24 @@ function injectBazarCSS() {
     .bz-studio-info-col { padding: 56px; border-left: 1px solid #151515; display: flex; flex-direction: column; justify-content: center; }
     .bz-studio-badge { font-size: 8px; letter-spacing: 5px; color: #FF4500; border: 1px solid #FF4500; display: inline-block; padding: 6px 14px; margin-bottom: 24px; width: fit-content; }
     .bz-studio-title { font-family: 'Bebas Neue', sans-serif; font-size: 64px; line-height: 0.9; margin: 0 0 24px; }
-    .bz-studio-desc { font-size: 13px; color: #888; line-height: 1.8; margin-bottom: 36px; }
+    .bz-studio-desc { font-size: 13px; color: #aaa; line-height: 1.8; margin-bottom: 36px; }
     .bz-studio-meta { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
     .bz-smeta-row { display: flex; gap: 16px; align-items: flex-start; }
     .bz-smeta-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
-    .bz-smeta-label { display: block; font-size: 9px; font-weight: bold; letter-spacing: 3px; color: #888; margin-bottom: 4px; }
-    .bz-smeta-val { font-size: 13px; color: #ccc; }
+    .bz-smeta-label { display: block; font-size: 9px; font-weight: bold; letter-spacing: 3px; color: #aaa; margin-bottom: 4px; }
+    .bz-smeta-val { font-size: 13px; color: #ddd; }
     .bz-rating-row { display: flex; align-items: center; gap: 10px; }
     .bz-stars { color: #FFD700; font-size: 18px; }
     .bz-rating-num { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: #FFD700; }
-    .bz-rating-cnt { font-size: 10px; color: #888; }
+    .bz-rating-cnt { font-size: 10px; color: #aaa; }
     .bz-user-rate-block { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; padding: 16px; background: #0d0d0d; border: 1px solid #222; }
-    .bz-rate-label { font-size: 9px; font-weight: bold; letter-spacing: 2px; color: #888; }
+    .bz-rate-label { font-size: 9px; font-weight: bold; letter-spacing: 2px; color: #aaa; }
     .bz-star-select { display: flex; gap: 4px; cursor: pointer; }
     .bz-s { font-size: 22px; color: #2a2a2a; transition: 0.15s; user-select: none; }
     .bz-s.hover, .bz-s.selected { color: #FFD700; }
     .bz-rate-thanks { font-size: 11px; color: #FF4500; }
     .bz-studio-socials { display: flex; flex-wrap: wrap; gap: 8px; }
-    .bz-soc-btn { display: flex; align-items: center; gap: 8px; padding: 11px 18px; text-decoration: none; font-size: 9px; letter-spacing: 2px; border: 1px solid #1e1e1e; color: #666; transition: 0.25s; }
+    .bz-soc-btn { display: flex; align-items: center; gap: 8px; padding: 11px 18px; text-decoration: none; font-size: 9px; letter-spacing: 2px; border: 1px solid #1e1e1e; color: #999; transition: 0.25s; }
     .bz-soc-btn svg { width: 14px; height: 14px; }
     .bz-soc-btn:hover { color: #fff; }
     .bz-soc-btn.tg:hover { border-color: #29b6f6; background: rgba(41,182,246,0.08); color: #29b6f6; }
@@ -918,9 +1052,9 @@ function injectBazarCSS() {
     .bz-beat-ava { width: 72px; height: 72px; overflow: hidden; border: 2px solid #1a1a1a; }
     .bz-beat-status { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 1px; background: #111; color: #4CAF50; border: 1px solid #222; padding: 2px 7px; white-space: nowrap; }
     .bz-beat-bio h4 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; margin: 0 0 4px; letter-spacing: 1px; }
-    .bz-beat-genre { font-size: 11px; color: #aaa; margin-bottom: 10px; letter-spacing: 1px; }
+    .bz-beat-genre { font-size: 11px; color: #bbb; margin-bottom: 10px; letter-spacing: 1px; }
     .bz-beat-socials { display: flex; gap: 6px; }
-    .bz-micro-link { font-size: 8px; letter-spacing: 2px; text-decoration: none; color: #999; border: 1px solid #333; padding: 3px 9px; transition: 0.2s; }
+    .bz-micro-link { font-size: 8px; letter-spacing: 2px; text-decoration: none; color: #bbb; border: 1px solid #333; padding: 3px 9px; transition: 0.2s; }
     .bz-micro-link:hover { color: #fff; border-color: #FF4500; }
     .bz-micro-link.tg:hover { border-color: #29b6f6; color: #29b6f6; }
     .bz-micro-link.yt:hover { border-color: #FF0000; color: #FF0000; }
@@ -929,18 +1063,18 @@ function injectBazarCSS() {
     .bz-lic-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #1a1a1a; }
     .bz-lic-row:last-child { border-bottom: none; }
     .bz-lic-row.premium { background: rgba(255,69,0,0.04); }
-    .bz-lic-type { font-size: 11px; color: #888; font-weight: bold; }
+    .bz-lic-type { font-size: 11px; color: #aaa; font-weight: bold; }
     .bz-lic-price { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #fff; }
     .bz-lic-row.premium .bz-lic-price { color: #FF4500; }
-    .bz-beat-tracks-head { font-size: 9px; font-weight: bold; letter-spacing: 4px; color: #888; margin-bottom: 12px; }
+    .bz-beat-tracks-head { font-size: 9px; font-weight: bold; letter-spacing: 4px; color: #aaa; margin-bottom: 12px; }
     .bz-audio-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1a1a1a; cursor: pointer; transition: 0.2s; }
     .bz-audio-row:hover { padding-left: 6px; border-bottom-color: #333; }
     .bz-audio-row.playing { border-bottom-color: #FF4500; }
     .bz-audio-row.playing .bz-track-name { color: #FF4500; }
     .bz-play-btn { width: 28px; height: 28px; border: 1px solid #333; background: none; color: #FF4500; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s; }
     .bz-play-btn:hover { background: #FF4500; color: #fff; border-color: #FF4500; }
-    .bz-track-name { font-size: 12px; color: #ccc; flex: 1; }
-    .bz-track-bpm { font-size: 9px; color: #666; letter-spacing: 1px; font-weight: bold; }
+    .bz-track-name { font-size: 12px; color: #ddd; flex: 1; }
+    .bz-track-bpm { font-size: 9px; color: #999; letter-spacing: 1px; font-weight: bold; }
 
     /* ─── COVERS ─── */
     .bz-covers-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; }
@@ -950,8 +1084,8 @@ function injectBazarCSS() {
     .bz-cover-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; transition: 0.35s; padding: 20px; border: 1px solid #FF4500; }
     .bz-cover-card:hover .bz-cover-overlay { opacity: 1; }
     .bz-cover-designer { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; margin-bottom: 4px; }
-    .bz-cover-tag { font-size: 8px; letter-spacing: 2px; color: #666; margin-bottom: 8px; }
-    .bz-cover-time { font-size: 10px; color: #888; margin-bottom: 8px; }
+    .bz-cover-tag { font-size: 8px; letter-spacing: 2px; color: #999; margin-bottom: 8px; }
+    .bz-cover-time { font-size: 10px; color: #aaa; margin-bottom: 8px; }
     .bz-cover-price { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: #FF4500; margin-bottom: 14px; }
     .bz-cover-links { display: flex; gap: 8px; }
     .bz-cov-btn { font-size: 8px; letter-spacing: 2px; text-decoration: none; color: #fff; border: 1px solid #333; padding: 5px 12px; transition: 0.2s; }
@@ -962,9 +1096,9 @@ function injectBazarCSS() {
     .bz-partners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 2px; }
     .bz-partner-card { background: #0a0a0a; border: 1px solid #222; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 40px 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); transition: 0.3s; }
     .bz-partner-logo { width: 100px; height: 60px; overflow: hidden; }
-    .bz-partner-name { font-size: 13px; font-weight: bold; letter-spacing: 3px; color: #ccc; text-align: center; }
+    .bz-partner-name { font-size: 13px; font-weight: bold; letter-spacing: 3px; color: #ddd; text-align: center; }
     .bz-partner-links { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-    .bz-p-link { font-size: 9px; font-weight: bold; letter-spacing: 2px; text-decoration: none; color: #ccc; border: 1px solid #555; padding: 6px 12px; transition: 0.2s; }
+    .bz-p-link { font-size: 9px; font-weight: bold; letter-spacing: 2px; text-decoration: none; color: #ddd; border: 1px solid #666; padding: 6px 12px; transition: 0.2s; }
     .bz-p-link:hover { color: #fff; }
     .bz-p-link.tg:hover { border-color: #29b6f6; color: #29b6f6; background: rgba(41,182,246,0.06); }
     .bz-p-link.yt:hover { border-color: #FF0000; color: #FF0000; background: rgba(255,0,0,0.06); }
@@ -983,11 +1117,11 @@ function injectBazarCSS() {
     .bz-clip-play-overlay:hover .bz-play-circle svg { color: #fff; }
     .bz-clip-play-overlay span { font-size: 10px; font-weight: bold; letter-spacing: 5px; color: #ccc; }
     .bz-clip-info-col { padding: 56px; }
-    .bz-clip-badge { font-size: 9px; font-weight: bold; letter-spacing: 5px; color: #ccc; border: 1px solid #555; display: inline-block; padding: 6px 14px; margin-bottom: 20px; }
+    .bz-clip-badge { font-size: 9px; font-weight: bold; letter-spacing: 5px; color: #ddd; border: 1px solid #555; display: inline-block; padding: 6px 14px; margin-bottom: 20px; }
     .bz-clip-title { font-family: 'Bebas Neue', sans-serif; font-size: 60px; line-height: 0.9; margin: 0 0 20px; }
-    .bz-clip-desc { font-size: 13px; color: #888; line-height: 1.8; margin-bottom: 24px; }
+    .bz-clip-desc { font-size: 13px; color: #aaa; line-height: 1.8; margin-bottom: 24px; }
     .bz-clip-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-    .bz-clip-tags span { font-size: 9px; font-weight: bold; letter-spacing: 2px; color: #ccc; border: 1px solid #555; padding: 5px 12px; }
+    .bz-clip-tags span { font-size: 9px; font-weight: bold; letter-spacing: 2px; color: #ddd; border: 1px solid #666; padding: 5px 12px; }
     .bz-clip-price-block { margin-bottom: 32px; border-left: 3px solid #FF4500; padding-left: 16px; }
     .bz-clip-price-label { display: block; font-size: 9px; font-weight: bold; letter-spacing: 3px; color: #aaa; margin-bottom: 4px; }
     .bz-clip-price-val { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #FF4500; }
@@ -996,7 +1130,7 @@ function injectBazarCSS() {
     .bz-clip-btn-main svg { width: 16px; height: 16px; }
     .bz-clip-btn-main:hover { background: #e03c00; transform: translateX(4px); }
     .bz-clip-mini-links { display: flex; gap: 8px; }
-    .bz-mini-btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #555; text-decoration: none; color: #ccc; font-size: 10px; font-weight: bold; letter-spacing: 1px; transition: 0.2s; }
+    .bz-mini-btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #666; text-decoration: none; color: #ddd; font-size: 10px; font-weight: bold; letter-spacing: 1px; transition: 0.2s; }
     .bz-mini-btn.ig:hover { border-color: #e1306c; color: #e1306c; }
     .bz-mini-btn.yt:hover { border-color: #FF0000; color: #FF0000; }
 
@@ -1013,7 +1147,7 @@ function injectBazarCSS() {
     .bz-distro-btn { display: inline-flex; align-items: center; gap: 12px; background: #000; color: #fff; text-decoration: none; padding: 20px 50px; font-size: 12px; letter-spacing: 3px; font-weight: 900; transition: 0.3s; margin-bottom: 20px; }
     .bz-distro-btn svg { width: 18px; height: 18px; }
     .bz-distro-btn:hover { transform: scale(1.04); box-shadow: 0 15px 40px rgba(0,0,0,0.5); background: #fff; color: #000; }
-    .bz-distro-hint { font-size: 12px; font-weight: 700; color: #000; opacity: 0.6; }
+    .bz-distro-hint { font-size: 12px; font-weight: 700; color: #000; opacity: 0.75; }
 
     /* ─── SCROLL TO TOP ─── */
     .bz-scroll-top { position: fixed; bottom: 36px; right: 36px; width: 52px; height: 52px; background: #FF4500; color: #fff; border: none; font-size: 22px; cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(20px); pointer-events: none; transition: 0.35s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 8px 30px rgba(255,69,0,0.4); }
@@ -1047,6 +1181,123 @@ function injectBazarCSS() {
       .bz-shop-grid { grid-template-columns: 1fr; }
       .bz-studio-title { font-size: 48px; }
     }
+
+/* ════════════════════════════════════════
+   BAZAR — МОБИЛЬ ≤600px
+════════════════════════════════════════ */
+@media (max-width: 600px) {
+
+  /* ── КОНТЕЙНЕР ── */
+  .bz-container { padding: 0 14px !important; }
+
+  /* ── HERO ── */
+  .bz-hero { padding: 60px 16px 40px !important; }
+  .bz-hero-bg-text { font-size: 100px !important; right: -10px !important; }
+  .bz-hero-title { font-size: 72px !important; letter-spacing: -1px !important; margin-bottom: 16px !important; }
+  .bz-hero-sub { font-size: 13px !important; margin-bottom: 28px !important; }
+  .bz-hero-label { font-size: 9px !important; letter-spacing: 4px !important; }
+  .bz-hero-line { margin-bottom: 24px !important; }
+
+  /* ── НАВИГАЦИЯ PILLS — скролл горизонтально ── */
+  .bz-nav-pills {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    gap: 6px !important;
+    padding-bottom: 4px !important;
+  }
+  .bz-nav-pills::-webkit-scrollbar { display: none !important; }
+  .bz-pill { padding: 8px 14px !important; font-size: 9px !important; white-space: nowrap !important; flex-shrink: 0 !important; }
+
+  /* ── СЕКЦИИ ── */
+  .bz-section { padding: 52px 0 40px !important; }
+  .bz-sec-head { gap: 12px !important; margin-bottom: 28px !important; align-items: flex-end !important; }
+  .bz-sec-num { font-size: 48px !important; color: #555 !important; }
+  .bz-sec-title { font-size: 34px !important; }
+  .bz-sec-sub { font-size: 9px !important; letter-spacing: 2px !important; }
+  .bz-sec-line { display: none !important; }
+
+  /* ── SHOP ── */
+  .bz-shop-store-badge { padding: 12px 16px !important; gap: 12px !important; }
+  .bz-store-info strong { font-size: 11px !important; }
+  .bz-store-info span { font-size: 10px !important; }
+  .bz-shop-grid { grid-template-columns: 1fr 1fr !important; gap: 2px !important; }
+  .bz-shop-body { padding: 14px !important; }
+  .bz-shop-name { font-size: 16px !important; margin-bottom: 6px !important; }
+  .bz-shop-desc { font-size: 11px !important; margin-bottom: 14px !important; line-height: 1.5 !important; }
+  .bz-shop-footer { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+  .bz-shop-price { font-size: 24px !important; }
+  .bz-shop-price span { font-size: 12px !important; }
+  .bz-slink { width: 36px !important; height: 36px !important; }
+
+  /* ── СТУДИЯ ── */
+  .bz-studio-wrap { grid-template-columns: 1fr !important; }
+  .bz-studio-slider-col .bz-slider { aspect-ratio: 4/3 !important; }
+  .bz-studio-info-col { padding: 24px 16px !important; border-left: none !important; border-top: 1px solid #1a1a1a !important; }
+  .bz-studio-badge { font-size: 7px !important; padding: 5px 10px !important; }
+  .bz-studio-title { font-size: 42px !important; margin-bottom: 14px !important; }
+  .bz-studio-desc { font-size: 12px !important; margin-bottom: 20px !important; }
+  .bz-studio-meta { gap: 12px !important; margin-bottom: 20px !important; }
+  .bz-smeta-icon { font-size: 14px !important; }
+  .bz-smeta-val { font-size: 12px !important; }
+  .bz-user-rate-block { padding: 12px !important; gap: 10px !important; flex-wrap: wrap !important; }
+  .bz-studio-socials { gap: 6px !important; }
+  .bz-soc-btn { padding: 9px 12px !important; font-size: 8px !important; gap: 6px !important; }
+
+  /* ── БИТЫ ── */
+  .bz-beats-grid { grid-template-columns: 1fr !important; }
+  .bz-beat-card { padding: 20px 16px !important; }
+  .bz-beat-profile { gap: 14px !important; margin-bottom: 18px !important; }
+  .bz-beat-ava { width: 58px !important; height: 58px !important; }
+  .bz-beat-bio h4 { font-size: 18px !important; }
+  .bz-beat-genre { font-size: 10px !important; }
+  .bz-lic-row { padding: 10px 12px !important; }
+  .bz-lic-type { font-size: 10px !important; }
+  .bz-lic-price { font-size: 18px !important; }
+  .bz-beat-tracks-head { font-size: 8px !important; letter-spacing: 3px !important; }
+  .bz-audio-row { gap: 8px !important; padding: 9px 0 !important; }
+  .bz-track-name { font-size: 11px !important; }
+  .bz-track-bpm { font-size: 8px !important; }
+
+  /* ── ОБЛОЖКИ ── */
+  .bz-covers-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 2px !important; }
+  .bz-cover-overlay { padding: 12px !important; }
+  .bz-cover-designer { font-size: 13px !important; }
+  .bz-cover-price { font-size: 18px !important; margin-bottom: 10px !important; }
+  .bz-cov-btn { font-size: 7px !important; padding: 4px 10px !important; }
+
+  /* ── ПАРТНЁРЫ ── */
+  .bz-partners-grid { grid-template-columns: 1fr 1fr !important; }
+  .bz-partner-card { padding: 24px 14px !important; gap: 12px !important; }
+  .bz-partner-name { font-size: 11px !important; letter-spacing: 2px !important; }
+  .bz-p-link { font-size: 8px !important; padding: 5px 8px !important; }
+
+  /* ── СЪЁМКА / КЛИПЫ ── */
+  .bz-clip-wrap { grid-template-columns: 1fr !important; }
+  .bz-clip-video-col { min-height: 220px !important; border-right: none !important; border-bottom: 1px solid #111 !important; }
+  .bz-play-circle { width: 60px !important; height: 60px !important; }
+  .bz-play-circle svg { width: 24px !important; height: 24px !important; }
+  .bz-clip-info-col { padding: 24px 16px !important; }
+  .bz-clip-title { font-size: 38px !important; margin-bottom: 12px !important; }
+  .bz-clip-desc { font-size: 12px !important; margin-bottom: 16px !important; }
+  .bz-clip-tags { gap: 6px !important; margin-bottom: 18px !important; }
+  .bz-clip-tags span { font-size: 8px !important; padding: 4px 10px !important; }
+  .bz-clip-price-val { font-size: 24px !important; }
+  .bz-clip-btn-main { padding: 12px 18px !important; font-size: 10px !important; }
+  .bz-clip-cta { gap: 8px !important; }
+  .bz-mini-btn { width: 38px !important; height: 38px !important; font-size: 9px !important; }
+
+  /* ── ДИСТРИБУЦИЯ ── */
+  .bz-distro { padding: 64px 20px !important; }
+  .bz-distro-title { font-size: 44px !important; }
+  .bz-distro-desc { font-size: 14px !important; margin-bottom: 28px !important; }
+  .bz-distro-platforms { gap: 8px !important; margin-bottom: 32px !important; }
+  .bz-distro-platforms span { font-size: 10px !important; padding: 8px 14px !important; }
+  .bz-distro-btn { padding: 14px 28px !important; font-size: 11px !important; letter-spacing: 2px !important; }
+
+  /* ── КНОПКА ВВЕРХ ── */
+  .bz-scroll-top { bottom: 20px !important; right: 16px !important; width: 44px !important; height: 44px !important; font-size: 18px !important; }
+}
   `;
   document.head.appendChild(s);
 }

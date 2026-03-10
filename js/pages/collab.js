@@ -5,11 +5,90 @@
 (function() {
 
 function renderCollab(container) {
-  container.innerHTML = '';
-  container.id = 'zc-page';
-  injectCSS();
-  container.innerHTML = getHTML();
-  initLogic(container);
+  // ── ЗАГРУЗОЧНЫЙ ЭКРАН Z-COLLAB ──
+  container.innerHTML = `
+<div id="zc-loader" style="
+  position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  height:80vh;background:#060606;overflow:hidden;
+">
+<style>
+  @keyframes zc-ld-grid  { to { background-position: 0 60px; } }
+  @keyframes zc-ld-pulse {
+    0%,100% { filter:drop-shadow(0 0 0px #FF4500) brightness(1);   transform:scale(1); }
+    50%      { filter:drop-shadow(0 0 28px #FF4500) drop-shadow(0 0 60px rgba(255,69,0,.5)) brightness(1.25); transform:scale(1.09); }
+  }
+  @keyframes zc-ld-cw   { to { transform:rotate(360deg);  } }
+  @keyframes zc-ld-ccw  { to { transform:rotate(-360deg); } }
+  @keyframes zc-ld-bar  { 0%{width:0%} 20%{width:14%} 55%{width:62%} 88%{width:91%} 100%{width:100%} }
+  @keyframes zc-ld-title { from{opacity:0;letter-spacing:20px} to{opacity:1;letter-spacing:8px} }
+  @keyframes zc-ld-sub   { from{opacity:0;transform:translateY(8px)} to{opacity:.65;transform:translateY(0)} }
+  @keyframes zc-ld-green { 0%,100%{opacity:1;box-shadow:0 0 10px #3dfd02} 50%{opacity:.4;box-shadow:none} }
+  .zcld-grid {
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,69,0,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,69,0,.03) 1px,transparent 1px);
+    background-size:50px 50px;
+    animation:zc-ld-grid 12s linear infinite;
+    pointer-events:none;
+  }
+  .zcld-vig {
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.8) 100%);
+    pointer-events:none;
+  }
+  .zcld-glow {
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:340px;height:340px;border-radius:50%;
+    background:radial-gradient(ellipse,rgba(255,69,0,.1) 0%,transparent 70%);
+    pointer-events:none;
+  }
+  .zcld-wrap { position:relative;z-index:2;display:flex;flex-direction:column;align-items:center; }
+  .zcld-rings { position:relative;width:160px;height:160px;display:flex;align-items:center;justify-content:center; }
+  .zcld-r1,.zcld-r2,.zcld-r3 { position:absolute;border-radius:50%; }
+  .zcld-r1 { width:160px;height:160px; border:1px solid rgba(255,69,0,.1); border-top:2px solid #FF4500; animation:zc-ld-cw 1.2s linear infinite; }
+  .zcld-r2 { width:126px;height:126px; border:1px solid rgba(255,69,0,.07); border-right:1px solid rgba(255,69,0,.35); animation:zc-ld-ccw 1.9s linear infinite; }
+  .zcld-r3 { width:94px;height:94px;   border:1px dashed rgba(255,69,0,.05); border-bottom:1px dashed rgba(61,253,2,.2); animation:zc-ld-cw 3.2s linear infinite; }
+  .zcld-logo { position:relative;z-index:2; width:54px;height:54px;object-fit:contain; animation:zc-ld-pulse 2s ease-in-out infinite; }
+  .zcld-logo-fb { position:relative;z-index:2; font-family:'Bebas Neue',sans-serif;font-size:50px;color:#FF4500;line-height:1; animation:zc-ld-pulse 2s ease-in-out infinite; display:none; }
+  .zcld-dot-live { display:inline-block;width:8px;height:8px;background:#3dfd02;border-radius:50%; animation:zc-ld-green 1.6s infinite; margin-right:8px; vertical-align:middle; }
+  .zcld-tag  { font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:5px;color:#FF4500;text-transform:uppercase;margin-top:22px;opacity:.9; }
+  .zcld-title { font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:8px;color:#fff;margin-top:4px;line-height:1; animation:zc-ld-title 1s .3s ease both; }
+  .zcld-title span { color:#FF4500; }
+  .zcld-sub  { font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:6px; animation:zc-ld-sub .8s .6s ease both; }
+  .zcld-bar-wrap { width:160px;height:1px;background:rgba(255,255,255,.07);margin-top:22px;overflow:hidden; }
+  .zcld-bar  { height:100%;background:linear-gradient(90deg,#FF4500,#3dfd02); animation:zc-ld-bar 1.9s ease forwards; }
+  .zcld-dots { display:flex;gap:8px;margin-top:14px; }
+  .zcld-dot  { width:4px;height:4px;border-radius:50%;background:#FF4500; animation:zcld-dsq 1.4s ease-in-out infinite; }
+  .zcld-dot:nth-child(2){animation-delay:.22s} .zcld-dot:nth-child(3){animation-delay:.44s}
+  @keyframes zcld-dsq{0%,80%,100%{transform:scale(0);opacity:0}40%{transform:scale(1);opacity:1}}
+</style>
+<div class="zcld-grid"></div>
+<div class="zcld-vig"></div>
+<div class="zcld-glow"></div>
+<div class="zcld-wrap">
+  <div class="zcld-rings">
+    <div class="zcld-r1"></div><div class="zcld-r2"></div><div class="zcld-r3"></div>
+    <img class="zcld-logo" src="assets/logo-white-big.png"
+      onerror="this.style.display='none';document.getElementById('zcld-fb').style.display='block'">
+    <div id="zcld-fb" class="zcld-logo-fb">Z</div>
+  </div>
+  <div class="zcld-tag"><span class="zcld-dot-live"></span>Z · COLLAB</div>
+  <div class="zcld-title">Z-<span>COLLAB</span></div>
+  <div class="zcld-sub">Загрузи куплет · Найди партнёра</div>
+  <div class="zcld-bar-wrap"><div class="zcld-bar"></div></div>
+  <div class="zcld-dots"><div class="zcld-dot"></div><div class="zcld-dot"></div><div class="zcld-dot"></div></div>
+</div>
+</div>`;
+
+  setTimeout(() => {
+    container.innerHTML = '';
+    container.id = 'zc-page';
+    injectCSS();
+    container.innerHTML = getHTML();
+    initLogic(container);
+  }, 1900);
 }
 
 // ─── CSS ─────────────────────────────────────────────────────
@@ -170,7 +249,7 @@ function injectCSS() {
 .zc-filter-btn {
   background: transparent;
   border: 1px solid #1e1e1e;
-  color: #555;
+  color: #999;
   padding: 10px 20px;
   font-family: var(--mono);
   font-size: 10px;
@@ -179,7 +258,7 @@ function injectCSS() {
   cursor: pointer;
   transition: all .2s;
 }
-.zc-filter-btn:hover { border-color: #333; color: #999; }
+.zc-filter-btn:hover { border-color: #444; color: #ccc; }
 .zc-filter-btn.on { border-color: var(--red); color: var(--red); background: rgba(255,69,0,.06); }
 .zc-filter-btn.closed { border-color: #1e1e1e; color: #333; }
 .zc-filter-btn.closed.on { border-color: #555; color: #555; background: rgba(255,255,255,.03); }
@@ -188,7 +267,7 @@ function injectCSS() {
   background: transparent;
   border: none;
   border-bottom: 1px solid #222;
-  color: #555;
+  color: #999;
   padding: 10px 28px 10px 4px;
   font-family: var(--mono);
   font-size: 10px;
@@ -255,7 +334,7 @@ function injectCSS() {
   display: flex; align-items: center; justify-content: center;
   font-family: var(--disp);
   font-size: 22px;
-  color: #888; /* Спокойный серый цвет для буквы — читаемо, но не ярко */
+  color: #aaa; /* Спокойный серый цвет для буквы — читаемо, но не ярко */
   flex-shrink: 0;
   position: relative;
   transition: all 0.3s ease;
@@ -291,7 +370,7 @@ function injectCSS() {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 2px;
-  color: #999; /* Светло-серый, чтобы легко читалось */
+  color: #bbb; /* Светло-серый, чтобы легко читалось */
   text-transform: uppercase;
   margin-top: 4px;
 }
@@ -357,7 +436,7 @@ function injectCSS() {
   font-family: var(--disp);
   font-size: 20px;
   letter-spacing: 2px;
-  color: #ccc;
+  color: #ddd;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 /* ── ИНФО ПОД ТРЕКОМ (Только читаемость и шрифт) ── */
@@ -366,7 +445,7 @@ function injectCSS() {
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 1px; /* Даем микро-отступ буквам, чтобы не слипались */
-  color: #888; /* Светло-серый, теперь всё ВИДНО */
+  color: #aaa;
   text-transform: uppercase;
   margin-top: 5px;
 }
@@ -389,7 +468,7 @@ function injectCSS() {
 .zc-audio-dur {
   font-family: var(--mono);
   font-size: 10px;
-  color: #333;
+  color: #777;
   letter-spacing: 1px;
   flex-shrink: 0;
 }
@@ -398,7 +477,7 @@ function injectCSS() {
 .zc-desc {
   font-size: 16px;
   font-weight: 500;
-  color: #777;
+  color: #aaa;
   line-height: 1.6;
   margin-bottom: 18px;
   border-left: 2px solid #1a1a1a;
@@ -418,7 +497,7 @@ function injectCSS() {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 2px;
-  color: #888;
+  color: #bbb;
   background: rgba(255, 255, 255, 0.03); /* Мягкая заливка вместо рамки */
   border: none; /* УБРАЛИ РАМКИ */
   padding: 6px 14px;
@@ -616,7 +695,7 @@ function injectCSS() {
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 1px;
-  color: #888;
+  color: #aaa;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -640,7 +719,7 @@ function injectCSS() {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 2px;
-  color: #555;
+  color: #888;
   text-transform: uppercase;
 }
 
@@ -771,7 +850,7 @@ function injectCSS() {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #666;
+  color: #aaa;
   text-transform: uppercase;
   margin-bottom: 5px;
 }
@@ -805,7 +884,7 @@ function injectCSS() {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 3px;
-  color: #666;
+  color: #999;
   text-transform: uppercase;
   line-height: 2;
 }
@@ -873,7 +952,7 @@ function injectCSS() {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 3px;
-  color: #444;
+  color: #888;
   text-transform: uppercase;
   line-height: 2;
 }
@@ -931,7 +1010,7 @@ function injectCSS() {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 2px;
-  color: #888;
+  color: #bbb;
   text-transform: uppercase;
   flex-shrink: 0;
   min-width: 80px;
@@ -1004,7 +1083,7 @@ function injectCSS() {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 4px;
-  color: #666;
+  color: #999;
   text-transform: uppercase;
   line-height: 2;
 }
@@ -1017,7 +1096,7 @@ function injectCSS() {
   font-family: var(--mono);
   font-size: 9px;
   letter-spacing: 5px;
-  color: #333;
+  color: #777;
   text-transform: uppercase;
   margin-bottom: 16px;
   padding-bottom: 10px;
@@ -1043,7 +1122,7 @@ function injectCSS() {
 .zc-top-num {
   font-family: var(--disp);
   font-size: 24px;
-  color: #1e1e1e;
+  color: #555;
   min-width: 32px;
   text-align: right;
   letter-spacing: 1px;
@@ -1062,7 +1141,7 @@ function injectCSS() {
   font-family: var(--disp);
   font-size: 18px;
   letter-spacing: 1px;
-  color: #888;
+  color: #bbb;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   transition: color .15s;
 }
@@ -1071,7 +1150,7 @@ function injectCSS() {
   font-family: var(--mono);
   font-size: 8px;
   letter-spacing: 2px;
-  color: #333;
+  color: #777;
   text-transform: uppercase;
   margin-top: 2px;
 }
@@ -1095,7 +1174,7 @@ function injectCSS() {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 1px;
-  color: #444;
+  color: #888;
   line-height: 1.7;
   text-transform: uppercase;
 }
@@ -1127,7 +1206,7 @@ function injectCSS() {
   font-family: var(--mono);
   font-size: 9px;
   letter-spacing: 2px;
-  color: #444;
+  color: #888;
   text-transform: uppercase;
 }
 .zc-toast.green { border-left-color: #00E676; }
@@ -1139,6 +1218,89 @@ function injectCSS() {
   to   { opacity: 1; transform: translateY(0); }
 }
 .zc-card { animation: zc-fadein .4s ease both; }
+
+/* ════════════════════════════════════════
+   Z-COLLAB — МОБИЛЬ ≤600px
+════════════════════════════════════════ */
+@media(max-width:600px) {
+
+  /* ── HERO ── */
+  .zc-hero { padding: 36px 16px 28px !important; }
+  .zc-hero::before { font-size: 80px !important; right: -8px !important; top: 0 !important; }
+  .zc-hero-top { flex-direction: column !important; gap: 20px !important; align-items: flex-start !important; }
+  .zc-hero-title { font-size: clamp(48px, 14vw, 72px) !important; letter-spacing: 2px !important; }
+  .zc-hero-sub { font-size: 13px !important; margin-top: 8px !important; padding-left: 12px !important; }
+  .zc-hero-label { font-size: 8px !important; letter-spacing: 4px !important; }
+
+  /* ── HERO STATS — горизонталь ── */
+  .zc-hero-stats {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 20px !important;
+    width: 100% !important;
+    padding-top: 16px !important;
+    border-top: 1px solid #1a1a1a !important;
+  }
+  .zc-hstat { text-align: left !important; }
+  .zc-hstat-n { font-size: 36px !important; justify-content: flex-start !important; gap: 6px !important; }
+  .zc-hstat-l { font-size: 8px !important; letter-spacing: 2px !important; margin-top: 4px !important; }
+  .zc-live-dot { width: 7px !important; height: 7px !important; }
+
+  /* ── TOOLBAR ── */
+  .zc-toolbar { padding: 12px 14px !important; gap: 8px !important; flex-wrap: nowrap !important; overflow-x: auto !important; scrollbar-width: none !important; }
+  .zc-toolbar::-webkit-scrollbar { display: none !important; }
+  .zc-filter-btn { padding: 8px 14px !important; font-size: 9px !important; letter-spacing: 2px !important; white-space: nowrap !important; flex-shrink: 0 !important; }
+  .zc-spacer { display: none !important; }
+  .zc-sel { font-size: 9px !important; padding: 8px 22px 8px 4px !important; display: none !important; }
+
+  /* ── LAYOUT — 1 колонка ── */
+  .zc-layout { padding: 0 12px !important; padding-top: 16px !important; grid-template-columns: 1fr !important; }
+  .zc-sidebar { display: none !important; }
+  .zc-feed { padding-right: 0 !important; gap: 14px !important; }
+
+  /* ── КАРТОЧКА ── */
+  .zc-card { padding: 20px 18px !important; }
+  .zc-card-head { gap: 12px !important; margin-bottom: 14px !important; }
+  .zc-avatar { width: 42px !important; height: 42px !important; font-size: 18px !important; }
+  .zc-artist-name { font-size: 20px !important; letter-spacing: 1px !important; }
+  .zc-artist-meta { font-size: 11px !important; letter-spacing: 1px !important; }
+  .zc-status-badge { font-size: 10px !important; padding: 6px 10px !important; letter-spacing: 2px !important; }
+
+  /* ── АУДИО БЛОК ── */
+  .zc-audio-block { padding: 12px 14px !important; gap: 12px !important; margin-bottom: 14px !important; }
+  .zc-play-btn { width: 38px !important; height: 38px !important; }
+  .zc-audio-title { font-size: 16px !important; letter-spacing: 1px !important; }
+  .zc-audio-meta { font-size: 9px !important; }
+  .zc-waveform { height: 40px !important; }
+  .zc-audio-dur { font-size: 9px !important; }
+
+  /* ── ОПИСАНИЕ ── */
+  .zc-desc { font-size: 13px !important; padding-left: 10px !important; margin-bottom: 12px !important; }
+
+  /* ── ТЕГИ ── */
+  .zc-tags { gap: 6px !important; margin-bottom: 18px !important; }
+  .zc-tag { font-size: 10px !important; padding: 5px 10px !important; letter-spacing: 1px !important; }
+
+  /* ── ACTIONS ── */
+  .zc-actions { gap: 14px !important; padding: 16px 0 !important; flex-wrap: wrap !important; }
+  .zc-btn-fit { padding: 14px 24px !important; font-size: 11px !important; letter-spacing: 3px !important; width: 100% !important; text-align: center !important; justify-content: center !important; }
+  .zc-btn-fit:hover { letter-spacing: 4px !important; padding-left: 24px !important; padding-right: 24px !important; }
+  .zc-demos-count { font-size: 11px !important; }
+  .zc-time-ago { font-size: 10px !important; margin-left: 0 !important; }
+
+  /* ── МОДАЛ — полный экран ── */
+  .zc-modal { width: 100vw !important; max-height: 100dvh !important; overflow-y: auto !important; border-top-width: 3px !important; }
+  .zc-modal-head { padding: 20px 18px 16px !important; }
+  .zc-modal-title { font-size: 32px !important; letter-spacing: 2px !important; }
+  .zc-modal-sub { font-size: 11px !important; }
+  .zc-modal-body { padding: 18px 18px 24px !important; }
+  .zc-upload-area { padding: 24px 16px !important; }
+  .zc-submit-btn { font-size: 16px !important; letter-spacing: 5px !important; padding: 18px !important; clip-path: none !important; }
+  .zc-submit-btn:hover { letter-spacing: 5px !important; }
+
+  /* ── TOAST ── */
+  .zc-toast { right: 12px !important; bottom: 16px !important; left: 12px !important; min-width: 0 !important; }
+}
 `;
   document.head.appendChild(s);
 }

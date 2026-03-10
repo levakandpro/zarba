@@ -5,13 +5,147 @@
 // ============================================================
 
 function renderCharts(container) {
-  // Удаляем старый CSS
   const old = document.getElementById('c-css');
   if (old) old.remove();
 
-  container.innerHTML = getChartsHTML();
-  injectChartsCSS();
-  initChartPlayers(container);
+  // ── ЗАГРУЗОЧНЫЙ ЭКРАН ──
+  container.innerHTML = `
+  <div id="c-loader" style="
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    height:80vh;background:#080808;position:relative;overflow:hidden;gap:0;
+  ">
+  <style>
+    @keyframes c-logo-pulse {
+      0%   { transform:scale(1);    filter:drop-shadow(0 0 0px #ff4500) brightness(1); }
+      50%  { transform:scale(1.1);  filter:drop-shadow(0 0 30px #ff4500) drop-shadow(0 0 70px rgba(255,69,0,.5)) brightness(1.2); }
+      100% { transform:scale(1);    filter:drop-shadow(0 0 0px #ff4500) brightness(1); }
+    }
+    @keyframes c-spin1 { to { transform: rotate(360deg);  } }
+    @keyframes c-spin2 { to { transform: rotate(-360deg); } }
+    @keyframes c-spin3 { to { transform: rotate(360deg);  } }
+    @keyframes c-bar-fill {
+      0%   { width: 0%; }
+      20%  { width: 15%; }
+      50%  { width: 55%; }
+      80%  { width: 80%; }
+      95%  { width: 95%; }
+      100% { width: 100%; }
+    }
+    @keyframes c-title-in {
+      from { opacity:0; letter-spacing:20px; }
+      to   { opacity:1; letter-spacing:8px; }
+    }
+    @keyframes c-sub-in {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:.6; transform:translateY(0); }
+    }
+    @keyframes c-grid-load {
+      to { transform: translateY(80px); }
+    }
+    .c-ld-grid {
+      position:absolute;inset:0;
+      background-image:
+        linear-gradient(rgba(255,69,0,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,69,0,.03) 1px,transparent 1px);
+      background-size:60px 60px;
+      animation:c-grid-load 12s linear infinite;
+      pointer-events:none;
+    }
+    .c-ld-spot {
+      position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+      width:600px;height:500px;
+      background:radial-gradient(ellipse,rgba(255,69,0,.12) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .c-ld-rings { position:relative;width:180px;height:180px;display:flex;align-items:center;justify-content:center; }
+    .c-ld-r1,.c-ld-r2,.c-ld-r3 { position:absolute;border-radius:50%; }
+    .c-ld-r1 {
+      width:180px;height:180px;
+      border:1px solid rgba(255,69,0,.12);
+      border-top:2px solid #ff4500;
+      animation:c-spin1 1.2s linear infinite;
+    }
+    .c-ld-r2 {
+      width:148px;height:148px;
+      border:1px solid rgba(255,69,0,.08);
+      border-right:1px solid rgba(255,69,0,.4);
+      animation:c-spin2 1.9s linear infinite;
+    }
+    .c-ld-r3 {
+      width:116px;height:116px;
+      border:1px dashed rgba(255,69,0,.06);
+      border-bottom:1px dashed rgba(255,69,0,.2);
+      animation:c-spin3 3s linear infinite;
+    }
+    .c-ld-logo {
+      position:relative;z-index:2;
+      width:64px;height:64px;
+      object-fit:contain;
+      animation:c-logo-pulse 2s ease-in-out infinite;
+    }
+    .c-ld-logo-fb {
+      position:relative;z-index:2;
+      font-family:'Bebas Neue',sans-serif;
+      font-size:56px;color:#ff4500;line-height:1;
+      animation:c-logo-pulse 2s ease-in-out infinite;
+    }
+    .c-ld-title {
+      font-family:'Bebas Neue',sans-serif;
+      font-size:42px;letter-spacing:8px;color:#fff;
+      margin-top:28px;
+      animation:c-title-in .8s .3s ease both;
+    }
+    .c-ld-title span { color:#ff4500; }
+    .c-ld-sub {
+      font-family:'JetBrains Mono',monospace;
+      font-size:9px;letter-spacing:5px;color:#888;
+      text-transform:uppercase;margin-top:6px;
+      animation:c-sub-in .8s .5s ease both;
+    }
+    .c-ld-bar-wrap {
+      width:180px;margin-top:24px;
+      background:rgba(255,255,255,.05);
+      border-radius:2px;height:2px;overflow:hidden;
+    }
+    .c-ld-bar {
+      height:100%;background:linear-gradient(90deg,#ff4500,#ff8c00);
+      border-radius:2px;
+      animation:c-bar-fill 1.8s ease-in-out forwards;
+    }
+    .c-ld-dots { display:flex;gap:8px;margin-top:14px; }
+    .c-ld-dot {
+      width:4px;height:4px;border-radius:50%;
+      background:#ff4500;
+      animation:za-dot-seq 1.4s ease-in-out infinite;
+    }
+    .c-ld-dot:nth-child(2){animation-delay:.2s}
+    .c-ld-dot:nth-child(3){animation-delay:.4s}
+    @keyframes za-dot-seq{0%,80%,100%{transform:scale(0);opacity:0}40%{transform:scale(1);opacity:1}}
+  </style>
+  <div class="c-ld-grid"></div>
+  <div class="c-ld-spot"></div>
+  <div class="c-ld-rings">
+    <div class="c-ld-r1"></div>
+    <div class="c-ld-r2"></div>
+    <div class="c-ld-r3"></div>
+    <img class="c-ld-logo" src="assets/logo-white-big.png"
+      onerror="this.style.display='none';document.getElementById('c-ld-fb').style.display='block'">
+    <div id="c-ld-fb" class="c-ld-logo-fb" style="display:none">Z</div>
+  </div>
+  <div class="c-ld-title">ТОП <span>100</span></div>
+  <div class="c-ld-sub">Официальный чарт ZARBA</div>
+  <div class="c-ld-bar-wrap"><div class="c-ld-bar"></div></div>
+  <div class="c-ld-dots">
+    <div class="c-ld-dot"></div><div class="c-ld-dot"></div><div class="c-ld-dot"></div>
+  </div>
+  </div>`;
+
+  // Рендерим контент после паузы (имитация загрузки)
+  setTimeout(() => {
+    container.innerHTML = getChartsHTML();
+    injectChartsCSS();
+    initChartPlayers(container);
+  }, 1800);
 }
 
 // ─── HTML ────────────────────────────────────────────────────
@@ -253,9 +387,11 @@ function injectChartsCSS() {
   display: flex; align-items: center; gap: 12px;
   margin-bottom: 20px;
   animation: cFD .8s ease both;
+  white-space: nowrap;
+  flex-wrap: nowrap;
 }
 .c-mline { width: 40px; height: 1px; background: #FF4500; opacity: .7; }
-.c-mtext { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; color: #FF4500; text-transform: uppercase; }
+.c-mtext { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; color: #FF4500; text-transform: uppercase; white-space: nowrap; }
 .c-hero-title {
   position: relative;
   font-family: var(--disp);
@@ -279,7 +415,7 @@ function injectChartsCSS() {
 }
 .c-stat { text-align: center; }
 .c-snum { font-family: var(--disp); font-size: 64px; color: #FF4500; line-height: 1; letter-spacing: 2px; }
-.c-slbl { font-family: var(--mono); font-size: 11px; letter-spacing: 5px; color: #555; text-transform: uppercase; margin-top: 4px; }
+.c-slbl { font-family: var(--mono); font-size: 11px; letter-spacing: 5px; color: #888; text-transform: uppercase; margin-top: 4px; }
 .c-sdiv { width: 1px; background: linear-gradient(transparent, #1e1e1e, transparent); align-self: stretch; }
 .c-live-dot {
   display: inline-block; width: 8px; height: 8px;
@@ -309,8 +445,8 @@ function injectChartsCSS() {
   opacity: .1;
 }
 .c-thdr-l { display: flex; align-items: center; gap: 16px; }
-.c-tlbl { font-family: var(--mono); font-size: 11px; letter-spacing: 5px; color: #555; text-transform: uppercase; }
-.c-tupd { font-family: var(--mono); font-size: 11px; color: #2a2a2a; letter-spacing: 2px; }
+.c-tlbl { font-family: var(--mono); font-size: 11px; letter-spacing: 5px; color: #888; text-transform: uppercase; }
+.c-tupd { font-family: var(--mono); font-size: 11px; color: #666; letter-spacing: 2px; }
 .c-live-tag {
   font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
   color: #00E676; text-transform: uppercase;
@@ -358,7 +494,7 @@ function injectChartsCSS() {
 .c-rank {
   font-family: var(--disp);
   font-size: 28px; text-align: center;
-  color: #1e1e1e; line-height: 1; padding-left: 4px;
+  color: #444; line-height: 1; padding-left: 4px;
   transition: color .2s;
 }
 .c-track[data-rank="1"] .c-rank { color: #FFD700; text-shadow: 0 0 20px rgba(255,215,0,.5); font-size: 34px; }
@@ -402,7 +538,7 @@ function injectChartsCSS() {
 .c-track[data-rank="1"] .c-tname { color: #fff; font-size: 22px; }
 .c-tartist {
   font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
-  color: #444; margin-top: 4px; text-transform: uppercase;
+  color: #666; margin-top: 4px; text-transform: uppercase;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .c-track:hover .c-tartist { color: #FF4500; }
@@ -410,14 +546,34 @@ function injectChartsCSS() {
 /* ── PLAYER ── */
 .c-player { display: flex; align-items: center; gap: 8px; padding: 0 8px; }
 .c-pbtn {
-  width: 30px; height: 30px; border-radius: 50%;
+  width: 36px; height: 36px; border-radius: 50%;
   background: #FF4500; border: none; color: #fff;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 11px; flex-shrink: 0;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0; /* скрываем текст ▶ */
+  flex-shrink: 0;
   transition: background .2s, transform .15s;
-  padding-left: 2px;
+  padding: 0; line-height: 1;
+  position: relative;
 }
-.c-pbtn:hover { background: #FF6B35; transform: scale(1.1); }
+/* SVG треугольник — идеально по центру */
+.c-pbtn::after {
+  content: '';
+  display: block;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 6px 0 6px 11px;
+  border-color: transparent transparent transparent #fff;
+  margin-left: 2px;
+  flex-shrink: 0;
+}
+.c-pbtn.playing::after {
+  /* пауза — два прямоугольника */
+  border: none;
+  width: 10px; height: 12px; margin-left: 0;
+  background: linear-gradient(to right, #fff 3px, transparent 3px, transparent 7px, #fff 7px);
+}
+.c-pbtn:hover { background: #FF6B35; transform: scale(1.08); }
 .c-sbtn {
   width: 28px; height: 28px; border-radius: 50%;
   background: #141414; border: 1px solid #2a2a2a;
@@ -453,7 +609,7 @@ function injectChartsCSS() {
 /* ── PLAYS ── */
 .c-plays { text-align: right; padding-right: 8px; }
 .c-plays-n { font-family: var(--disp); font-size: 22px; color: #fff; line-height: 1; letter-spacing: 1px; }
-.c-plays-l { font-family: var(--mono); font-size: 9px; color: #252525; text-transform: uppercase; letter-spacing: 2px; }
+.c-plays-l { font-family: var(--mono); font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 2px; }
 
 /* ── ACTIONS ── */
 .c-acts { display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding-right: 4px; }
@@ -475,9 +631,109 @@ function injectChartsCSS() {
   .c-stats { gap: 28px; }
   .c-snum { font-size: 44px; }
 }
+
+/* ══════════════════════════════════════
+   МОБИЛЬ — полная переработка строк
+══════════════════════════════════════ */
 @media(max-width: 600px) {
-  .c-track { grid-template-columns: 36px 52px 1fr 48px 56px; }
-  .c-clbls, .c-plays { display: none; }
+
+  /* Hero компактнее */
+  .c-hero { min-height: 320px; padding: 48px 20px 36px; }
+  .c-hero-title { font-size: clamp(52px, 18vw, 80px); }
+  .c-hero-meta { gap: 6px; flex-wrap: nowrap; white-space: nowrap; }
+  .c-mtext { font-size: 8px; letter-spacing: 1px; white-space: nowrap; }
+  .c-mline { width: 20px; flex-shrink: 0; }
+  .c-stats { gap: 12px; margin-top: 20px; flex-wrap: nowrap; }
+  .c-snum { font-size: 36px; }
+  .c-slbl { font-size: 9px; letter-spacing: 2px; }
+  .c-hero::before, .c-hero::after { display: none; }
+
+  /* Хедер */
+  .c-thdr { padding: 14px 14px 10px; }
+  .c-tlbl { font-size: 9px; letter-spacing: 3px; }
+  .c-tupd { font-size: 9px; }
+
+  /* Скрываем колонки */
+  .c-clbls { display: none; }
+  .c-list { padding: 0 0 60px; }
+
+  /* ── СТРОКА ТРЕКА — новый layout ── */
+  .c-track {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    min-height: 64px !important;
+    padding: 10px 14px 10px 10px !important;
+    gap: 10px !important;
+    border-bottom: 1px solid rgba(255,255,255,.04) !important;
+    transform: none !important;
+  }
+  .c-track:hover { transform: none !important; }
+  .c-track::before { display: none !important; }
+
+  /* Номер — компактный */
+  .c-rank {
+    font-size: 18px !important;
+    min-width: 28px !important;
+    text-align: center !important;
+    padding-left: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  .c-track[data-rank="1"] .c-rank { font-size: 20px !important; }
+  .c-track[data-rank="2"] .c-rank { font-size: 19px !important; }
+  .c-track[data-rank="3"] .c-rank { font-size: 19px !important; }
+
+  /* Обложка — чуть меньше */
+  .c-cover {
+    width: 42px !important; height: 42px !important;
+    flex-shrink: 0 !important; margin: 0 !important;
+  }
+
+  /* Инфо — растягивается */
+  .c-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+  }
+  .c-tname {
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .c-tartist {
+    font-size: 9px !important;
+    letter-spacing: 2px !important;
+    color: #555 !important;
+    margin-top: 2px !important;
+  }
+  .c-track:hover .c-tartist { color: #FF4500 !important; }
+
+  /* Плеер — только кнопка play */
+  .c-player {
+    flex-shrink: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+  .c-sbtn,
+  .c-ptime,
+  .c-pbar { display: none !important; }
+  .c-pbtn {
+    width: 40px !important; height: 40px !important;
+    font-size: 0 !important;
+  }
+
+  /* Тренд — компактный */
+  .c-trend {
+    flex-shrink: 0 !important;
+    font-size: 11px !important;
+    min-width: 32px !important;
+    text-align: center !important;
+  }
+
+  /* Скрываем plays и actions */
+  .c-plays,
+  .c-acts { display: none !important; }
 }
   `;
   document.head.appendChild(s);
@@ -549,15 +805,15 @@ function initChartPlayers(container) {
     const stopCurrent = () => {
       if (curAudio && curEl) {
         curAudio.pause(); curAudio.currentTime = 0;
-        curEl.querySelector('.c-pbtn').textContent = '▶';
-        curEl.querySelector('.c-pbtn').style.paddingLeft = '2px';
+        curEl.querySelector('.c-pbtn').classList.remove('playing');
+        curEl.querySelector('.c-pbtn').textContent = '';
         curEl.querySelector('.c-pfill').style.width = '0%';
         curEl.querySelector('.c-ptime').textContent = '0:00';
       }
     };
-    const play  = () => { stopCurrent(); audio.play(); playing = true; pbtn.textContent = '⏸'; pbtn.style.paddingLeft = '0'; curAudio = audio; curEl = row; };
-    const pause = () => { audio.pause(); playing = false; pbtn.textContent = '▶'; pbtn.style.paddingLeft = '2px'; };
-    const stop  = () => { audio.pause(); audio.currentTime = 0; playing = false; pbtn.textContent = '▶'; pbtn.style.paddingLeft = '2px'; fill.style.width = '0%'; time.textContent = '0:00'; };
+    const play  = () => { stopCurrent(); audio.play(); playing = true; pbtn.classList.add('playing'); pbtn.textContent = ''; curAudio = audio; curEl = row; };
+    const pause = () => { audio.pause(); playing = false; pbtn.classList.remove('playing'); pbtn.textContent = ''; };
+    const stop  = () => { audio.pause(); audio.currentTime = 0; playing = false; pbtn.classList.remove('playing'); pbtn.textContent = ''; fill.style.width = '0%'; time.textContent = '0:00'; };
 
     audio.addEventListener('timeupdate', () => {
       if (audio.duration) fill.style.width = (audio.currentTime / audio.duration * 100) + '%';

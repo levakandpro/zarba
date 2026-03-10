@@ -19,7 +19,7 @@
 }
 
 /* ============================================
-   БАЗОВЫЕ СТИЛИ
+   БАЗОВЫЕ СТИЛИ + МОБИЛЬНАЯ БРОНЯ (ПАКЕТ 1)
    ============================================ */
 body, html {
     margin: 0;
@@ -30,6 +30,20 @@ body, html {
     height: 100%;
     overflow-x: hidden;
     position: relative;
+    
+    /* БРОНЯ ОТ БРАУЗЕРНЫХ ПРИВЫЧЕК */
+    -webkit-tap-highlight-color: transparent; /* Убираем уродливые серые квадраты при тапе */
+    -webkit-touch-callout: none; /* Блокируем всплывающее меню на iOS */
+    -webkit-user-select: none; /* Запрещаем выделять текст пальцем */
+    user-select: none;
+    touch-action: manipulation; /* Отключаем двойной тап (зум экрана) */
+    overscroll-behavior-y: none; /* Блокируем свайп вниз для обновления страницы (pull-to-refresh) */
+}
+
+/* Разрешаем выделять текст только в инпутах, если они будут в чате */
+input, textarea {
+    -webkit-user-select: auto;
+    user-select: auto;
 }
 
 /* ПРЕМИУМ ФОН */
@@ -41,39 +55,11 @@ body::before {
     right: 0;
     bottom: 0;
     background: 
-        /* Оранжевое свечение левый верхний угол */
-        radial-gradient(
-            ellipse 900px 600px at -5% 10%,
-            rgba(255, 69, 0, 0.09) 0%,
-            transparent 65%
-        ),
-        /* Оранжевое свечение правый нижний угол */
-        radial-gradient(
-            ellipse 700px 500px at 105% 90%,
-            rgba(255, 69, 0, 0.07) 0%,
-            transparent 60%
-        ),
-        /* Центральное свечение сверху */
-        radial-gradient(
-            ellipse 1400px 500px at 50% 0%,
-            rgba(255, 69, 0, 0.06) 0%,
-            transparent 55%
-        ),
-        /* Базовый градиент */
-        linear-gradient(
-            180deg,
-            rgba(18, 18, 18, 1) 0%,
-            rgba(10, 10, 10, 1) 40%,
-            rgba(6, 6, 6, 1) 100%
-        ),
-        /* Микро-шум */
-        repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 2px,
-            rgba(255, 255, 255, 0.008) 2px,
-            rgba(255, 255, 255, 0.008) 4px
-        );
+        radial-gradient(ellipse 900px 600px at -5% 10%, rgba(255, 69, 0, 0.09) 0%, transparent 65%),
+        radial-gradient(ellipse 700px 500px at 105% 90%, rgba(255, 69, 0, 0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 1400px 500px at 50% 0%, rgba(255, 69, 0, 0.06) 0%, transparent 55%),
+        linear-gradient(180deg, rgba(18, 18, 18, 1) 0%, rgba(10, 10, 10, 1) 40%, rgba(6, 6, 6, 1) 100%),
+        repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255, 255, 255, 0.008) 2px, rgba(255, 255, 255, 0.008) 4px);
     background-attachment: fixed;
     background-color: #080808;
     z-index: 0;
@@ -102,6 +88,24 @@ body::after {
     opacity: 0.6;
     z-index: 0;
     pointer-events: none;
+}
+
+/* ============================================
+   УПРУГИЙ ОТКЛИК НА КАСАНИЕ (ПАКЕТ 1)
+   ============================================ */
+.track-row-skeleton:active,
+.release-item-skeleton:active,
+.ringtone-item:active,
+.trend-track-row:active,
+.newcomer-card:active,
+.artist-card-skeleton:active,
+.player-btn:active,
+.btn-google-auth:active,
+.scroll-arrow-btn:active,
+.play-btn-elite:active {
+    transform: scale(0.96) !important;
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 0.85;
 }
 
 /* ============================================
@@ -285,10 +289,6 @@ body::after {
     background: #ff571a;
 }
 
-.btn-google-auth:active {
-    transform: translateY(1px);
-}
-
 /* ============================================
    РАДИО КАПСУЛА
    ============================================ */
@@ -327,7 +327,7 @@ body::after {
     display: flex;
     align-items: center;
     background: linear-gradient(160deg, #141414 0%, #0d0d0d 50%, #0a0a0a 100%);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,69,0,0.2); /* Усилил контур капсулы для мобилок */
     border-radius: 120px;
     padding: 16px 50px 16px 20px;
     gap: 35px;
@@ -337,8 +337,7 @@ body::after {
         1px 0 0 rgba(255,255,255,0.03) inset,
         0 20px 60px rgba(0, 0, 0, 0.8),
         0 8px 25px rgba(0,0,0,0.6),
-        0 0 60px rgba(255, 69, 0, 0.12),
-        0 0 0 1px rgba(255,69,0,0.05);
+        0 0 60px rgba(255, 69, 0, 0.12);
     backdrop-filter: blur(20px);
     background-color: rgba(12, 12, 12, 0.97);
     position: relative;
@@ -347,14 +346,13 @@ body::after {
 }
 
 .z-capsule:hover {
-    border-color: rgba(255,255,255,0.12);
+    border-color: rgba(255,69,0,0.4);
     box-shadow: 
         0 2px 0 rgba(255,255,255,0.06) inset,
         0 -2px 0 rgba(0,0,0,0.7) inset,
         0 30px 80px rgba(0, 0, 0, 0.9),
         0 10px 30px rgba(0,0,0,0.7),
-        0 0 80px rgba(255, 69, 0, 0.2),
-        0 0 0 1px rgba(255,69,0,0.12);
+        0 0 80px rgba(255, 69, 0, 0.2);
     transform: translateY(-2px);
 }
 
@@ -450,10 +448,6 @@ body::after {
         0 0 50px rgba(255, 69, 0, 0.8),
         0 15px 50px rgba(255, 69, 0, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.play-btn-elite:active {
-    transform: scale(0.95);
 }
 
 .energy-ring-1, .energy-ring-2 {
@@ -731,8 +725,6 @@ h3, h2, h1 {
     padding: 0 !important;
     margin: 0 !important;
     display: block;
-    width: 32px;
-    height: 32px;
 }
 
 .section-icon:focus,
@@ -743,7 +735,7 @@ h3, h2, h1 {
 }
 
 /* ============================================
-   ТОП 10
+   ТОП 10 (С улучшенным контрастом)
    ============================================ */
 .trending-list {
     display: flex;
@@ -755,7 +747,7 @@ h3, h2, h1 {
     display: flex;
     align-items: center;
     background: linear-gradient(160deg, #161616 0%, #0f0f0f 60%, #0a0a0a 100%);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 69, 0, 0.15); /* Заменил белую рамку на оранжевое свечение для мобилок */
     padding: 14px 24px;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -765,7 +757,7 @@ h3, h2, h1 {
     box-shadow:
         0 1px 0 rgba(255,255,255,0.04) inset,
         0 -1px 0 rgba(0,0,0,0.5) inset,
-        0 4px 12px rgba(0,0,0,0.4),
+        0 6px 15px rgba(0,0,0,0.7), /* Усилил тень для отрыва от фона */
         0 1px 3px rgba(0,0,0,0.5);
 }
 
@@ -863,7 +855,7 @@ h3, h2, h1 {
 }
 
 /* ============================================
-   НОВИНКИ
+   НОВИНКИ (С улучшенным контрастом)
    ============================================ */
 .grid-1-1 {
     display: grid;
@@ -874,7 +866,7 @@ h3, h2, h1 {
 .release-item-skeleton {
     aspect-ratio: 1/1;
     background: linear-gradient(160deg, #1e1e1e 0%, #141414 60%, #0f0f0f 100%);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 69, 0, 0.15); /* Контраст для мобилок */
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -886,7 +878,7 @@ h3, h2, h1 {
     box-shadow:
         0 2px 0 rgba(255,255,255,0.05) inset,
         0 -1px 0 rgba(0,0,0,0.6) inset,
-        0 6px 20px rgba(0,0,0,0.6),
+        0 8px 25px rgba(0,0,0,0.7),
         0 2px 4px rgba(0,0,0,0.4);
 }
 
@@ -1007,7 +999,7 @@ h3, h2, h1 {
 .artist-card-skeleton:hover .artist-name { color: var(--orange); }
 
 /* ============================================
-   РИНГТОНЫ
+   РИНГТОНЫ (С улучшенным контрастом)
    ============================================ */
 .ringtones-list {
     display: flex;
@@ -1019,7 +1011,7 @@ h3, h2, h1 {
     display: flex;
     align-items: center;
     background: linear-gradient(160deg, #161616 0%, #0f0f0f 60%, #0a0a0a 100%);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 69, 0, 0.15); /* Контраст для мобилок */
     padding: 16px 28px;
     border-radius: 50px;
     justify-content: space-between;
@@ -1028,7 +1020,7 @@ h3, h2, h1 {
     box-shadow:
         0 1px 0 rgba(255,255,255,0.05) inset,
         0 -1px 0 rgba(0,0,0,0.5) inset,
-        0 4px 14px rgba(0,0,0,0.45);
+        0 6px 18px rgba(0,0,0,0.6);
 }
 
 .ringtone-item:hover {
@@ -1354,7 +1346,7 @@ h3, h2, h1 {
 .modal-content a:hover::after { width: 100%; }
 
 /* ============================================
-   АНИМАЦИИ
+   АНИМАЦИИ И ГЛОБАЛЬНАЯ БРОНЯ КАРТИНОК
    ============================================ */
 @keyframes blink {
     0%, 100% { opacity: 1; }
@@ -1372,6 +1364,10 @@ img {
     margin: 0 !important;
     border-radius: 0;
     display: block;
+    
+    /* БРОНЯ КАРТИНОК (ПАКЕТ 1) */
+    -webkit-user-drag: none; /* Запрет перетаскивания обложек */
+    pointer-events: none; /* Отключаем меню "Сохранить", клик пробивает насквозь к кнопке */
 }
 
 img:focus, img:active, img:focus-visible {
@@ -1395,7 +1391,7 @@ img:focus, img:active, img:focus-visible {
 
 @media (max-width: 768px) {
     .main-header { padding: 0 20px; }
-/* --- ПРАВКИ ДЛЯ РАДИО-КАПСУЛЫ --- */
+    /* --- ПРАВКИ ДЛЯ РАДИО-КАПСУЛЫ --- */
     .z-capsule {
         flex-wrap: nowrap;
         padding: 8px 16px 8px 8px;
@@ -1442,7 +1438,7 @@ img:focus, img:active, img:focus-visible {
    ============================================ */
 .custom-player {
     background: linear-gradient(135deg, #111 0%, #161616 100%);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 69, 0, 0.2); /* Контраст плеера */
     border-radius: 14px;
     padding: 16px 20px;
     display: flex;
@@ -1457,7 +1453,7 @@ img:focus, img:active, img:focus-visible {
 }
 
 .custom-player:hover {
-    border-color: rgba(255,69,0,0.2);
+    border-color: rgba(255,69,0,0.4);
     box-shadow: 
         0 16px 32px rgba(0, 0, 0, 0.9),
         inset 0 1px 2px rgba(255, 255, 255, 0.08);
@@ -1494,8 +1490,6 @@ img:focus, img:active, img:focus-visible {
     transform: scale(1.1);
     box-shadow: 0 0 15px rgba(255, 69, 0, 0.3);
 }
-
-.player-btn:active { transform: scale(0.95); }
 
 .player-btn.playing {
     background: linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);
@@ -1703,7 +1697,7 @@ img:focus, img:active, img:focus-visible {
     min-width: 150px;
     width: 150px;
     background: linear-gradient(180deg, #161616 0%, #0f0f0f 100%);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 69, 0, 0.15); /* Контраст для мобилок */
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
@@ -1711,6 +1705,7 @@ img:focus, img:active, img:focus-visible {
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
 }
 
 .newcomer-card:hover {
@@ -1797,7 +1792,7 @@ img:focus, img:active, img:focus-visible {
 .ringtones-scroll { max-height: 680px; }
 
 /* ============================================
-   В ТРЕНДЕ — СТРОКА
+   В ТРЕНДЕ — СТРОКА (С улучшенным контрастом)
    ============================================ */
 .trend-track-row {
     display: flex;
@@ -1805,7 +1800,7 @@ img:focus, img:active, img:focus-visible {
     align-items: center;
     gap: 16px;
     background: linear-gradient(160deg, #161616 0%, #0f0f0f 60%, #0a0a0a 100%);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 69, 0, 0.15); /* Заменил белую рамку на оранжевую */
     border-radius: 12px;
     padding: 14px 20px;
     position: relative;
@@ -1814,7 +1809,7 @@ img:focus, img:active, img:focus-visible {
     box-shadow:
         0 1px 0 rgba(255,255,255,0.04) inset,
         0 -1px 0 rgba(0,0,0,0.5) inset,
-        0 4px 12px rgba(0,0,0,0.4);
+        0 6px 15px rgba(0,0,0,0.7);
 }
 
 .trend-track-row:hover {
@@ -1971,6 +1966,11 @@ img:focus, img:active, img:focus-visible {
 .trend-track-row .trend-indicators { flex-shrink: 0; margin-left: 4px; }
 .trend-player-block { display: contents; }
 
+/* Прогресс в meta — только для мобиля, на десктопе скрыт */
+.trend-track-meta .trend-progress-bar {
+    display: none;
+}
+
 .trend-actions {
     display: flex;
     align-items: center;
@@ -2108,4 +2108,482 @@ img:focus, img:active, img:focus-visible {
     position: relative;
     z-index: 1;
     min-height: calc(100vh - 70px);
+}
+/* ============================================================
+   ██████████  ZARBA MOBILE ARMOR  ██████████
+   Полная мобильная адаптация — мировой уровень
+   ============================================================ */
+
+/* ── 1. БАЗОВАЯ БРОНЯ — защита от браузерных артефактов ── */
+* {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none;
+}
+img, .art-card > img, .art-modal-img,
+.release-card-cover img, .newcomer-card-cover img,
+.art-vr-avatar, .trend-cover img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+}
+/* Прозрачный щит поверх обложек — сохранить нельзя */
+.release-card-cover::after,
+.newcomer-card-cover::after,
+.trend-cover::after,
+.art-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: transparent;
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* ── 2. TOUCH FEEDBACK — упругость iOS ── */
+.trend-track-row,
+.release-card,
+.newcomer-card-new,
+.newcomer-card,
+.art-vote-row,
+.art-card,
+.play-btn-elite,
+.rc-play-btn,
+.trend-play-btn,
+.art-nav-btn,
+.scroll-arrow-btn,
+.card-mini-btn {
+    transition: transform 0.15s cubic-bezier(0.4,0,0.2,1),
+                box-shadow 0.15s ease,
+                background 0.2s ease !important;
+    -webkit-tap-highlight-color: transparent;
+}
+.trend-track-row:active    { transform: scale(0.97) !important; opacity: 0.88; }
+.release-card:active        { transform: scale(0.95) translateY(0) !important; }
+.newcomer-card-new:active   { transform: scale(0.95) !important; }
+.newcomer-card:active       { transform: scale(0.96) !important; }
+.art-vote-row:active        { transform: scale(0.97) translateY(0) !important; }
+.play-btn-elite:active      { transform: scale(0.92) !important; }
+.rc-play-btn:active         { transform: scale(0.9) !important; }
+.trend-play-btn:active      { transform: scale(0.9) !important; }
+.art-nav-btn:active         { transform: scale(0.9) !important; background: #ff4500 !important; }
+.scroll-arrow-btn:active    { transform: scale(0.9) !important; }
+.card-mini-btn:active       { transform: scale(0.88) translateY(0) !important; }
+
+/* ── 3. SHIMMER — золотой блик на скелетонах ── */
+@keyframes zarba-shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+}
+.release-item-skeleton,
+.artist-card-skeleton,
+.track-row-skeleton {
+    background: linear-gradient(
+        90deg,
+        #1a1a1a 0px,
+        #242424 60px,
+        #2a1e0a 120px,
+        #242424 180px,
+        #1a1a1a 240px
+    ) !important;
+    background-size: 400px 100% !important;
+    animation: zarba-shimmer 1.8s ease-in-out infinite !important;
+}
+
+/* ── 4. SNAP SCROLLING на горизонтальных лентах ── */
+.hscroll-wrapper {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+.hscroll-wrapper::-webkit-scrollbar { display: none !important; }
+.hscroll-inner > * {
+    scroll-snap-align: start;
+}
+
+/* ──────────────────────────────────────────────
+   МОБИЛЬНЫЙ BREAKPOINT ≤768px
+──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+
+    /* ── HEADER ── */
+    .main-header {
+        padding: 0 16px !important;
+        height: 60px !important;
+    }
+    .logo-main     { font-size: 22px !important; }
+    .logo-tagline  { display: none !important; }
+    .logo-icon-wrapper { width: 38px !important; height: 38px !important; }
+    .logo-icon     { width: 22px !important; height: 22px !important; }
+    .btn-google-auth {
+        padding: 8px 14px !important;
+        font-size: 11px !important;
+    }
+
+    /* ── HAMBURGER ── */
+    #hamburger {
+        display: flex !important;
+        flex-direction: column;
+        gap: 5px;
+        width: 36px; height: 36px;
+        align-items: center; justify-content: center;
+        background: rgba(255,69,0,0.08);
+        border: 1px solid rgba(255,69,0,0.25);
+        border-radius: 10px;
+        cursor: pointer;
+        z-index: 1001;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+    }
+    #hamburger span {
+        display: block;
+        width: 18px; height: 2px;
+        background: #ff4500;
+        border-radius: 2px;
+        transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
+        transform-origin: center;
+    }
+    #hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    #hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    #hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── NAV MENU MOBILE ── */
+    .main-nav {
+        position: fixed !important;
+        top: 60px !important; left: 0 !important; right: 0 !important;
+        background: rgba(8,8,8,0.98) !important;
+        backdrop-filter: blur(20px) !important;
+        border-bottom: 1px solid rgba(255,69,0,0.2) !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 12px 0 20px !important;
+        z-index: 1000 !important;
+        transform: translateY(-110%) !important;
+        transition: transform 0.35s cubic-bezier(0.23,1,0.32,1) !important;
+        display: flex !important;
+        pointer-events: none !important;
+    }
+    .main-nav.open {
+        transform: translateY(0) !important;
+        pointer-events: all !important;
+    }
+    .main-nav button {
+        width: 100% !important;
+        text-align: left !important;
+        padding: 14px 24px !important;
+        margin: 0 !important;
+        font-size: 13px !important;
+        border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+        border-radius: 0 !important;
+        color: rgba(255,255,255,0.7) !important;
+    }
+    .main-nav button:hover,
+    .main-nav button.active {
+        color: #ff4500 !important;
+        background: rgba(255,69,0,0.06) !important;
+        padding-left: 30px !important;
+    }
+    .main-nav button::after { display: none !important; }
+
+    /* ── RADIO CAPSULE — мобиль версия ── */
+    .radio-section {
+        padding: 12px 12px 16px !important;
+    }
+    .z-capsule {
+        border-radius: 20px !important;
+        padding: 12px 16px 12px 14px !important;
+        gap: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .history-side { display: none !important; }
+    .capsule-visual {
+        width: 64px !important;
+        height: 64px !important;
+        flex-shrink: 0 !important;
+    }
+    .play-btn-elite {
+        width: 56px !important;
+        height: 56px !important;
+    }
+    .play-btn-elite img { width: 22px !important; }
+    .energy-ring-1, .energy-ring-2 {
+        width: 56px !important;
+        height: 56px !important;
+    }
+    .capsule-info {
+        min-width: 0 !important;
+        flex: 1 !important;
+        gap: 4px !important;
+    }
+    .pure-track-title {
+        font-size: 15px !important;
+        max-width: 100% !important;
+    }
+    .pure-artist-name { font-size: 11px !important; }
+    .progress-zone { gap: 6px !important; }
+    .neon-line-bg { height: 3px !important; }
+    .status-row { gap: 6px !important; }
+    .live-tag-green { font-size: 9px !important; }
+    .z-tag { font-size: 7px !important; padding: 2px 6px !important; }
+    .capsule-actions { flex-shrink: 0 !important; }
+    .btn-chat-elite {
+        padding: 8px 14px !important;
+        font-size: 11px !important;
+    }
+
+    /* ── SECTION TITLES ── */
+    .content-block {
+        padding: 18px 14px 22px !important;
+    }
+    .section-title {
+        font-size: 12px !important;
+        letter-spacing: 2px !important;
+        padding: 5px 14px 5px 12px !important;
+        margin-bottom: 14px !important;
+    }
+    .section-icon { width: 18px !important; height: 18px !important; }
+
+    /* ── ARTIST CAROUSEL ── */
+    .art-slider-track {
+        height: 280px !important;
+    }
+    .art-card {
+        width: 170px !important;
+        height: 260px !important;
+    }
+    .art-name-text { font-size: 14px !important; }
+
+    /* ── ГОЛОСОВАНИЕ — мобиль layout ── */
+    .art-vote-container { padding: 0 4px !important; }
+    .art-vote-title { font-size: 22px !important; letter-spacing: 2px !important; }
+    .art-vote-head-bar { display: none !important; }
+
+    /* Сетка → список карточек горизонтальных */
+    .art-vote-list {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        padding: 14px 0 0 !important;
+    }
+    .art-vote-row {
+        flex-direction: row !important;
+        align-items: center !important;
+        min-height: unset !important;
+        height: 76px !important;
+        padding: 12px 14px !important;
+        gap: 14px !important;
+        border-radius: 16px !important;
+        transform: none !important;
+    }
+    .art-vote-row:hover {
+        transform: translateX(4px) !important;
+    }
+    .art-vote-row:active {
+        transform: scale(0.97) !important;
+    }
+    .art-vr-avatar {
+        width: 52px !important;
+        height: 52px !important;
+        border-radius: 12px !important;
+        flex-shrink: 0 !important;
+    }
+    .art-vr-info {
+        flex: 1 !important;
+        text-align: left !important;
+        min-width: 0 !important;
+    }
+    .art-vr-name {
+        font-size: 13px !important;
+        margin-bottom: 5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    .art-vr-bar-wrap {
+        margin: 0 0 4px !important;
+    }
+    .art-vr-pct {
+        font-size: 13px !important;
+        margin-top: 2px !important;
+    }
+    .art-vr-icon {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 18px !important;
+        flex-shrink: 0 !important;
+    }
+    .art-vote-row.voted .art-vr-icon {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    /* ── ГОРИЗОНТАЛЬНЫЕ ЛЕНТЫ ── */
+    .scroll-arrow-btn { display: none !important; }
+    .scroll-nav-row {
+        gap: 0 !important;
+    }
+    .hscroll-inner {
+        gap: 10px !important;
+        padding: 6px 14px 12px !important;
+    }
+    .release-card,
+    .grid-1-1.hscroll-inner .release-item-skeleton {
+        width: 148px !important;
+        min-width: 148px !important;
+        flex: 0 0 148px !important;
+    }
+    .release-card-cover { width: 148px !important; height: 148px !important; }
+    .release-card-title { font-size: 11px !important; }
+    .release-card-artist { font-size: 10px !important; }
+    .newcomer-card-new {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        flex: none !important;
+    }
+    #newcomers-list,
+    .nc-scroll-container {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ── В ТРЕНДЕ TOP 10 — МОБИЛЬНЫЙ РЕДИЗАЙН ── */
+    .vscroll-top10 { max-height: none !important; overflow: visible !important; }
+
+    .trend-track-row {
+        padding: 10px 12px !important;
+        gap: 0 !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        position: relative !important;
+    }
+
+    /* Номер */
+    .trend-track-row .rank {
+        font-size: 15px !important;
+        min-width: 22px !important;
+        width: 22px !important;
+        margin-right: 8px !important;
+    }
+
+    /* Обложка */
+    .trend-cover {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        margin-right: 10px !important;
+        border-radius: 8px !important;
+    }
+
+    /* Инфо + прогресс — растягивается */
+    .trend-track-meta {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        width: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 3px !important;
+        margin-right: 10px !important;
+    }
+    .t-name { font-size: 13px !important; font-weight: 800 !important; }
+    .a-name { font-size: 11px !important; color: #888 !important; }
+
+    /* Прогресс-бар — под названием внутри meta */
+    .trend-track-meta .trend-progress-bar {
+        display: block !important;
+        width: 100% !important;
+        height: 2px !important;
+        min-width: unset !important;
+        margin-top: 5px !important;
+        background: rgba(255,255,255,0.08) !important;
+        border-radius: 2px !important;
+        cursor: pointer !important;
+        overflow: visible !important;
+    }
+    .trend-progress-fill {
+        height: 100% !important;
+        background: linear-gradient(90deg, #ff4500, #ff8c00) !important;
+        box-shadow: 0 0 6px rgba(255,69,0,0.6) !important;
+    }
+
+    /* Время — скрываем */
+    .trend-time,
+    .trend-duration { display: none !important; }
+
+    /* Кнопки play/stop — компактные, справа */
+    .trend-player-controls {
+        flex: 0 0 auto !important;
+        gap: 6px !important;
+        align-items: center !important;
+    }
+    .trend-play-btn {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        font-size: 13px !important;
+        border-radius: 50% !important;
+        background: #ff4500 !important;
+        box-shadow: 0 2px 10px rgba(255,69,0,0.5) !important;
+    }
+    .trend-stop-btn {
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px !important;
+        font-size: 10px !important;
+        border-radius: 50% !important;
+        background: rgba(255,255,255,0.06) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        color: #888 !important;
+    }
+
+    /* Стрелка ▲ и счётчик просмотров — убираем */
+    .trend-indicators,
+    .trend-actions { display: none !important; }
+
+    /* ── РИНГТОНЫ ── */
+    .ringtones-scroll { max-height: none !important; overflow: visible !important; }
+
+    /* ── ПИЛЮЛЯ ГОЛОСОВ ── */
+    .art-vote-pill { font-size: 10px !important; padding: 4px 10px !important; }
+
+    /* ── VIP TOAST ── */
+    .zarba-vote-toast { bottom: 80px !important; }
+}
+
+/* ── 480px — очень узкие экраны ── */
+@media (max-width: 480px) {
+    .main-header { padding: 0 12px !important; }
+    .logo-container { gap: 8px !important; }
+    .logo-icon-wrapper { width: 34px !important; height: 34px !important; }
+    .logo-main { font-size: 20px !important; }
+
+    .art-card { width: 150px !important; height: 230px !important; }
+    .art-slider-track { height: 250px !important; }
+
+    .art-vote-row { height: 68px !important; padding: 10px 12px !important; }
+    .art-vr-avatar { width: 46px !important; height: 46px !important; }
+    .art-vr-name { font-size: 12px !important; }
+
+    .release-card,
+    .grid-1-1.hscroll-inner .release-item-skeleton {
+        width: 136px !important;
+        min-width: 136px !important;
+        flex: 0 0 136px !important;
+    }
+    .release-card-cover { width: 136px !important; height: 136px !important; }
+
+    .trend-track-row { padding: 9px 10px !important; gap: 8px !important; }
+    .trend-cover { width: 40px !important; height: 40px !important; min-width: 40px !important; }
+    .trend-track-meta { min-width: 100px !important; }
+}
+
+/* ── 360px — Galaxy S и самые узкие ── */
+@media (max-width: 360px) {
+    .art-vote-row { height: 62px !important; padding: 8px 10px !important; gap: 10px !important; }
+    .art-vr-avatar { width: 42px !important; height: 42px !important; }
+    .art-vr-icon { width: 34px !important; height: 34px !important; font-size: 15px !important; }
+    .art-vote-title { font-size: 18px !important; }
 }

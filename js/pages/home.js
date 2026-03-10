@@ -140,59 +140,802 @@ window.renderHome = function(container) {
             opacity: 1 !important; filter: none !important; display: block !important;
             background: transparent !important; border-radius: 8px !important;
         }
+        /* ═══════════════════════════════════════
+           НОВИНКИ — VINYL CARD
+        ═══════════════════════════════════════ */
         .release-card {
-            position: relative; flex-shrink: 0; width: 180px; border-radius: 14px; overflow: hidden;
-            background: #1a1a1a; cursor: pointer; transition: transform .3s, box-shadow .3s;
-            border: 1px solid rgba(255,255,255,0.12);
-            box-shadow: 0 4px 24px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative; flex-shrink: 0;
+            width: 190px;
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; background: transparent;
+            border: none; box-shadow: none; border-radius: 0; overflow: visible;
+            padding-bottom: 4px;
         }
-        .release-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,.9), 0 0 0 1px rgba(255,69,0,.5), 0 0 40px rgba(255,69,0,.15); border-color: rgba(255,69,0,.4); }
-        .release-card.playing { border-color: rgba(255,69,0,.6); box-shadow: 0 0 30px rgba(255,69,0,.25), 0 8px 30px rgba(0,0,0,.7); }
+
+        /* ── Диск ── */
         .release-card-cover {
-            width: 180px; height: 180px; background: #0a0a0a;
-            display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
+            width: 170px; height: 170px;
+            position: relative; flex-shrink: 0;
+            background: transparent; overflow: visible;
         }
-        .release-card-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
-        .release-card:hover .release-card-cover img { transform: scale(1.08); }
-        .release-card-cover .no-cover {
-            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+        /* убираем старые стили cover */
+        .release-card-cover img { display: none !important; }
+        .release-card-cover .no-cover { display: none !important; }
+        .release-card-cover-grad { display: none !important; }
+
+        /* Сам диск */
+        .rc-vinyl-outer {
+            width: 170px; height: 170px; border-radius: 50%;
+            background:
+                repeating-radial-gradient(circle at 50% 50%,
+                    rgba(255,255,255,.025) 0px, rgba(255,255,255,.025) 1px,
+                    transparent 1px, transparent 5px),
+                radial-gradient(circle, #2e2e2e 0%, #141414 55%, #090909 100%);
+            box-shadow:
+                0 10px 40px rgba(0,0,0,.85),
+                inset 0 1px 0 rgba(255,255,255,.06),
+                0 0 0 1px rgba(255,255,255,.05);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+            transition: box-shadow .4s ease;
         }
-        .release-card-cover .no-cover img { width: 60px; height: 60px; opacity: 0.15; transform: none !important; }
-        .release-card-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.3) 50%, transparent 100%);
-            display: flex; align-items: flex-end; justify-content: space-between;
-            padding: 10px 12px; opacity: 0; transition: opacity .25s;
+        .release-card:hover .rc-vinyl-outer {
+            box-shadow: 0 14px 50px rgba(0,0,0,.9),
+                0 0 0 1px rgba(255,69,0,.4), 0 0 40px rgba(255,69,0,.12);
         }
-        .release-card:hover .release-card-overlay,
-        .release-card.playing .release-card-overlay,
-        .newcomer-card-new:hover .release-card-overlay,
-        .newcomer-card-new.playing .release-card-overlay { opacity: 1; }
+        .release-card.playing .rc-vinyl-outer {
+            box-shadow: 0 0 0 2px rgba(255,69,0,.75),
+                0 0 60px rgba(255,69,0,.28), 0 14px 50px rgba(0,0,0,.9);
+            animation: rcspin 3.5s linear infinite;
+        }
+        @keyframes rcspin { to { transform: rotate(360deg); } }
+
+        /* Блики */
+        .rc-vinyl-shine {
+            position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+            background: conic-gradient(
+                transparent 0deg, rgba(255,255,255,.05) 25deg,
+                transparent 55deg, rgba(255,255,255,.02) 110deg,
+                transparent 170deg, rgba(255,255,255,.04) 220deg,
+                transparent 270deg, rgba(255,255,255,.02) 320deg, transparent 360deg);
+        }
+
+        /* Обложка-лейбл в центре */
+        .rc-vinyl-label {
+            width: 70px; height: 70px; border-radius: 50%;
+            overflow: hidden; position: relative; z-index: 2; flex-shrink: 0;
+            border: 2.5px solid rgba(255,255,255,.1);
+            box-shadow: 0 0 0 4px rgba(0,0,0,.9), 0 0 0 5px rgba(255,255,255,.04);
+        }
+        .rc-vinyl-label img {
+            width: 100%; height: 100%; object-fit: cover; display: block !important;
+            pointer-events: none; -webkit-user-drag: none;
+        }
+        .rc-vinyl-hole {
+            position: absolute; width: 10px; height: 10px; border-radius: 50%;
+            background: radial-gradient(circle, #000 60%, #222 100%);
+            box-shadow: 0 0 0 1px rgba(255,255,255,.08); z-index: 3;
+        }
+
+        /* Play overlay */
+        .rc-play-overlay {
+            display: none !important;
+        }
+        .rc-pause-overlay {
+            display: none !important;
+        }
+
+        /* Единая кнопка play/pause поверх диска — всегда кликабельна */
         .rc-play-btn {
-            width: 44px; height: 44px; border-radius: 50%;
-            background: #ff4500; border: none; color: #fff; font-size: 16px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: transform .15s, background .15s;
-            box-shadow: 0 4px 14px rgba(255,69,0,.5); padding-left: 3px;
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.82);
+            width: 52px; height: 52px; border-radius: 50%;
+            background: rgba(255,69,0,.88);
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0;
+            box-shadow: 0 4px 20px rgba(255,69,0,.55), 0 0 0 3px rgba(0,0,0,.5);
+            transition: transform .25s cubic-bezier(.23,1,.32,1),
+                        background .2s ease, opacity .25s ease;
+            opacity: 0; z-index: 15;
+            pointer-events: all;
         }
-        .rc-play-btn:hover { transform: scale(1.12); background: #ff6b00; }
-        .rc-views-overlay { font-size: 10px; font-weight: 700; color: rgba(255,255,255,.7); }
-        .release-card-info { padding: 10px 12px 11px; background: #111; }
-        .release-card-title { font-size: 12px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
-        .release-card-artist { font-size: 10px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 7px; }
-        .release-card-progress { height: 2px; background: #1e1e1e; border-radius: 1px; margin-bottom: 5px; cursor: pointer; }
-        .release-card-progress-fill { height: 100%; background: linear-gradient(90deg,#ff4500,#ff8c00); width: 0%; border-radius: 1px; transition: width .1s linear; }
+        .rc-play-btn svg { display: block; flex-shrink: 0; pointer-events: none; }
+        /* Десктоп — показывать при hover */
+        .release-card:hover .rc-play-btn {
+            opacity: 1; transform: translate(-50%, -50%) scale(1);
+        }
+        .release-card:hover .rc-play-btn:hover {
+            background: #ff6b00;
+            transform: translate(-50%, -50%) scale(1.1) !important;
+        }
+        .release-card:hover .rc-play-btn:active {
+            transform: translate(-50%, -50%) scale(0.9) !important;
+        }
+        /* Когда играет — показываем паузу */
+        .release-card.playing .rc-play-btn {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            background: rgba(0,0,0,.75);
+            border: 2px solid rgba(255,69,0,.7);
+        }
+        /* Мобиль — всегда видна */
+        @media (max-width: 768px) {
+            .release-card .rc-play-btn {
+                opacity: 1 !important;
+                transform: translate(-50%, -50%) scale(0.85) !important;
+                width: 44px !important; height: 44px !important;
+            }
+            .release-card.playing .rc-play-btn {
+                transform: translate(-50%, -50%) scale(0.9) !important;
+            }
+            .release-card { width: 155px !important; }
+            .release-card-cover { width: 138px !important; height: 138px !important; }
+            .rc-vinyl-outer { width: 138px !important; height: 138px !important; }
+            .rc-vinyl-label { width: 58px !important; height: 58px !important; }
+        }
+        @media (max-width: 480px) {
+            .release-card { width: 140px !important; }
+            .release-card-cover { width: 124px !important; height: 124px !important; }
+            .rc-vinyl-outer { width: 124px !important; height: 124px !important; }
+            .rc-vinyl-label { width: 52px !important; height: 52px !important; }
+            .release-card .rc-play-btn { width: 40px !important; height: 40px !important; }
+        }
+        .rc-needle-wrap {
+            position: absolute; top: 4px; right: -12px;
+            width: 26px; height: 72px;
+            transform-origin: 13px 6px;
+            transform: rotate(-22deg);
+            transition: transform .6s cubic-bezier(.23,1,.32,1);
+            z-index: 20;
+        }
+        .release-card.playing .rc-needle-wrap { transform: rotate(-7deg); }
+        .rc-needle-pivot {
+            position: absolute; left: 4px; top: -2px;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: radial-gradient(circle, #bbb 30%, #555 100%);
+            box-shadow: 0 2px 6px rgba(0,0,0,.6);
+        }
+        .rc-needle-arm {
+            position: absolute; left: 11px; top: 6px;
+            width: 3px; height: 58px;
+            background: linear-gradient(180deg, #ccc 0%, #666 60%, #444 100%);
+            border-radius: 2px; box-shadow: 1px 0 4px rgba(0,0,0,.5);
+        }
+        .rc-needle-head {
+            position: absolute; left: 6px; bottom: 0;
+            width: 12px; height: 10px;
+            background: linear-gradient(135deg, #999, #444);
+            border-radius: 2px 2px 4px 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,.6);
+        }
+
+        /* Оранжевый ореол снизу когда играет */
+        .release-card.playing .release-card-cover::after {
+            content: '';
+            position: absolute; bottom: -10px; left: 50%;
+            transform: translateX(-50%);
+            width: 120px; height: 18px;
+            background: radial-gradient(ellipse, rgba(255,69,0,.4) 0%, transparent 70%);
+            border-radius: 50%; filter: blur(8px); pointer-events: none; z-index: 0;
+        }
+
+        /* ── Инфо под диском ── */
+        .release-card-info {
+            width: 100% !important; text-align: center;
+            margin-top: 14px; padding: 0 6px 0 !important;
+            background: transparent !important;
+            border-top: none !important;
+        }
+        .release-card-title {
+            font-size: 13px !important; font-weight: 800 !important;
+            color: #fff !important;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-bottom: 3px; transition: color .2s;
+        }
+        .release-card:hover .release-card-title,
+        .release-card.playing .release-card-title { color: #ff8c00 !important; }
+        .release-card-artist {
+            font-size: 11px !important; color: #bbb !important;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-bottom: 10px;
+        }
+        .release-card-progress {
+            height: 3px; background: rgba(255,255,255,.1);
+            border-radius: 3px; margin-bottom: 6px;
+            cursor: pointer; overflow: hidden;
+        }
+        .release-card-progress-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #ff4500, #ff8c00);
+            border-radius: 3px; box-shadow: 0 0 6px rgba(255,69,0,.5);
+            transition: width .1s linear;
+        }
         .release-card-bottom { display: flex; justify-content: space-between; align-items: center; }
-        .release-card-time, .release-card-views { font-size: 9px; color: #888; font-family: monospace; letter-spacing: .3px; }
-        .newcomer-card-new {
+        .release-card-time {
+            font-size: 10px !important; color: #ff8c00 !important;
+            font-family: monospace !important; font-weight: 800 !important;
+            letter-spacing: .5px;
+        }
+        .release-card-views {
+            font-size: 10px !important; color: #aaa !important;
+            font-family: monospace !important; font-weight: 700 !important;
+        }
+
+        /* Мобиль */
+        @media (max-width: 768px) {
+            .release-card { width: 155px !important; }
+            .release-card-cover { width: 138px !important; height: 138px !important; }
+            .rc-vinyl-outer { width: 138px !important; height: 138px !important; }
+            .rc-vinyl-label { width: 58px !important; height: 58px !important; }
+            .rc-play-btn { width: 44px !important; height: 44px !important; font-size: 16px !important; }
+            /* На тач — play overlay всегда чуть видна */
+            .release-card .rc-play-overlay { opacity: 0.6 !important; }
+            .release-card.playing .rc-play-overlay { opacity: 0 !important; }
+        }
+        @media (max-width: 480px) {
+            .release-card { width: 140px !important; }
+            .release-card-cover { width: 124px !important; height: 124px !important; }
+            .rc-vinyl-outer { width: 124px !important; height: 124px !important; }
+            .rc-vinyl-label { width: 52px !important; height: 52px !important; }
+        }
+        /* ═══════════════════════════════════════
+           РИНГТОНЫ — PHONE CARD STYLE
+        ═══════════════════════════════════════ */
+        .rt-card {
+            position: relative;
+            background: linear-gradient(145deg, #111 0%, #0a0a0a 100%);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform .3s cubic-bezier(.23,1,.32,1), box-shadow .3s, border-color .3s;
+        }
+        .rt-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,69,0,.35);
+            box-shadow: 0 10px 36px rgba(0,0,0,.7), 0 0 28px rgba(255,69,0,.09);
+        }
+        .rt-card.playing {
+            border-color: rgba(255,69,0,.6);
+            box-shadow: 0 0 0 1px rgba(255,69,0,.35), 0 0 36px rgba(255,69,0,.14);
+        }
+        .rt-pulse-ring {
+            position: absolute; inset: -1px; border-radius: 20px;
+            border: 1px solid rgba(255,69,0,.4);
+            opacity: 0; pointer-events: none; z-index: 0;
+        }
+        @keyframes rt-pulse {
+            0%   { transform: scale(1);   opacity: .5; }
+            100% { transform: scale(1.04); opacity: 0; }
+        }
+        .rt-card.playing .rt-pulse-ring { animation: rt-pulse 1.8s ease-out infinite; }
+
+        /* Верх — экран телефона */
+        .rt-phone-screen {
+            position: relative;
+            background: linear-gradient(160deg, #0d1a0d 0%, #1a0d00 50%, #0d0d1a 100%);
+            padding: 14px 16px 12px;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            overflow: hidden;
+        }
+        .rt-phone-screen::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,69,0,.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,69,0,.035) 1px, transparent 1px);
+            background-size: 22px 22px; pointer-events: none;
+        }
+        .rt-phone-screen::after {
+            content: '';
+            position: absolute; top: -28px; right: -28px;
+            width: 110px; height: 110px;
+            background: radial-gradient(circle, rgba(255,69,0,.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Статус бар */
+        .rt-statusbar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; position: relative; z-index: 1;
+        }
+        .rt-signal { display: flex; align-items: flex-end; gap: 2px; }
+        .rt-signal-bar { width: 3px; border-radius: 1px; background: rgba(255,69,0,.5); }
+        .rt-signal-bar:nth-child(1) { height: 4px; }
+        .rt-signal-bar:nth-child(2) { height: 7px; }
+        .rt-signal-bar:nth-child(3) { height: 10px; background: rgba(255,69,0,.8); }
+        .rt-signal-bar:nth-child(4) { height: 13px; background: #ff4500; }
+        .rt-clock { font-size: 10px; font-weight: 700; color: rgba(255,255,255,.45); font-family: monospace; letter-spacing: 1px; }
+        .rt-battery-icon {
+            width: 18px; height: 9px; border: 1px solid rgba(255,255,255,.25);
+            border-radius: 2px; padding: 1.5px; position: relative;
+        }
+        .rt-battery-icon::after {
+            content: ''; position: absolute; right: -4px; top: 50%;
+            transform: translateY(-50%); width: 2px; height: 4px;
+            background: rgba(255,255,255,.25); border-radius: 0 1px 1px 0;
+        }
+        .rt-battery-fill {
+            height: 100%; width: 70%; border-radius: 1px;
+            background: linear-gradient(90deg, #ff4500, #ff8c00);
+        }
+
+        /* Основная инфо строка */
+        .rt-screen-info {
+            display: flex; align-items: center; gap: 12px;
+            position: relative; z-index: 1;
+        }
+        .rt-call-icon {
+            width: 44px; height: 44px; border-radius: 13px; flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(255,69,0,.18), rgba(255,69,0,.07));
+            border: 1px solid rgba(255,69,0,.28);
+            display: flex; align-items: center; justify-content: center;
+            transition: all .3s;
+        }
+        .rt-card.playing .rt-call-icon {
+            background: linear-gradient(135deg, rgba(255,69,0,.35), rgba(255,69,0,.12));
+            border-color: rgba(255,69,0,.55);
+            box-shadow: 0 0 16px rgba(255,69,0,.22);
+        }
+        .rt-track-text { flex: 1; min-width: 0; }
+        .rt-track-name {
+            font-size: 13px; font-weight: 800; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-bottom: 3px; transition: color .2s;
+        }
+        .rt-card.playing .rt-track-name,
+        .rt-card:hover .rt-track-name { color: #ff8c00; }
+        .rt-track-artist {
+            font-size: 11px; color: rgba(255,255,255,.45);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        /* Волна */
+        .rt-wave { display: flex; align-items: center; gap: 2px; height: 18px; flex-shrink: 0; }
+        .rt-wave-b {
+            width: 3px; border-radius: 2px;
+            background: linear-gradient(to top, #ff4500, #ff8c00);
+            opacity: 0; transition: opacity .3s;
+        }
+        .rt-card.playing .rt-wave-b { opacity: 1; }
+        .rt-wave-b:nth-child(1) { height: 8px;  animation: wv .55s ease-in-out infinite 0s; }
+        .rt-wave-b:nth-child(2) { height: 14px; animation: wv .55s ease-in-out infinite .1s; }
+        .rt-wave-b:nth-child(3) { height: 10px; animation: wv .55s ease-in-out infinite .2s; }
+        .rt-wave-b:nth-child(4) { height: 16px; animation: wv .55s ease-in-out infinite .08s; }
+        .rt-wave-b:nth-child(5) { height: 7px;  animation: wv .55s ease-in-out infinite .15s; }
+
+        /* Нижняя часть — плеер */
+        .rt-player { padding: 11px 16px 13px; background: #0d0d0d; }
+        .rt-progress-wrap {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+        }
+        .rt-time-lbl { font-size: 9px; color: #ff8c00; font-family: monospace; font-weight: 700; flex-shrink: 0; }
+        .rt-dur-lbl  { font-size: 9px; color: rgba(255,255,255,.28); font-family: monospace; flex-shrink: 0; }
+        .rt-progress {
+            flex: 1; height: 3px; background: rgba(255,255,255,.08);
+            border-radius: 3px; cursor: pointer; position: relative;
+        }
+        .rt-progress-fill {
+            height: 100%; width: 0%; border-radius: 3px;
+            background: linear-gradient(90deg, #ff4500, #ff8c00);
+            box-shadow: 0 0 6px rgba(255,69,0,.5);
+            transition: width .1s linear;
+        }
+        .rt-progress-thumb {
+            position: absolute; top: 50%; transform: translateY(-50%) scale(0);
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #ff4500; box-shadow: 0 0 8px rgba(255,69,0,.6);
+            transition: transform .2s, left .1s linear;
+            pointer-events: none;
+        }
+        .rt-card.playing .rt-progress-thumb,
+        .rt-progress:hover .rt-progress-thumb { transform: translateY(-50%) scale(1); }
+        .rt-controls {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .rt-views { font-size: 10px; color: rgba(255,255,255,.32); font-weight: 600; letter-spacing: .4px; }
+        .rt-btns { display: flex; align-items: center; gap: 8px; }
+        .rt-btn-dl {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            color: rgba(255,255,255,.45); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all .2s; padding: 0;
+        }
+        .rt-btn-dl:hover { background: rgba(255,69,0,.15); border-color: rgba(255,69,0,.4); color: #ff4500; }
+        .rt-btn-dl:active { transform: scale(.9); }
+        .rt-btn-play {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: linear-gradient(135deg, #ff4500, #ff8c00);
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0; flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(255,69,0,.4);
+            transition: transform .25s cubic-bezier(.23,1,.32,1), box-shadow .2s;
+        }
+        .rt-btn-play:hover { transform: scale(1.1); box-shadow: 0 6px 22px rgba(255,69,0,.55); }
+        .rt-btn-play:active { transform: scale(.9); }
+        .rt-btn-play svg { display: block; pointer-events: none; }
+
+        /* Сетка */
+        .ringtones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+        }
+
+        /* ── МОБИЛЬ — рингтоны как компактные строки ── */
+        @media (max-width: 600px) {
+            .ringtones-grid {
+                grid-template-columns: 1fr !important;
+                gap: 6px !important;
+            }
+
+            /* Карточка — горизонтальная строка */
+            .rt-card {
+                border-radius: 12px !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+
+            /* "Экран телефона" — компактная шапка */
+            .rt-phone-screen {
+                padding: 8px 12px !important;
+            }
+            /* Прячем статус-бар (антенна, часы, батарея) на мобиле */
+            .rt-statusbar { display: none !important; }
+
+            /* Иконка телефона + название + волна в одну строку */
+            .rt-screen-info {
+                gap: 10px !important;
+                align-items: center !important;
+            }
+            .rt-call-icon {
+                width: 40px !important; height: 40px !important;
+                border-radius: 10px !important;
+                flex-shrink: 0 !important;
+            }
+            .rt-track-text { flex: 1 !important; min-width: 0 !important; }
+            .rt-track-name {
+                font-size: 13px !important;
+                font-weight: 800 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+            .rt-track-artist {
+                font-size: 11px !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+            /* Волна — справа от названия */
+            .rt-wave { flex-shrink: 0 !important; }
+
+            /* Плеер — компактный */
+            .rt-player {
+                padding: 6px 12px 10px !important;
+            }
+            .rt-progress-wrap {
+                margin-bottom: 8px !important;
+                gap: 6px !important;
+            }
+            .rt-controls {
+                align-items: center !important;
+            }
+            .rt-views {
+                font-size: 9px !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                max-width: 130px !important;
+            }
+            .rt-btn-dl { width: 30px !important; height: 30px !important; }
+            .rt-btn-play { width: 38px !important; height: 38px !important; }
+        }
             position: relative; flex-shrink: 0; width: 180px; border-radius: 14px; overflow: hidden;
             background: #1a1a1a; cursor: pointer; transition: transform .3s, box-shadow .3s;
             border: 1px solid rgba(255,255,255,0.12);
             box-shadow: 0 4px 24px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,0.05);
         }
-        .newcomer-card-new:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,.8), 0 0 0 1px rgba(255,69,0,.3); }
-        .newcomer-card-new.playing { border-color: rgba(255,69,0,.5); box-shadow: 0 0 25px rgba(255,69,0,.2); }
+        /* ═══════════════════════════════════════
+           НОВИЧКИ — ULTRA REDESIGN 2025
+        ═══════════════════════════════════════ */
+
+        /* Обёртка всего списка — ограниченная высота + скролл */
+        #newcomers-list {
+            position: relative;
+        }
+        .nc-scroll-container {
+            max-height: 680px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,69,0,.4) transparent;
+            padding-right: 2px;
+        }
+        .nc-scroll-container::-webkit-scrollbar { width: 3px; }
+        .nc-scroll-container::-webkit-scrollbar-track { background: transparent; }
+        .nc-scroll-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff4500, #ff8c00);
+            border-radius: 2px;
+        }
+
+        /* Fade-out внизу когда есть ещё треки */
+        .nc-scroll-fade {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 80px; pointer-events: none;
+            background: linear-gradient(to top, #0c0c0c 0%, transparent 100%);
+            z-index: 5;
+        }
+
+        /* Ряд-трек */
+        .newcomer-card-new {
+            position: relative; flex-shrink: 0;
+            width: 100%;
+            height: 72px;
+            border-radius: 14px; overflow: hidden;
+            display: flex; align-items: center;
+            cursor: pointer;
+            background: linear-gradient(110deg, #0f0f0f 0%, #0a0a0a 100%);
+            border: 1px solid rgba(255,255,255,.05);
+            transition: border-color .3s, box-shadow .3s, transform .25s cubic-bezier(.23,1,.32,1), background .3s;
+            margin-bottom: 5px;
+        }
+        .newcomer-card-new:last-child { margin-bottom: 0; }
+
+        /* Анимация появления при загрузке */
+        .newcomer-card-new {
+            animation: ncSlideIn .45s cubic-bezier(.23,1,.32,1) both;
+        }
+        @keyframes ncSlideIn {
+            from { opacity: 0; transform: translateX(-18px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        /* stagger задержка через nth-child */
+        .newcomer-card-new:nth-child(1)  { animation-delay: .02s; }
+        .newcomer-card-new:nth-child(2)  { animation-delay: .06s; }
+        .newcomer-card-new:nth-child(3)  { animation-delay: .10s; }
+        .newcomer-card-new:nth-child(4)  { animation-delay: .14s; }
+        .newcomer-card-new:nth-child(5)  { animation-delay: .18s; }
+        .newcomer-card-new:nth-child(6)  { animation-delay: .22s; }
+        .newcomer-card-new:nth-child(7)  { animation-delay: .26s; }
+        .newcomer-card-new:nth-child(8)  { animation-delay: .30s; }
+        .newcomer-card-new:nth-child(9)  { animation-delay: .34s; }
+        .newcomer-card-new:nth-child(10) { animation-delay: .38s; }
+
+        .newcomer-card-new:hover {
+            border-color: rgba(255,69,0,.3);
+            box-shadow: 0 6px 28px rgba(0,0,0,.55), 0 0 24px rgba(255,69,0,.07);
+            transform: translateX(5px);
+            background: linear-gradient(110deg, #150a00 0%, #0d0d0d 60%);
+        }
+        .newcomer-card-new.playing {
+            border-color: rgba(255,69,0,.6);
+            box-shadow: -3px 0 0 0 #ff4500, 0 0 36px rgba(255,69,0,.16), 0 6px 28px rgba(0,0,0,.6);
+            background: linear-gradient(110deg, #200900 0%, #0d0d0d 55%);
+            transform: translateX(5px);
+        }
+
+        /* Левая неоновая черта */
+        .newcomer-card-new::before {
+            content: '';
+            position: absolute; left: 0; top: 10px; bottom: 10px;
+            width: 3px; border-radius: 0 2px 2px 0;
+            background: linear-gradient(180deg, #ff4500, #ff8c00);
+            opacity: 0;
+            transition: opacity .3s, box-shadow .3s;
+        }
+        .newcomer-card-new:hover::before,
+        .newcomer-card-new.playing::before {
+            opacity: 1;
+            box-shadow: 0 0 10px rgba(255,69,0,.8);
+        }
+
+        /* Сканлайн-глитч фон при воспроизведении */
+        .newcomer-card-new.playing::after {
+            content: '';
+            position: absolute; inset: 0; pointer-events: none;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent, transparent 3px,
+                rgba(255,69,0,.018) 3px, rgba(255,69,0,.018) 4px
+            );
+            border-radius: 14px;
+        }
+
+        /* Номер трека */
+        .nc-num {
+            flex-shrink: 0;
+            width: 36px;
+            text-align: center;
+            font-family: 'Bebas Neue', monospace;
+            font-size: 20px;
+            font-weight: 900;
+            color: rgba(255,255,255,.12);
+            letter-spacing: 1px;
+            transition: color .3s;
+            line-height: 1;
+            user-select: none;
+        }
+        .newcomer-card-new:hover .nc-num { color: rgba(255,69,0,.35); }
+        .newcomer-card-new.playing .nc-num { color: #ff4500; text-shadow: 0 0 12px rgba(255,69,0,.6); }
+
+        /* Обложка */
+        .nc-cover-wrap {
+            flex-shrink: 0;
+            width: 50px; height: 50px;
+            border-radius: 10px; overflow: hidden;
+            margin: 0 12px 0 4px;
+            background: #0a0a0a;
+            position: relative;
+            box-shadow: 0 2px 12px rgba(0,0,0,.6);
+            transition: box-shadow .3s, transform .3s;
+        }
+        .newcomer-card-new:hover .nc-cover-wrap {
+            box-shadow: 0 4px 20px rgba(0,0,0,.7), 0 0 12px rgba(255,69,0,.15);
+            transform: scale(1.06);
+        }
+        .newcomer-card-new.playing .nc-cover-wrap {
+            box-shadow: 0 0 0 2px rgba(255,69,0,.55), 0 4px 20px rgba(255,69,0,.2);
+        }
+        .nc-cover-img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            pointer-events: none; -webkit-user-drag: none;
+            transition: transform .4s ease;
+        }
+        .newcomer-card-new:hover .nc-cover-img,
+        .newcomer-card-new.playing .nc-cover-img { transform: scale(1.12); }
+        .nc-cover-grad { display: none; }
+
+        /* FRESH бейдж */
+        .newcomer-badge {
+            position: absolute; bottom: 3px; right: 3px; z-index: 5;
+            background: linear-gradient(135deg, #ff4500, #ff8c00);
+            color: #fff; font-size: 5px; font-weight: 900;
+            padding: 2px 4px; border-radius: 3px; letter-spacing: 1px;
+            box-shadow: 0 1px 6px rgba(255,69,0,.5);
+        }
+
+        /* Play btn — поверх обложки */
+        .nc-play-btn {
+            position: absolute; inset: 0; margin: auto;
+            width: 30px; height: 30px; border-radius: 50%;
+            background: rgba(255,69,0,.95);
+            border: none; display: flex; align-items: center; justify-content: center;
+            padding: 0; cursor: pointer; z-index: 4;
+            box-shadow: 0 2px 12px rgba(255,69,0,.6);
+            opacity: 0; transform: scale(.5);
+            transition: opacity .2s, transform .25s cubic-bezier(.23,1,.32,1);
+        }
+        .nc-play-btn svg { display: block; pointer-events: none; }
+        .newcomer-card-new:hover .nc-play-btn { opacity: 1; transform: scale(1); }
+        .newcomer-card-new.playing .nc-play-btn { opacity: 0 !important; }
+        .nc-play-btn:active { transform: scale(.82) !important; }
+        @media (max-width: 768px) {
+            .nc-play-btn { opacity: 1 !important; transform: scale(.82) !important; }
+            .newcomer-card-new.playing .nc-play-btn { opacity: 0 !important; }
+        }
+
+        /* Волна — когда играет, вместо play */
+        .nc-wave {
+            position: absolute; inset: 0; margin: auto;
+            width: 32px; height: 22px;
+            display: flex; align-items: center; justify-content: center; gap: 3px;
+            opacity: 0; transition: opacity .25s; z-index: 5;
+            pointer-events: none;
+        }
+        .newcomer-card-new.playing .nc-wave { opacity: 1; }
+        .nc-wave-bar {
+            width: 3px; border-radius: 2px;
+            background: linear-gradient(to top, #ff4500, #ffcc00);
+        }
+        .nc-wave-bar:nth-child(1) { height: 8px;  animation: rcwv .55s ease-in-out infinite 0s; }
+        .nc-wave-bar:nth-child(2) { height: 16px; animation: rcwv .55s ease-in-out infinite .1s; }
+        .nc-wave-bar:nth-child(3) { height: 10px; animation: rcwv .55s ease-in-out infinite .18s; }
+        .nc-wave-bar:nth-child(4) { height: 14px; animation: rcwv .55s ease-in-out infinite .08s; }
+
+        /* Инфо */
+        .nc-info {
+            flex: 1; min-width: 0;
+            display: flex; flex-direction: column; justify-content: center;
+            padding-right: 14px;
+            background: transparent !important; border: none !important;
+        }
+        .nc-title {
+            font-size: 13px; font-weight: 800; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-bottom: 2px; transition: color .2s;
+            letter-spacing: .3px;
+        }
+        .newcomer-card-new:hover .nc-title,
+        .newcomer-card-new.playing .nc-title { color: #ff8c00; }
+        .nc-artist {
+            font-size: 11px; color: rgba(255,255,255,.38);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-bottom: 7px;
+            transition: color .2s;
+        }
+        .newcomer-card-new:hover .nc-artist { color: rgba(255,180,80,.65); }
+        .newcomer-card-new.playing .nc-artist { color: rgba(255,140,0,.75); }
+
+        /* Прогресс-бар — тонкий, с неоном */
+        .nc-progress {
+            height: 2px; background: rgba(255,255,255,.06);
+            border-radius: 2px; cursor: pointer; overflow: hidden;
+            margin-bottom: 5px; position: relative;
+        }
+        .nc-progress-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #ff4500, #ff8c00, #ffcc00);
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(255,69,0,.7), 0 0 16px rgba(255,69,0,.3);
+            transition: width .1s linear;
+            position: relative;
+        }
+        /* Glowing dot на конце прогресса */
+        .nc-progress-fill::after {
+            content: '';
+            position: absolute; right: -3px; top: -2.5px;
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #ff8c00;
+            box-shadow: 0 0 8px #ff4500, 0 0 16px rgba(255,69,0,.6);
+            opacity: 0; transition: opacity .2s;
+        }
+        .newcomer-card-new.playing .nc-progress-fill::after { opacity: 1; }
+
+        .nc-bottom {
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nc-time  {
+            font-size: 9px; color: #ff8c00; font-family: 'Courier New', monospace;
+            font-weight: 800; letter-spacing: .5px;
+        }
+        .nc-views {
+            font-size: 9px; color: rgba(255,255,255,.22);
+            font-family: monospace; letter-spacing: .3px;
+        }
+        .newcomer-card-new.playing .nc-views { color: rgba(255,140,0,.5); }
+
+        /* Мобиль */
+        @media (max-width: 600px) {
+            /* На мобиле — убираем номер, делаем обложку крупнее */
+            .newcomer-card-new {
+                height: 68px !important;
+                padding: 0 !important;
+            }
+            .nc-num { display: none !important; }
+            .nc-cover-wrap {
+                width: 52px !important;
+                height: 52px !important;
+                margin: 0 12px 0 12px !important;
+                border-radius: 10px !important;
+            }
+            .nc-info {
+                flex: 1 !important;
+                min-width: 0 !important;
+                padding-right: 12px !important;
+            }
+            .nc-title {
+                font-size: 13px !important;
+                font-weight: 800 !important;
+            }
+            .nc-artist {
+                font-size: 11px !important;
+                margin-bottom: 5px !important;
+            }
+            .nc-progress { margin-bottom: 3px !important; }
+            .nc-bottom {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+            .nc-time { font-size: 9px !important; }
+            .nc-views { font-size: 9px !important; }
+            .nc-scroll-container { max-height: none !important; overflow: visible !important; }
+            .nc-scroll-fade { display: none !important; }
+        }
         .trend-track-row {
             transition: background .2s, transform .15s !important;
             background: rgba(255,255,255,0.02) !important;
@@ -502,10 +1245,8 @@ window.renderHome = function(container) {
             <h3 class="section-title">
                 <img src="assets/tops/ringtone.png" alt="Ringtone" class="section-icon"> РИНГТОНЫ
             </h3>
-            <div class="vscroll-wrapper ringtones-scroll" id="ringtones-wrap">
-                <div class="ringtones-list" id="ringtones-list">
-                    <div style="padding: 20px; color: #666; text-align: center;">Загрузка рингтонов...</div>
-                </div>
+            <div class="ringtones-grid" id="ringtones-list">
+                <div style="padding: 20px; color: #666; text-align: center; grid-column: 1/-1;">Загрузка рингтонов...</div>
             </div>
         </section>
 
@@ -513,14 +1254,20 @@ window.renderHome = function(container) {
             <h3 class="section-title">
                 <img src="assets/tops/new.png" alt="Новички" class="section-icon"> НОВИЧКИ
             </h3>
-            <div class="scroll-nav-row">
-                <button class="scroll-arrow-btn" onclick="scrollSection('newcomers-list', -1)">&#8249;</button>
-                <div class="hscroll-wrapper" id="newcomers-wrap">
-                    <div class="hscroll-inner" id="newcomers-list">
-                        ${'<div class="newcomer-card"><div class="newcomer-card-cover"><img src="assets/black.svg" alt="cover"></div><div class="newcomer-card-info"><span class="newcomer-card-title">Загрузка...</span></div></div>'.repeat(5)}
-                    </div>
+            <div id="newcomers-list" style="position:relative;">
+                <div class="nc-scroll-container" id="newcomers-scroll">
+                    ${[1,2,3,4,5].map((n) => `
+                    <div class="newcomer-card-new" style="opacity:.3;pointer-events:none;">
+                        <div class="nc-num" style="color:rgba(255,255,255,.06);">${n < 10 ? '0' + n : n}</div>
+                        <div class="nc-cover-wrap" style="background:#111;"></div>
+                        <div class="nc-info">
+                            <div class="nc-title" style="background:#1e1e1e;border-radius:4px;color:transparent;width:55%;">Загрузка...</div>
+                            <div class="nc-artist" style="background:#161616;border-radius:3px;width:40%;color:transparent;margin-top:5px;height:11px;">...</div>
+                            <div class="nc-progress" style="margin-top:8px;"></div>
+                        </div>
+                    </div>`).join('')}
                 </div>
-                <button class="scroll-arrow-btn" onclick="scrollSection('newcomers-list', 1)">&#8250;</button>
+                <div class="nc-scroll-fade" id="nc-fade"></div>
             </div>
         </section>
     `;
@@ -771,7 +1518,16 @@ window.renderHome = function(container) {
                     '<div class="art-vr-pct" id="avpct-'+i+'">0</div>' +
                 '</div>' +
                 '<div class="art-vr-icon">'+(artVoted===i?'✓':'♥')+'</div>';
-            if (artVoted === null) row.addEventListener('click', function() { castArtVote(i); });
+            if (artVoted === null) {
+                row.addEventListener('click', function() { castArtVote(i); });
+                // Touch ripple
+                row.addEventListener('touchstart', function(e) {
+                    row.style.transform = 'scale(0.97)';
+                }, { passive: true });
+                row.addEventListener('touchend', function() {
+                    setTimeout(function(){ row.style.transform = ''; }, 150);
+                }, { passive: true });
+            }
             list.appendChild(row);
             setTimeout(function() {
                 var bar=container.querySelector('#avbar-'+i);
@@ -830,13 +1586,15 @@ window.renderHome = function(container) {
 
     function showVoteToast(text) {
         var msg = document.createElement('div');
-        msg.style.cssText = 'position:fixed;bottom:34px;left:50%;transform:translateX(-50%) translateY(10px);background:#111;border:1px solid rgba(255,69,0,.5);color:#fff;padding:10px 20px;border-radius:30px;font-weight:700;letter-spacing:1px;font-size:12px;z-index:99999;box-shadow:0 4px 20px rgba(255,69,0,.3);white-space:nowrap;opacity:0;transition:all .3s;pointer-events:none;';
+        var isMobile = window.innerWidth <= 768;
+        var bottomPos = isMobile ? '90px' : '34px';
+        msg.style.cssText = 'position:fixed;bottom:' + bottomPos + ';left:50%;transform:translateX(-50%) translateY(10px);background:rgba(17,17,17,0.97);border:1px solid rgba(255,69,0,.6);color:#fff;padding:12px 24px;border-radius:30px;font-weight:700;letter-spacing:1px;font-size:13px;z-index:99999;box-shadow:0 4px 30px rgba(255,69,0,.35),0 2px 0 rgba(255,255,255,.05) inset;white-space:nowrap;opacity:0;transition:all .35s cubic-bezier(0.23,1,0.32,1);pointer-events:none;backdrop-filter:blur(12px);max-width:90vw;text-align:center;';
         msg.textContent = text;
         document.body.appendChild(msg);
         requestAnimationFrame(function() { msg.style.opacity='1'; msg.style.transform='translateX(-50%) translateY(0)'; });
         setTimeout(function() {
             msg.style.opacity='0'; msg.style.transform='translateX(-50%) translateY(10px)';
-            setTimeout(function(){ msg.remove(); }, 300);
+            setTimeout(function(){ msg.remove(); }, 350);
         }, 3000);
     }
 
@@ -856,11 +1614,41 @@ window.renderHome = function(container) {
 
     container.querySelectorAll('.hscroll-wrapper').forEach(el => {
         let isDown = false, startX, scrollLeft;
+        // Mouse drag (desktop)
         el.addEventListener('mousedown', e => { isDown = true; el.classList.add('dragging'); startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft; });
         el.addEventListener('mouseleave', () => { isDown = false; el.classList.remove('dragging'); });
         el.addEventListener('mouseup', () => { isDown = false; el.classList.remove('dragging'); });
         el.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX); });
         el.addEventListener('wheel', e => { e.preventDefault(); el.scrollBy({ left: e.deltaY * 2, behavior: 'smooth' }); }, { passive: false });
+        // Touch momentum (mobile)
+        let touchStartX = 0, touchScrollLeft = 0, touchVel = 0, touchLastX = 0, touchLastT = 0, momentumRaf = null;
+        el.addEventListener('touchstart', e => {
+            if (momentumRaf) { cancelAnimationFrame(momentumRaf); momentumRaf = null; }
+            touchStartX = e.touches[0].clientX;
+            touchScrollLeft = el.scrollLeft;
+            touchLastX = touchStartX;
+            touchLastT = Date.now();
+            touchVel = 0;
+        }, { passive: true });
+        el.addEventListener('touchmove', e => {
+            const now = Date.now();
+            const dx = touchLastX - e.touches[0].clientX;
+            touchVel = dx / Math.max(1, now - touchLastT);
+            touchLastX = e.touches[0].clientX;
+            touchLastT = now;
+            el.scrollLeft = touchScrollLeft + (touchStartX - e.touches[0].clientX);
+        }, { passive: true });
+        el.addEventListener('touchend', () => {
+            // momentum glide
+            let vel = touchVel * 16;
+            function glide() {
+                if (Math.abs(vel) < 0.5) return;
+                el.scrollLeft += vel;
+                vel *= 0.88;
+                momentumRaf = requestAnimationFrame(glide);
+            }
+            glide();
+        }, { passive: true });
     });
 
     // ══════════════════════════════════════════
@@ -924,12 +1712,41 @@ window.renderHome = function(container) {
         } catch(e) { window._zarba_coverCache[trackUrl] = null; return null; }
     }
 
-    function applyTrackCover(imgEl, trackUrl, coverUrlFromDb) {
-        if (coverUrlFromDb) { imgEl.src = coverUrlFromDb; return; }
+    function applyTrackCover(imgEl, trackUrl, coverUrlFromDb, dataObj) {
+        // Пробуем все возможные названия поля обложки из Firestore
+        const dbCover = coverUrlFromDb
+            || (dataObj && (dataObj.coverUrl || dataObj.cover || dataObj.imageUrl
+                || dataObj.thumbnail || dataObj.image || dataObj.artworkUrl
+                || dataObj.artwork || dataObj.coverImage || dataObj.imgUrl || dataObj.photo));
+        if (dbCover) {
+            imgEl.src = dbCover;
+            imgEl.onerror = () => { imgEl.onerror = null; imgEl.src = getFallbackCover(trackUrl || dbCover || ''); };
+            return;
+        }
+        // Показываем fallback пока тянем мета из аудио
         imgEl.src = getFallbackCover(trackUrl || '');
-        fetchCoverFromWorker(trackUrl).then(cover => {
-            if (cover && imgEl.parentElement) imgEl.src = cover;
-        });
+        if (trackUrl) {
+            fetchCoverFromWorker(trackUrl).then(cover => {
+                if (cover && imgEl.isConnected) imgEl.src = cover;
+            });
+        }
+    }
+
+    // ── Безопасный play/pause — защита от AbortError ──
+    function safePlay(audio) {
+        if (!audio._playPromise) {
+            audio._playPromise = audio.play().catch(err => {
+                if (err.name !== 'AbortError') console.warn('Audio error:', err.message);
+            }).finally(() => { audio._playPromise = null; });
+        }
+        return audio._playPromise;
+    }
+    function safePause(audio) {
+        if (audio._playPromise) {
+            audio._playPromise.then(() => { try { audio.pause(); } catch(e){} }).catch(() => {});
+        } else {
+            try { audio.pause(); } catch(e) {}
+        }
     }
 
     function formatViews(num) {
@@ -948,11 +1765,9 @@ window.renderHome = function(container) {
     let pageCurrentCard  = null;
 
     function stopPageCurrent() {
-        if (pageCurrentAudio) { pageCurrentAudio.pause(); pageCurrentAudio.currentTime = 0; pageCurrentAudio = null; }
+        if (pageCurrentAudio) { safePause(pageCurrentAudio); pageCurrentAudio.currentTime = 0; pageCurrentAudio = null; }
         if (pageCurrentCard) {
             pageCurrentCard.classList.remove('playing');
-            const btn  = pageCurrentCard.querySelector('.rc-play-btn');
-            if (btn)  btn.textContent = '▶';
             const fill = pageCurrentCard.querySelector('.release-card-progress-fill');
             if (fill) fill.style.width = '0%';
             const time = pageCurrentCard.querySelector('.release-card-time');
@@ -964,16 +1779,24 @@ window.renderHome = function(container) {
     _cleanupTasks.push(stopPageCurrent);
 
     function makeCard(data, id, isNewcomer, docFn, updateDocFn, incrementFn) {
+        if (isNewcomer) return makeNewcomerCard(data, id, docFn, updateDocFn, incrementFn);
+
+        // ── НОВИНКИ — vinyl card ──
         const div = document.createElement('div');
-        div.className = isNewcomer ? 'newcomer-card-new' : 'release-card';
+        div.className = 'release-card';
         const _coverId = 'cov_' + Math.random().toString(36).slice(2);
         div.innerHTML =
-            (isNewcomer ? '<div class="newcomer-badge">★ FRESH</div>' : '') +
             '<div class="release-card-cover">' +
-                '<div class="no-cover" id="' + _coverId + '"><img src="assets/black.svg" alt=""></div>' +
-                '<div class="release-card-overlay">' +
-                    '<button class="rc-play-btn">▶</button>' +
-                    '<span class="rc-views-overlay">▶ ' + formatViews(data.views) + '</span>' +
+                '<div class="rc-vinyl-outer">' +
+                    '<div class="rc-vinyl-shine"></div>' +
+                    '<div class="rc-vinyl-label" id="' + _coverId + '"><img src="assets/black.svg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;"></div>' +
+                    '<div class="rc-vinyl-hole"></div>' +
+                    '<button class="rc-play-btn" id="rcbtn_' + _coverId + '"><svg viewBox="0 0 24 24" fill="white" width="20" height="20"><polygon points="6,3 20,12 6,21"/></svg></button>' +
+                '</div>' +
+                '<div class="rc-needle-wrap">' +
+                    '<div class="rc-needle-pivot"></div>' +
+                    '<div class="rc-needle-arm"></div>' +
+                    '<div class="rc-needle-head"></div>' +
                 '</div>' +
             '</div>' +
             '<div class="release-card-info">' +
@@ -987,20 +1810,20 @@ window.renderHome = function(container) {
             '</div>';
 
         (() => {
-            const slot = div.querySelector('#' + _coverId);
-            if (!slot) return;
-            const img = document.createElement('img');
-            img.alt = 'cover';
-            img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-            img.onerror = () => { img.src = getFallbackCover(data.url || ''); };
-            applyTrackCover(img, data.url, data.coverUrl);
-            if (slot.parentElement) slot.replaceWith(img);
+            const labelEl = div.querySelector('#' + _coverId + ' img');
+            if (!labelEl) return;
+            labelEl.onerror = () => { labelEl.src = getFallbackCover(data.url || ''); };
+            applyTrackCover(labelEl, data.url, data.coverUrl, data);
         })();
 
         const playBtn     = div.querySelector('.rc-play-btn');
         const fill        = div.querySelector('.release-card-progress-fill');
         const timeEl      = div.querySelector('.release-card-time');
         const progressBar = div.querySelector('.release-card-progress');
+
+        const SVG_PLAY  = '<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><polygon points="6,3 20,12 6,21"/></svg>';
+        const SVG_PAUSE = '<svg viewBox="0 0 24 24" fill="white" width="18" height="18"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>';
+
         let audio = null, viewCounted = false;
 
         function initAudio() {
@@ -1017,30 +1840,131 @@ window.renderHome = function(container) {
                 }
             });
             audio.addEventListener('ended', () => {
-                div.classList.remove('playing'); playBtn.textContent = '▶';
+                div.classList.remove('playing'); playBtn.innerHTML = SVG_PLAY;
                 fill.style.width = '0%'; timeEl.textContent = '0:00';
                 pageCurrentAudio = null; pageCurrentCard = null; viewCounted = false;
             });
-            audio.addEventListener('error', () => { playBtn.textContent = '❌'; });
+            audio.addEventListener('error', () => { div.style.opacity = '0.5'; });
         }
 
         playBtn.addEventListener('click', e => {
             e.stopPropagation(); initAudio();
             if (!audio.paused) {
-                audio.pause(); div.classList.remove('playing'); playBtn.textContent = '▶';
+                safePause(audio); div.classList.remove('playing'); playBtn.innerHTML = SVG_PLAY;
                 pageCurrentAudio = null; pageCurrentCard = null;
             } else {
-                stopPageCurrent();
-                audio.play().catch(() => { playBtn.textContent = '❌'; });
-                div.classList.add('playing'); playBtn.textContent = '⏸';
+                if (pageCurrentAudio && pageCurrentAudio !== audio) {
+                    const _prev = pageCurrentAudio; const _prevCard = pageCurrentCard;
+                    safePause(_prev); _prev.currentTime = 0;
+                    if (_prevCard) {
+                        _prevCard.classList.remove('playing');
+                        const pf = _prevCard.querySelector('.release-card-progress-fill, .nc-progress-fill'); if (pf) pf.style.width = '0%';
+                        const pt = _prevCard.querySelector('.release-card-time, .nc-time'); if (pt) pt.textContent = '0:00';
+                        const pb = _prevCard.querySelector('.rc-play-btn, .nc-play-btn'); if (pb) pb.innerHTML = SVG_PLAY;
+                    }
+                }
+                div.classList.add('playing'); playBtn.innerHTML = SVG_PAUSE;
                 pageCurrentAudio = audio; pageCurrentCard = div;
+                safePlay(audio);
             }
         });
-
         progressBar.addEventListener('click', e => {
-            initAudio();
+            e.stopPropagation(); initAudio();
             if (audio.duration)
                 audio.currentTime = ((e.clientX - progressBar.getBoundingClientRect().left) / progressBar.offsetWidth) * audio.duration;
+        });
+        return div;
+    }
+
+    // ── НОВИЧКИ — Ultra redesign card ──
+    function makeNewcomerCard(data, id, docFn, updateDocFn, incrementFn, trackNum) {
+        const div = document.createElement('div');
+        div.className = 'newcomer-card-new';
+        const _coverId = 'nc_' + Math.random().toString(36).slice(2);
+        const numStr = trackNum < 10 ? '0' + trackNum : '' + trackNum;
+
+        const SVG_PLAY  = '<svg viewBox="0 0 24 24" fill="white" width="16" height="16"><polygon points="6,3 20,12 6,21"/></svg>';
+        const SVG_PAUSE = '<svg viewBox="0 0 24 24" fill="white" width="14" height="14"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>';
+
+        div.innerHTML =
+            '<div class="nc-num">' + numStr + '</div>' +
+            '<div class="nc-cover-wrap">' +
+                '<img class="nc-cover-img" id="' + _coverId + '" src="assets/black.svg" alt="">' +
+                '<div class="nc-cover-grad"></div>' +
+                
+                '<button class="nc-play-btn">' + SVG_PLAY + '</button>' +
+                '<div class="nc-wave">' +
+                    '<div class="nc-wave-bar"></div><div class="nc-wave-bar"></div>' +
+                    '<div class="nc-wave-bar"></div><div class="nc-wave-bar"></div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="nc-info">' +
+                '<div class="nc-title">' + (data.title || '—') + '</div>' +
+                '<div class="nc-artist">' + (data.artist || '—') + '</div>' +
+                '<div class="nc-progress"><div class="nc-progress-fill"></div></div>' +
+                '<div class="nc-bottom">' +
+                    '<span class="nc-time">0:00</span>' +
+                    '<span class="nc-views">▶ ' + formatViews(data.views) + '</span>' +
+                '</div>' +
+            '</div>';
+
+        // Загружаем обложку
+        const imgEl = div.querySelector('#' + _coverId);
+        imgEl.onerror = () => { imgEl.src = getFallbackCover(data.url || ''); };
+        applyTrackCover(imgEl, data.url, data.coverUrl, data);
+
+        const playBtn    = div.querySelector('.nc-play-btn');
+        const fill       = div.querySelector('.nc-progress-fill');
+        const timeEl     = div.querySelector('.nc-time');
+        const progressEl = div.querySelector('.nc-progress');
+        let audio = null, viewCounted = false;
+
+        function initAudio() {
+            if (audio) return;
+            audio = new Audio(data.url);
+            audio.addEventListener('timeupdate', () => {
+                if (!audio.duration) return;
+                fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+                timeEl.textContent = fmt(audio.currentTime);
+                if (audio.currentTime > 10 && !viewCounted) {
+                    viewCounted = true;
+                    if (updateDocFn && docFn && incrementFn)
+                        updateDocFn(docFn(window.firebaseDb, 'tracks', id), { views: incrementFn(1) }).catch(() => {});
+                }
+            });
+            audio.addEventListener('ended', () => {
+                div.classList.remove('playing'); playBtn.innerHTML = SVG_PLAY;
+                fill.style.width = '0%'; timeEl.textContent = '0:00';
+                pageCurrentAudio = null; pageCurrentCard = null; viewCounted = false;
+            });
+            audio.addEventListener('error', () => { div.style.opacity = '0.5'; });
+        }
+
+        playBtn.addEventListener('click', e => {
+            e.stopPropagation(); initAudio();
+            if (!audio.paused) {
+                safePause(audio); div.classList.remove('playing'); playBtn.innerHTML = SVG_PLAY;
+                pageCurrentAudio = null; pageCurrentCard = null;
+            } else {
+                if (pageCurrentAudio && pageCurrentAudio !== audio) {
+                    const _prev = pageCurrentAudio; const _prevCard = pageCurrentCard;
+                    safePause(_prev); _prev.currentTime = 0;
+                    if (_prevCard) {
+                        _prevCard.classList.remove('playing');
+                        const pf = _prevCard.querySelector('.release-card-progress-fill, .nc-progress-fill'); if (pf) pf.style.width = '0%';
+                        const pt = _prevCard.querySelector('.release-card-time, .nc-time'); if (pt) pt.textContent = '0:00';
+                        const pb = _prevCard.querySelector('.rc-play-btn, .nc-play-btn'); if (pb) pb.innerHTML = SVG_PLAY;
+                    }
+                }
+                div.classList.add('playing'); playBtn.innerHTML = SVG_PAUSE;
+                pageCurrentAudio = audio; pageCurrentCard = div;
+                safePlay(audio);
+            }
+        });
+        progressEl.addEventListener('click', e => {
+            e.stopPropagation(); initAudio();
+            if (audio.duration)
+                audio.currentTime = ((e.clientX - progressEl.getBoundingClientRect().left) / progressEl.offsetWidth) * audio.duration;
         });
 
         return div;
@@ -1443,22 +2367,20 @@ window.renderHome = function(container) {
                 topHTML +=
                     '<div class="trend-track-row" data-src="' + d.url + '" data-id="' + docSnap.id + '">' +
                         '<div class="rank">' + rank++ + '</div>' +
-                        '<div class="trend-cover" id="tc-' + docSnap.id + '" style="background:linear-gradient(135deg,#ff4500,#c73200);">' +
-                            '<img src="assets/black.svg" alt="" style="width:26px;height:26px;opacity:.9;filter:brightness(0) invert(1);">' +
+                        '<div class="trend-cover" id="tc-' + docSnap.id + '">' +
+                            '<img src="assets/black.svg" alt="">' +
                         '</div>' +
                         '<div class="trend-track-meta">' +
-                            '<span class="t-name">' + d.title + '</span>' +
-                            '<span class="a-name">' + d.artist + '</span>' +
+                            '<span class="t-name">' + (d.title || '—') + '</span>' +
+                            '<span class="a-name">' + (d.artist || '—') + '</span>' +
+                            '<div class="trend-progress-bar"><div class="trend-progress-fill"></div></div>' +
                         '</div>' +
                         '<div class="trend-player-controls">' +
+                            '<span class="trend-time">0:00</span>' +
                             '<button class="trend-play-btn">▶</button>' +
                             '<button class="trend-stop-btn">⏹</button>' +
-                            '<span class="trend-time">0:00</span>' +
-                            '<div class="trend-progress-bar"><div class="trend-progress-fill"></div></div>' +
                             '<span class="trend-duration">0:00</span>' +
                         '</div>' +
-                        '<div class="trend-indicators"><span class="trend-up">▲</span></div>' +
-                        '<div class="trend-actions"><span class="trend-plays">▶ ' + formatViews(d.views) + '</span></div>' +
                     '</div>';
             });
             if (topContainer) topContainer.innerHTML = topHTML || '<div style="padding:20px;color:#666;text-align:center;">Нет треков с флагом ТОП 10</div>';
@@ -1483,40 +2405,157 @@ window.renderHome = function(container) {
             });
 
             // РИНГТОНЫ
-            const snapRings = await getDocs(query(tracksRef, where('isRingtone', '==', true), limit(10)));
+            const snapRings = await getDocs(query(tracksRef, where('isRingtone', '==', true), limit(20)));
             const ringContainer = container.querySelector('#ringtones-list');
-            let ringsHTML = '';
-            snapRings.forEach(docSnap => {
-                const d = docSnap.data();
-                ringsHTML +=
-                    '<div class="custom-player" data-src="' + d.url + '" data-id="' + docSnap.id + '">' +
-                        '<div class="player-controls">' +
-                            '<button class="player-btn play-pause-btn">▶</button>' +
-                            '<button class="player-btn stop-btn">⏹</button>' +
-                        '</div>' +
-                        '<div class="player-info">' +
-                            '<div class="player-title">' + d.artist + ' - ' + d.title + '</div>' +
-                            '<div class="ringtone-plays">▶ ' + formatViews(d.views) + ' прослушиваний</div>' +
-                            '<div class="player-progress-container">' +
-                                '<span class="player-time current-time">0:00</span>' +
-                                '<div class="player-progress-bar"><div class="player-progress-fill"></div></div>' +
-                                '<span class="player-duration">0:00</span>' +
+            if (ringContainer) {
+                ringContainer.innerHTML = '';
+                let ringAudios = [];
+
+                const SVG_PLAY  = '<svg viewBox="0 0 24 24" fill="white" width="18" height="18"><polygon points="7,4 20,12 7,20"/></svg>';
+                const SVG_PAUSE = '<svg viewBox="0 0 24 24" fill="white" width="16" height="16"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>';
+                const SVG_PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="#ff4500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 .01h3a2 2 0 012 1.72c.13 1 .37 1.97.72 2.9a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.17-1.17a2 2 0 012.11-.45c.93.35 1.9.59 2.9.72A2 2 0 0122 14.92z"/></svg>';
+                const SVG_DL    = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+
+                let curRingAudio = null, curRingCard = null, curRingBtn = null;
+
+                function stopRingCurrent() {
+                    if (curRingAudio) { curRingAudio.pause(); curRingAudio.currentTime = 0; }
+                    if (curRingCard) {
+                        curRingCard.classList.remove('playing');
+                        const pf = curRingCard.querySelector('.rt-progress-fill'); if (pf) pf.style.width = '0%';
+                        const th = curRingCard.querySelector('.rt-progress-thumb'); if (th) th.style.left = '0%';
+                        const t  = curRingCard.querySelector('.rt-time-lbl'); if (t) t.textContent = '0:00';
+                    }
+                    if (curRingBtn) curRingBtn.innerHTML = SVG_PLAY;
+                    curRingAudio = null; curRingCard = null; curRingBtn = null;
+                }
+
+                const now = new Date();
+                const clockStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+
+                snapRings.forEach(docSnap => {
+                    const d = docSnap.data();
+                    if (!d.url) return;
+
+                    const card = document.createElement('div');
+                    card.className = 'rt-card';
+                    card.innerHTML =
+                        '<div class="rt-pulse-ring"></div>' +
+                        '<div class="rt-phone-screen">' +
+                            '<div class="rt-statusbar">' +
+                                '<div class="rt-signal"><div class="rt-signal-bar"></div><div class="rt-signal-bar"></div><div class="rt-signal-bar"></div><div class="rt-signal-bar"></div></div>' +
+                                '<span class="rt-clock">' + clockStr + '</span>' +
+                                '<div class="rt-battery-icon"><div class="rt-battery-fill"></div></div>' +
+                            '</div>' +
+                            '<div class="rt-screen-info">' +
+                                '<div class="rt-call-icon">' + SVG_PHONE + '</div>' +
+                                '<div class="rt-track-text">' +
+                                    '<div class="rt-track-name">' + (d.title || '—') + '</div>' +
+                                    '<div class="rt-track-artist">' + (d.artist || '') + '</div>' +
+                                '</div>' +
+                                '<div class="rt-wave"><div class="rt-wave-b"></div><div class="rt-wave-b"></div><div class="rt-wave-b"></div><div class="rt-wave-b"></div><div class="rt-wave-b"></div></div>' +
                             '</div>' +
                         '</div>' +
-                    '</div>';
-            });
-            if (ringContainer) ringContainer.innerHTML = ringsHTML || '<div style="padding:20px;color:#666;text-align:center;">Нет рингтонов в базе</div>';
+                        '<div class="rt-player">' +
+                            '<div class="rt-progress-wrap">' +
+                                '<span class="rt-time-lbl">0:00</span>' +
+                                '<div class="rt-progress"><div class="rt-progress-fill"></div><div class="rt-progress-thumb"></div></div>' +
+                                '<span class="rt-dur-lbl">—:——</span>' +
+                            '</div>' +
+                            '<div class="rt-controls">' +
+                                '<span class="rt-views">▶ ' + formatViews(d.views) + ' прослушиваний</span>' +
+                                '<div class="rt-btns">' +
+                                    '<a class="rt-btn-dl" href="' + d.url + '" download title="Скачать">' + SVG_DL + '</a>' +
+                                    '<button class="rt-btn-play">' + SVG_PLAY + '</button>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
+
+                    const playBtn  = card.querySelector('.rt-btn-play');
+                    const fill     = card.querySelector('.rt-progress-fill');
+                    const thumb    = card.querySelector('.rt-progress-thumb');
+                    const timeLbl  = card.querySelector('.rt-time-lbl');
+                    const durLbl   = card.querySelector('.rt-dur-lbl');
+                    const progress = card.querySelector('.rt-progress');
+
+                    const audio = new Audio(d.url);
+                    audio.viewCounted = false;
+                    ringAudios.push(audio);
+
+                    audio.addEventListener('loadedmetadata', () => { if (durLbl) durLbl.textContent = fmt(audio.duration); });
+                    audio.addEventListener('timeupdate', () => {
+                        if (!audio.duration) return;
+                        const pct = audio.currentTime / audio.duration * 100;
+                        fill.style.width = pct + '%';
+                        thumb.style.left = 'calc(' + pct + '% - 5px)';
+                        timeLbl.textContent = fmt(audio.currentTime);
+                        if (audio.currentTime > 10 && !audio.viewCounted) {
+                            audio.viewCounted = true;
+                            updateDoc(doc(window.firebaseDb, 'tracks', docSnap.id), { views: increment(1) }).catch(() => {});
+                        }
+                    });
+                    audio.addEventListener('ended', () => {
+                        card.classList.remove('playing'); playBtn.innerHTML = SVG_PLAY;
+                        fill.style.width = '0%'; thumb.style.left = '0%';
+                        timeLbl.textContent = '0:00'; audio.viewCounted = false;
+                        curRingAudio = null; curRingCard = null; curRingBtn = null;
+                    });
+
+                    playBtn.addEventListener('click', e => {
+                        e.stopPropagation();
+                        stopPageCurrent(); // стоп новинок/топа
+                        if (!audio.paused) {
+                            safePause(audio); card.classList.remove('playing'); playBtn.innerHTML = SVG_PLAY;
+                            curRingAudio = null; curRingCard = null; curRingBtn = null;
+                        } else {
+                            stopRingCurrent();
+                            card.classList.add('playing'); playBtn.innerHTML = SVG_PAUSE;
+                            safePlay(audio);
+                            curRingAudio = audio; curRingCard = card; curRingBtn = playBtn;
+                        }
+                    });
+                    progress.addEventListener('click', e => {
+                        if (!audio.duration) return;
+                        const pct = (e.clientX - progress.getBoundingClientRect().left) / progress.offsetWidth;
+                        audio.currentTime = pct * audio.duration;
+                    });
+
+                    ringContainer.appendChild(card);
+                });
+
+                if (!ringContainer.querySelector('.rt-card'))
+                    ringContainer.innerHTML = '<div style="padding:24px;color:#555;text-align:center;grid-column:1/-1;">Нет рингтонов в базе</div>';
+
+                _cleanupTasks.push(() => {
+                    ringAudios.forEach(a => { try { a.pause(); a.src = ''; } catch(e) {} });
+                });
+            }
 
             // НОВИЧКИ
-            const snapNewc = await getDocs(query(tracksRef, where('isNewcomer', '==', true), limit(10)));
-            const newcContainer = container.querySelector('#newcomers-list');
+            const snapNewc = await getDocs(query(tracksRef, where('isNewcomer', '==', true), limit(20)));
+            const newcContainer = container.querySelector('#newcomers-scroll');
+            const ncFade = container.querySelector('#nc-fade');
             if (newcContainer) {
                 newcContainer.innerHTML = '';
+                let ncIdx = 0;
                 snapNewc.forEach(docSnap => {
-                    newcContainer.appendChild(makeCard(docSnap.data(), docSnap.id, true, doc, updateDoc, increment));
+                    ncIdx++;
+                    newcContainer.appendChild(makeNewcomerCard(docSnap.data(), docSnap.id, doc, updateDoc, increment, ncIdx));
                 });
                 if (!newcContainer.children.length)
                     newcContainer.innerHTML = '<div style="padding:20px;color:#666;">Список новичков пуст</div>';
+                // Скрываем fade если контент не переполняет контейнер
+                if (ncFade) {
+                    setTimeout(() => {
+                        if (newcContainer.scrollHeight <= newcContainer.clientHeight + 5) {
+                            ncFade.style.display = 'none';
+                        }
+                        newcContainer.addEventListener('scroll', () => {
+                            const atBottom = newcContainer.scrollTop + newcContainer.clientHeight >= newcContainer.scrollHeight - 10;
+                            ncFade.style.opacity = atBottom ? '0' : '1';
+                        });
+                    }, 600);
+                }
             }
 
             initListPlayers(doc, updateDoc, increment);
@@ -1566,67 +2605,25 @@ window.renderHome = function(container) {
             });
             playBtn.addEventListener('click', e => {
                 e.stopPropagation(); stopPageCurrent();
-                if (playing) { audio.pause(); playing = false; playBtn.textContent = '▶'; curAudio = null; curRow = null; }
+                if (playing) { safePause(audio); playing = false; playBtn.textContent = '▶'; curAudio = null; curRow = null; }
                 else {
                     if (curAudio && curAudio !== audio) {
                         curAudio.pause(); curAudio.currentTime = 0; curAudio.viewCounted = false;
                         if (curRow) { curRow.querySelector('.trend-play-btn').textContent = '▶'; const pf = curRow.querySelector('.trend-progress-fill'); if (pf) pf.style.width = '0%'; }
                     }
-                    audio.play().catch(() => { playBtn.textContent = '❌'; });
                     playing = true; playBtn.textContent = '⏸'; curAudio = audio; curRow = row;
+                    safePlay(audio).catch(() => { playBtn.textContent = '❌'; playing = false; });
                 }
             });
             stopBtn.addEventListener('click', e => {
-                e.stopPropagation(); audio.pause(); audio.currentTime = 0; playing = false;
+                e.stopPropagation(); safePause(audio); audio.currentTime = 0; playing = false;
                 playBtn.textContent = '▶'; if (fill) fill.style.width = '0%'; if (timeEl) timeEl.textContent = '0:00';
                 audio.viewCounted = false; curAudio = null; curRow = null;
             });
         });
 
-        const ringAudios = [];
-        container.querySelectorAll('.custom-player').forEach(playerEl => {
-            const trackId       = playerEl.getAttribute('data-id');
-            const audio         = new Audio(playerEl.getAttribute('data-src'));
-            audio.viewCounted   = false;
-            ringAudios.push(audio);
-            const playPauseBtn  = playerEl.querySelector('.play-pause-btn');
-            const stopBtn       = playerEl.querySelector('.stop-btn');
-            const progressBar   = playerEl.querySelector('.player-progress-bar');
-            const progressFill  = playerEl.querySelector('.player-progress-fill');
-            const currentTimeEl = playerEl.querySelector('.current-time');
-            const durationEl    = playerEl.querySelector('.player-duration');
-            let isPlaying = false;
-
-            playPauseBtn.addEventListener('click', () => {
-                stopPageCurrent();
-                if (isPlaying) { audio.pause(); playPauseBtn.textContent = '▶'; isPlaying = false; }
-                else { audio.play().catch(() => {}); playPauseBtn.textContent = '⏸'; isPlaying = true; }
-            });
-            stopBtn.addEventListener('click', () => {
-                audio.pause(); audio.currentTime = 0; playPauseBtn.textContent = '▶'; isPlaying = false;
-                audio.viewCounted = false;
-                if (progressFill)  progressFill.style.width   = '0%';
-                if (currentTimeEl) currentTimeEl.textContent  = '0:00';
-            });
-            audio.addEventListener('timeupdate', () => {
-                if (progressFill)  progressFill.style.width  = (audio.currentTime / audio.duration * 100) + '%';
-                if (currentTimeEl) currentTimeEl.textContent = fmt(audio.currentTime);
-                countView(audio, trackId);
-            });
-            audio.addEventListener('loadedmetadata', () => { if (durationEl) durationEl.textContent = fmt(audio.duration); });
-            audio.addEventListener('error', () => { playPauseBtn.textContent = '❌'; });
-            if (progressBar) progressBar.addEventListener('click', e => {
-                const r = progressBar.getBoundingClientRect();
-                audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
-            });
-            audio.addEventListener('ended', () => { playPauseBtn.textContent = '▶'; isPlaying = false; audio.viewCounted = false; });
-        });
-
-        // [FIX 4] Останавливаем все аудио плееры при уходе со страницы
         _cleanupTasks.push(function() {
-            [...trendAudios, ...ringAudios].forEach(a => {
-                try { a.pause(); a.src = ''; } catch(e) {}
-            });
+            trendAudios.forEach(a => { try { a.pause(); a.src = ''; } catch(e) {} });
         });
     }
 

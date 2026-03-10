@@ -13,6 +13,40 @@ const ini = n => String(n||'Z').trim().split(/\s+/).map(w=>w[0].toUpperCase()).j
 const hashId = (str) => { if(!str)return 0; let s=String(str), h=0; for(let i=0;i<s.length;i++)h+=s.charCodeAt(i); return h; };
 
 let _el, _state = {city:'Все города',genre:'Все жанры',alpha:'',search:'',sort:'plays'};
+
+// ── ТАП-ЛОГИКА ДЛЯ МОБИЛЯ ──
+window._zaClearTap = function() {
+  document.querySelectorAll('.za-card.tapped').forEach(c => c.classList.remove('tapped'));
+};
+window._zaTapHandler = function(e, aid) {
+  const isMobile = window.innerWidth <= 800;
+  if (!isMobile) {
+    // Десктоп — открываем модалку напрямую
+    if (!e.target.closest('.za-card-btns') && !e.target.classList.contains('za-ov-fan'))
+      window.openArtistModal(aid);
+    return;
+  }
+  // Мобиль — первый тап показывает оверлей, второй — ничего (кнопки сами обрабатывают)
+  const card = e.currentTarget;
+  if (e.target.closest('.za-card-tap-ov')) return; // клик по кнопкам внутри
+  if (card.classList.contains('tapped')) {
+    // Второй тап вне кнопок — закрываем
+    card.classList.remove('tapped');
+    return;
+  }
+  window._zaClearTap();
+  card.classList.add('tapped');
+  // Закрываем при клике вне
+  setTimeout(() => {
+    const close = (ev) => {
+      if (!ev.target.closest('.za-card')) {
+        window._zaClearTap();
+        document.removeEventListener('click', close);
+      }
+    };
+    document.addEventListener('click', close);
+  }, 0);
+};
 let _faned = new Set(), _openId = null;
 let _drawer = null, _dAid = null, _dType = null;
 
@@ -336,16 +370,31 @@ function renderArtistsPage(){
   <select class="za-sel" id="za-gs">${GENRES.map(g=>`<option value="${g}"${_state.genre===g?' selected':''}>${g}</option>`).join('')}</select>
   <select class="za-sel" id="za-ss"><option value="plays"${_state.sort==='plays'?' selected':''}>По прослушиваниям</option><option value="fans"${_state.sort==='fans'?' selected':''}>По фанатам</option><option value="alpha"${_state.sort==='alpha'?' selected':''}>А — Я</option><option value="new"${_state.sort==='new'?' selected':''}>Новые</option></select>
 </div>
-<div class="za-alpha"><button class="za-ab all ${_state.alpha===''?'on':''}" data-a="">ВСЕ</button>${ALPHA.map(l=>`<button class="za-ab ${_state.alpha===l?'on':''}" data-a="${l}">${l}</button>`).join('')}</div>
+<div class="za-alpha-wrap">
+  <div class="za-alpha-toggle" id="za-alpha-toggle" onclick="this.closest('.za-alpha-wrap').classList.toggle('open')">
+    <span class="za-alpha-label">${_state.alpha ? '# ' + _state.alpha : 'А — Я'}</span>
+    <span class="za-alpha-arrow">▾</span>
+  </div>
+  <div class="za-alpha" id="za-alpha-panel"><button class="za-ab all ${_state.alpha===''?'on':''}" data-a="">ВСЕ</button>${ALPHA.map(l=>`<button class="za-ab ${_state.alpha===l?'on':''}" data-a="${l}">${l}</button>`).join('')}</div>
+</div>
 <div class="za-count">${list.length} / ${_zarbaArtists.length} артистов</div>
 <div class="za-grid">
 ${list.length===0?'<div class="za-empty">Нет результатов</div>':list.map((a,i)=>{
   const gb=GBGS[hashId(a.id)%GBGS.length], on=_faned.has(String(a.id));
   const styleStr = a.photo ? `background: url('${a.photo}') center/cover no-repeat; color: transparent;` : `background: ${gb};`;
-  return`<div class="za-card${a.hof?' hof':''}" data-id="${a.id}" onclick="if(!event.target.closest('.za-card-btns') && !event.target.classList.contains('za-ov-fan')) window.openArtistModal('${a.id}')" style="animation:za-fu .45s ${Math.min(i*.05,.6)}s both">
-  <div class="za-card-init" style="${styleStr}">${a.photo ? '' : ini(a.name)}</div>
+  return`<div class="za-card${a.hof?' hof':''}" data-id="${a.id}"
+    onclick="window._zaTapHandler(event,'${a.id}')"
+    style="animation:za-fu .45s ${Math.min(i*.05,.6)}s both">
+
+  <!-- ФОТО (всегда на весь размер на мобиле) -->
+  <div class="za-card-init" style="${styleStr}">
+    ${a.photo ? `<img src="${a.photo}" alt="${a.name}">` : ini(a.name)}
+  </div>
+
   ${a.verified?`<div class="za-card-v${a.hof?' gold':''}">✓</div>`:''}
   ${a.chartPos?`<div class="za-card-chart">#${a.chartPos}</div>`:''}
+
+  <!-- ДЕСКТОП: hover оверлей -->
   <div class="za-card-ov">
     <div class="za-ov-name">${a.name}</div>
     <div class="za-ov-genre">${a.genre}</div>
@@ -357,6 +406,29 @@ ${list.length===0?'<div class="za-empty">Нет результатов</div>':li
     <button class="za-side-btn" onclick="window.openArtistDrawer(event, '${a.id}', 'tracks')">Треки</button>
     <button class="za-side-btn" onclick="window.openArtistDrawer(event, '${a.id}', 'clips')">Клипы</button>
   </div>
+
+  <!-- МОБИЛЬ: имя всегда снизу -->
+  <div class="za-card-info-mob">
+    <div class="mob-name">${a.name}</div>
+    <div class="mob-genre">${a.genre}</div>
+    <div class="mob-city">${a.city}</div>
+  </div>
+
+  <!-- МОБИЛЬ: тап-оверлей с кнопками -->
+  <div class="za-card-tap-ov">
+    <div class="za-tap-name">${a.name}</div>
+    <button class="za-tap-btn primary" onclick="event.stopPropagation(); window._zaClearTap(); window.openArtistModal('${a.id}')">
+      Открыть профиль
+    </button>
+    <div class="za-tap-btn-row">
+      <button class="za-tap-btn" onclick="event.stopPropagation(); window._zaClearTap(); window.openArtistDrawer(event,'${a.id}','tracks')">▶ Треки</button>
+      <button class="za-tap-btn" onclick="event.stopPropagation(); window._zaClearTap(); window.openArtistDrawer(event,'${a.id}','clips')">▷ Клипы</button>
+    </div>
+    <button class="za-tap-btn${on?' primary':''}" onclick="event.stopPropagation(); window._zaClearTap(); window.toggleArtistFan('${a.id}')">
+      ${on?'✓ Ты фанат':'+ Стать фанатом'}
+    </button>
+  </div>
+
 </div>`;}).join('')}
 </div>
 
@@ -366,11 +438,10 @@ ${list.length===0?'<div class="za-empty">Нет результатов</div>':li
     <!-- ЛЕВАЯ ЧАСТЬ: фото во весь рост -->
     <div class="za-m-cover" id="za-m-cov">
       <div class="za-m-cover-init" id="za-m-ini"></div>
-      <!-- кинематографический оверлей поверх фото -->
       <div class="za-m-cov-gradient"></div>
-      <!-- верифицирован тег -->
       <div id="za-m-vtag"></div>
-      <!-- имя артиста крупно внизу фото -->
+      <!-- Кнопка закрыть на обложке (видна на мобиле) -->
+      <button class="za-m-close-cover" onclick="window.closeArtistModal()">✕</button>
       <div class="za-m-cover-name-wrap">
         <div class="za-m-cover-genre" id="za-m-cov-genre"></div>
         <div class="za-m-cover-title" id="za-m-cov-title"></div>
@@ -453,7 +524,13 @@ ${list.length===0?'<div class="za-empty">Нет результатов</div>':li
   q('#za-cs')?.addEventListener('change',e=>{_state.city=e.target.value; window.closeArtistDrawer(); renderArtistsPage();});
   q('#za-gs')?.addEventListener('change',e=>{_state.genre=e.target.value; window.closeArtistDrawer(); renderArtistsPage();});
   q('#za-ss')?.addEventListener('change',e=>{_state.sort=e.target.value; window.closeArtistDrawer(); renderArtistsPage();});
-  qa('.za-ab').forEach(b=>b.addEventListener('click',()=>{_state.alpha=b.dataset.a; window.closeArtistDrawer(); renderArtistsPage();}));
+  qa('.za-ab').forEach(b=>b.addEventListener('click',()=>{
+    _state.alpha=b.dataset.a;
+    window.closeArtistDrawer();
+    // close alpha panel on mobile after selection
+    document.querySelector('.za-alpha-wrap')?.classList.remove('open');
+    renderArtistsPage();
+  }));
 }
 
 // ── SHARE ──────────────────────────────────────────────────────
@@ -581,6 +658,8 @@ window.renderArtists = async function(container){
 .za-sel:focus{border-color:#FF4500;color:#f0f0f0}
 .za-sel option{background:#111;color:#ccc}
 .za-alpha{display:flex;gap:3px;flex-wrap:wrap;padding:18px 56px;border-bottom:1px solid #0a0a0a}
+.za-alpha-toggle{display:none}
+.za-alpha-wrap{display:block}
 .za-ab{min-width:32px;height:32px;padding:0 6px;background:transparent;border:none;color:#484848;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:color .15s,background .15s;text-transform:uppercase;letter-spacing:1px;border-radius:2px}
 .za-ab:hover{color:#bbb}
 .za-ab.on{color:#FF4500;background:rgba(255,69,0,.08)}
@@ -893,34 +972,291 @@ window.renderArtists = async function(container){
 .za-badge.gold{border-color:rgba(255,215,0,.2);color:rgba(255,215,0,.6);background:rgba(255,215,0,.03)}
 .za-badge.hot{border-color:rgba(255,69,0,.2);color:rgba(255,69,0,.6);background:rgba(255,69,0,.03)}
 
-/* RESPONSIVE */
-@media(max-width:800px){
-  .za-bar{padding:24px 20px 20px;flex-wrap:wrap;gap:20px}
-  .za-filters,.za-alpha,.za-count,.za-grid{padding-left:16px;padding-right:16px}
-  .za-grid{grid-template-columns:repeat(2,1fr);gap:2px}
+/* Мобильные элементы — скрыты на десктопе */
+.za-card-info-mob,
+.za-card-mob-right { display: none; }
 
+/* ═══════════════════════════════
+   RESPONSIVE — МОБИЛЬ
+═══════════════════════════════ */
+
+/* Мобильный тап-оверлей поверх карточки (скрыт по умолчанию) */
+.za-card-tap-ov{
+  display:none;
+}
+
+/* Кнопка закрыть поверх фото в модалке — только мобиль */
+.za-m-close-cover{
+  display:none;
+}
+
+@media(max-width:800px){
+
+  /* ── ШАПКА ── */
+  .za-bar{ padding:14px 14px 10px; flex-wrap:wrap; gap:8px; }
+  .za-bar-stats{ gap:18px }
+  .za-bs-n{ font-size:36px; color:#fff !important }
+  .za-bs-l{ font-size:9px; letter-spacing:3px; color:#888 !important }
+  .za-bar-divider{ height:26px }
+  .za-join-btn{ padding:11px 18px; font-size:9px; letter-spacing:3px;
+    clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%); }
+
+  /* ── ФИЛЬТРЫ — только поиск, селекты скрыты ── */
+  .za-filters{
+    padding:8px 14px 6px;
+    gap:6px;
+    flex-wrap:nowrap;
+    align-items:center;
+  }
+  .za-search{ flex:1 1 100%; max-width:100% }
+  .za-search input{ font-size:13px; padding:10px 10px 10px 34px }
+  /* Селекты — полностью скрыты на мобиле */
+  .za-sel{ display:none !important; }
+
+  /* ── АЛФАВИТ — коллапс ── */
+  .za-alpha-wrap{
+    border-bottom:none;
+    overflow:hidden;
+  }
+  .za-alpha-toggle{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:5px 14px 3px; cursor:pointer;
+    background:transparent;
+  }
+  .za-alpha-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; letter-spacing:3px; color:#999;
+    text-transform:uppercase;
+  }
+  .za-alpha-arrow{
+    font-size:12px; color:#444;
+    transition:transform .2s;
+  }
+  .za-alpha-wrap.open .za-alpha-arrow{ transform:rotate(180deg); }
+  .za-alpha{
+    display:none; /* скрыт по умолчанию на мобиле */
+    padding:6px 14px 10px; gap:2px; flex-wrap:wrap;
+  }
+  .za-alpha-wrap.open .za-alpha{ display:flex !important; }
+  .za-ab{ min-width:28px; height:28px; font-size:11px }
+  .za-count{ display:none !important; }
+
+  /* ── ФИЛЬТРЫ — компактно ── */
+  .za-filters{
+    padding:10px 14px;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .za-sel{ font-size:11px; }
+
+  /* ══════════════════════════════════
+     СЕТКА — 2 колонки, карточки 3/4
+  ══════════════════════════════════ */
+  .za-grid{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:6px !important;
+    padding:2px 10px 20px !important;
+    margin-top:0 !important;
+  }
+
+  /* Карточка — 3D выпуклая */
+  .za-card{
+    aspect-ratio:3/4 !important;
+    height:auto !important;
+    display:block !important;
+    border-radius:14px !important;
+    overflow:visible !important;
+    padding:0 !important;
+    transform:translateY(0) !important;
+    /* 3D выпуклость через filter drop-shadow (работает с overflow:hidden) */
+    filter:
+      drop-shadow(0 2px 0px rgba(255,255,255,.06))
+      drop-shadow(0 8px 14px rgba(0,0,0,.7))
+      drop-shadow(0 20px 36px rgba(0,0,0,.5)) !important;
+    cursor:pointer !important;
+    position:relative !important;
+    background:#111 !important;
+    border:none !important;
+    overflow:hidden !important;
+    transition:transform .18s, filter .18s !important;
+  }
+  .za-card:active{
+    transform:translateY(4px) scale(0.975) !important;
+    filter:
+      drop-shadow(0 1px 0px rgba(255,255,255,.03))
+      drop-shadow(0 3px 6px rgba(0,0,0,.8)) !important;
+  }
+
+  /* Фото — на всю карточку */
+  .za-card-init{
+    position:absolute !important; inset:0 !important;
+    width:100% !important; height:100% !important;
+    border-radius:0 !important;
+    overflow:hidden !important;
+    font-size:clamp(36px,10vw,56px) !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    z-index:1 !important;
+  }
+  .za-card-init img{
+    position:absolute !important; inset:0 !important;
+    width:100% !important; height:100% !important;
+    object-fit:cover !important; border-radius:0 !important;
+  }
+
+  /* Градиент снизу — имя всегда видно */
+  .za-card-info-mob{
+    position:absolute !important;
+    bottom:0; left:0; right:0;
+    padding:36px 10px 10px !important;
+    background:linear-gradient(to top, rgba(0,0,0,.93) 0%, rgba(0,0,0,.5) 55%, transparent 100%) !important;
+    display:flex !important; flex-direction:column !important; gap:2px !important;
+    z-index:3 !important;
+  }
+  .za-card-info-mob .mob-name{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(15px,4.2vw,20px); letter-spacing:1px; color:#fff;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    line-height:1.1; text-shadow:0 1px 6px rgba(0,0,0,.9);
+  }
+  .za-card-info-mob .mob-genre{
+    font-family:'JetBrains Mono',monospace;
+    font-size:8px; letter-spacing:2px; color:#ff4500;
+    text-transform:uppercase;
+  }
+  .za-card-info-mob .mob-city{
+    font-family:'JetBrains Mono',monospace;
+    font-size:7px; letter-spacing:1px; color:rgba(255,255,255,.38);
+    text-transform:uppercase;
+  }
+
+  /* Тап-оверлей — появляется при .tapped */
+  .za-card-tap-ov{
+    display:block !important;
+    position:absolute !important; inset:0 !important;
+    background:rgba(0,0,0,.78) !important;
+    z-index:4 !important;
+    opacity:0; pointer-events:none;
+    transition:opacity .22s;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:8px !important;
+    padding:12px !important;
+  }
+  .za-card.tapped .za-card-tap-ov{
+    opacity:1 !important; pointer-events:all !important;
+  }
+  .za-tap-name{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(18px,5vw,24px); letter-spacing:2px; color:#fff;
+    text-align:center; margin-bottom:4px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%;
+  }
+  .za-tap-btn{
+    width:100%; padding:11px 8px;
+    background:transparent; border:1px solid rgba(255,255,255,.15);
+    border-radius:8px; color:rgba(255,255,255,.8);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:3px;
+    text-transform:uppercase; cursor:pointer;
+    transition:background .18s, border-color .18s, color .18s;
+  }
+  .za-tap-btn:active{ background:rgba(255,69,0,.2) !important; border-color:#ff4500 !important; color:#fff !important; }
+  .za-tap-btn.primary{
+    background:linear-gradient(135deg,#ff4500,#ff6b00) !important;
+    border-color:transparent !important; color:#fff !important;
+    font-size:10px !important;
+  }
+  .za-tap-btn-row{
+    display:flex !important; gap:6px !important; width:100% !important;
+  }
+  .za-tap-btn-row .za-tap-btn{ flex:1 !important; }
+
+  /* Верификация — поверх */
+  .za-card-v{
+    top:8px !important; left:8px !important; right:auto !important;
+    width:20px !important; height:20px !important; font-size:9px !important;
+    opacity:1 !important; z-index:5 !important;
+  }
+  .za-card-chart{ display:none !important; }
+
+  /* HOF */
+  .za-card.hof .mob-name{ color:#FFD700 !important; }
+  .za-card.hof::after{
+    bottom:0; height:2px !important;
+    background:linear-gradient(90deg,transparent,rgba(255,215,0,.5),transparent) !important;
+    z-index:6 !important;
+  }
+
+  /* Скрываем десктопный hover-оверлей и боковые кнопки */
+  .za-card-ov,
+  .za-card-btns{ display:none !important; }
+
+  /* ══════════════════════════════════
+     МОДАЛКА — полный экран
+  ══════════════════════════════════ */
   .za-modal{
     flex-direction:column;
-    width:100vw;height:100dvh;
-    border-radius:0;border:none;
-    max-height:100dvh;
+    width:100vw; height:100dvh;
+    border-radius:0; border:none;
+    max-height:100dvh; overflow-y:auto;
   }
   .za-m-cover{
-    flex:0 0 52%;width:100%;
+    flex:0 0 44%; width:100%; min-height:44dvh;
+    position:relative;
   }
   .za-m-cov-gradient{
     background:
-      linear-gradient(to top, rgba(0,0,0,.98) 0%, rgba(0,0,0,.4) 45%, transparent 70%),
-      linear-gradient(to bottom, rgba(0,0,0,.5) 0%, transparent 25%);
+      linear-gradient(to top,rgba(0,0,0,.98) 0%,rgba(0,0,0,.3) 50%,transparent 75%),
+      linear-gradient(to bottom,rgba(0,0,0,.55) 0%,transparent 30%);
   }
-  .za-m-cover-title{font-size:clamp(44px,11vw,68px)}
-  .za-m-body{padding:24px 22px 28px;gap:0;flex:1;min-height:0}
-  .za-m-plays{margin-bottom:16px}
-  .za-m-stat-num{font-size:40px}
-  .za-m-stat-block{padding:16px 18px}
-  .za-m-fan-row{margin-bottom:14px}
-  .za-m-soc{flex-wrap:nowrap}
-  .za-m-soc a{font-size:8px;letter-spacing:1.5px;padding:12px 4px}
+
+  /* Кнопка ЗАКРЫТЬ поверх фото — только мобиль */
+  .za-m-close-cover{
+    display:flex !important;
+    position:absolute !important; top:14px !important; right:14px !important;
+    width:38px !important; height:38px !important;
+    background:rgba(0,0,0,.55) !important;
+    border:1px solid rgba(255,255,255,.2) !important;
+    border-radius:50% !important;
+    color:#fff !important; font-size:14px !important;
+    align-items:center !important; justify-content:center !important;
+    cursor:pointer !important; z-index:20 !important;
+    backdrop-filter:blur(8px) !important;
+    transition:background .2s, border-color .2s !important;
+  }
+  .za-m-close-cover:active{
+    background:rgba(255,69,0,.4) !important;
+    border-color:#ff4500 !important;
+  }
+
+  /* Скрываем старую кнопку закрыть (в body) */
+  .za-m-close{ display:none !important; }
+
+  .za-m-cover-title{ font-size:clamp(38px,10vw,60px) }
+  .za-m-body{ padding:18px 16px 22px; gap:0; flex:1; min-height:0; overflow-y:auto; }
+  .za-m-plays{ margin-bottom:12px }
+  .za-m-stat-num{ font-size:34px }
+  .za-m-stat-block{ padding:12px 14px }
+  .za-m-fan-row{ margin-bottom:10px }
+  .za-m-soc{ flex-wrap:nowrap }
+  .za-m-soc a{ font-size:8px; letter-spacing:1.5px; padding:11px 3px }
+
+  /* Drawer — выезжает снизу */
+  #za-float-drawer{
+    position:fixed !important;
+    top:auto !important; left:0 !important; right:0 !important; bottom:0 !important;
+    width:100% !important; height:62vh !important;
+    border-left:none !important; border-top:2px solid #FF4500 !important;
+    border-radius:20px 20px 0 0 !important;
+    transform:translateY(100%) !important;
+    opacity:1 !important;
+    transition:transform .38s cubic-bezier(.23,1,.32,1) !important;
+  }
+  #za-float-drawer.open{ transform:translateY(0) !important; }
 }
 /* КНОПКИ ДЕЙСТВИЙ */
 .za-m-actions{display:flex;gap:8px;margin-top:auto;padding-top:4px}
@@ -1049,7 +1385,91 @@ window.renderArtists = async function(container){
   `;
   document.head.appendChild(s);
 
-  container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:70vh;color:var(--acc,#ff4500);font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;letter-spacing:2px;animation:za-blink 1s infinite;">ЗАГРУЗКА АРТИСТОВ...</div>`;
+  container.innerHTML = `
+<div id="za-loader" style="
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:70vh;gap:0;position:relative;overflow:hidden;
+">
+  <style>
+    @keyframes za-logo-pulse {
+      0%   { transform:scale(1);    opacity:.9; filter:drop-shadow(0 0 0px #ff4500); }
+      50%  { transform:scale(1.08); opacity:1;  filter:drop-shadow(0 0 28px #ff4500) drop-shadow(0 0 60px rgba(255,69,0,.4)); }
+      100% { transform:scale(1);    opacity:.9; filter:drop-shadow(0 0 0px #ff4500); }
+    }
+    @keyframes za-ring-spin {
+      from { transform:rotate(0deg); }
+      to   { transform:rotate(360deg); }
+    }
+    @keyframes za-ring2-spin {
+      from { transform:rotate(0deg); }
+      to   { transform:rotate(-360deg); }
+    }
+    @keyframes za-text-fade {
+      0%,100% { opacity:.35; letter-spacing:6px; }
+      50%     { opacity:.9;  letter-spacing:8px; }
+    }
+    @keyframes za-dot-seq {
+      0%,80%,100% { transform:scale(0); opacity:0; }
+      40%         { transform:scale(1); opacity:1; }
+    }
+    .za-loader-logo { animation: za-logo-pulse 2s ease-in-out infinite; }
+    .za-loader-ring1 {
+      position:absolute;
+      width:140px;height:140px;
+      border-radius:50%;
+      border:1px solid rgba(255,69,0,.25);
+      border-top-color:rgba(255,69,0,.8);
+      animation: za-ring-spin 1.4s linear infinite;
+    }
+    .za-loader-ring2 {
+      position:absolute;
+      width:168px;height:168px;
+      border-radius:50%;
+      border:1px solid rgba(255,69,0,.1);
+      border-bottom-color:rgba(255,69,0,.4);
+      animation: za-ring2-spin 2.2s linear infinite;
+    }
+    .za-loader-ring3 {
+      position:absolute;
+      width:200px;height:200px;
+      border-radius:50%;
+      border:1px dashed rgba(255,69,0,.07);
+      animation: za-ring-spin 4s linear infinite;
+    }
+    .za-loader-text {
+      font-family:'JetBrains Mono',monospace;
+      font-size:10px;letter-spacing:6px;color:rgba(255,255,255,.4);
+      text-transform:uppercase;margin-top:110px;
+      animation: za-text-fade 2s ease-in-out infinite;
+    }
+    .za-loader-dots { display:flex;gap:6px;margin-top:14px; }
+    .za-loader-dot {
+      width:5px;height:5px;border-radius:50%;background:#ff4500;
+      animation: za-dot-seq 1.4s ease-in-out infinite;
+    }
+    .za-loader-dot:nth-child(2){ animation-delay:.16s; }
+    .za-loader-dot:nth-child(3){ animation-delay:.32s; }
+  </style>
+
+  <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;">
+    <div class="za-loader-ring3"></div>
+    <div class="za-loader-ring2"></div>
+    <div class="za-loader-ring1"></div>
+    <img class="za-loader-logo" src="assets/logo-white-big.png"
+      style="width:72px;height:72px;object-fit:contain;position:relative;z-index:2;"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div style="display:none;align-items:center;justify-content:center;
+      font-family:'Bebas Neue',sans-serif;font-size:52px;color:#ff4500;
+      position:relative;z-index:2;animation:za-logo-pulse 2s ease-in-out infinite;">Z</div>
+  </div>
+
+  <div class="za-loader-text">Загрузка артистов</div>
+  <div class="za-loader-dots">
+    <div class="za-loader-dot"></div>
+    <div class="za-loader-dot"></div>
+    <div class="za-loader-dot"></div>
+  </div>
+</div>`;
   _el = container;
 
   const oldDrawer=document.getElementById('za-float-drawer');

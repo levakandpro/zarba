@@ -4,8 +4,152 @@
    ============================================================ */
 
 function renderMedia(container) {
-  // 1. ОЧИЩАЕМ КОНТЕЙНЕР ПЕРЕД РЕНДЕРОМ
-  container.innerHTML = '';
+  // ── ЗАГРУЗКА — киношный экран ──
+  container.innerHTML = `
+<div id="zm-loader" style="
+  position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  height:80vh;background:#080808;overflow:hidden;gap:0;
+">
+<style>
+  @keyframes zm-scan-move { to { top:100%; } }
+  @keyframes zm-logo-glow {
+    0%,100% { filter:brightness(1) drop-shadow(0 0 0px #e50914); transform:scale(1); }
+    50%      { filter:brightness(1.3) drop-shadow(0 0 24px #e50914) drop-shadow(0 0 50px rgba(229,9,20,.4)); transform:scale(1.06); }
+  }
+  @keyframes zm-tape-spin { to { transform:rotate(360deg); } }
+  @keyframes zm-tape-spin2 { to { transform:rotate(-360deg); } }
+  @keyframes zm-bar-fill { 0%{width:0%} 30%{width:25%} 65%{width:70%} 90%{width:92%} 100%{width:100%} }
+  @keyframes zm-title-reveal { from{opacity:0;clip-path:inset(0 100% 0 0)} to{opacity:1;clip-path:inset(0 0% 0 0)} }
+  @keyframes zm-sub-up { from{opacity:0;transform:translateY(8px)} to{opacity:.7;transform:translateY(0)} }
+  @keyframes zm-flicker { 0%,94%,96%,100%{opacity:1} 95%{opacity:.5} }
+  .zm-ld-bg-grid {
+    position:absolute;inset:0;
+    background-image:linear-gradient(rgba(229,9,20,.03) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(229,9,20,.02) 1px,transparent 1px);
+    background-size:40px 40px;
+    animation:cGrid 15s linear infinite;
+  }
+  .zm-ld-scan {
+    position:absolute;top:-4px;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,transparent,rgba(229,9,20,.6),transparent);
+    animation:zm-scan-move 2s linear infinite;
+    z-index:2;
+  }
+  .zm-ld-vignette {
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.7) 100%);
+    pointer-events:none;z-index:1;
+  }
+  .zm-ld-frame {
+    position:relative;z-index:3;
+    display:flex;flex-direction:column;align-items:center;gap:0;
+  }
+  .zm-ld-rings {
+    position:relative;width:160px;height:160px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .zm-ld-r1,.zm-ld-r2 { position:absolute;border-radius:50%; }
+  .zm-ld-r1 {
+    width:160px;height:160px;
+    border:1px solid rgba(229,9,20,.15);
+    border-top:2px solid #e50914;
+    animation:zm-tape-spin 1.2s linear infinite;
+  }
+  .zm-ld-r2 {
+    width:124px;height:124px;
+    border:1px solid rgba(229,9,20,.08);
+    border-right:1px solid rgba(229,9,20,.35);
+    animation:zm-tape-spin2 2s linear infinite;
+  }
+  /* Плёночные перфорации по кругу */
+  .zm-ld-perf {
+    position:absolute;width:148px;height:148px;border-radius:50%;
+    border:1px dashed rgba(229,9,20,.06);
+    animation:zm-tape-spin 6s linear infinite;
+  }
+  .zm-ld-logo {
+    position:relative;z-index:2;
+    width:60px;height:60px;object-fit:contain;
+    animation:zm-logo-glow 2s ease-in-out infinite, zm-flicker 4s ease-in-out infinite;
+  }
+  .zm-ld-logo-fb {
+    position:relative;z-index:2;
+    font-family:'Barlow Condensed','Bebas Neue',sans-serif;
+    font-size:52px;font-weight:900;color:#e50914;line-height:1;
+    animation:zm-logo-glow 2s ease-in-out infinite;
+    display:none;
+  }
+  /* Кинолента снизу */
+  .zm-ld-film {
+    display:flex;gap:3px;margin-top:20px;opacity:.25;
+  }
+  .zm-ld-frame-hole {
+    width:18px;height:12px;
+    border:1px solid rgba(229,9,20,.5);
+    border-radius:2px;background:transparent;
+  }
+  .zm-ld-title {
+    font-family:'Barlow Condensed','Bebas Neue',sans-serif;
+    font-size:36px;font-weight:900;letter-spacing:10px;
+    color:#fff;margin-top:6px;
+    animation:zm-title-reveal .9s .4s ease both;
+  }
+  .zm-ld-title span { color:#e50914; }
+  .zm-ld-sub {
+    font-family:'Inter',sans-serif;
+    font-size:9px;letter-spacing:5px;text-transform:uppercase;
+    color:rgba(255,255,255,.5);margin-top:5px;
+    animation:zm-sub-up .7s .7s ease both;
+  }
+  .zm-ld-progress {
+    width:160px;height:1px;background:rgba(255,255,255,.08);
+    margin-top:20px;overflow:hidden;
+  }
+  .zm-ld-prog-fill {
+    height:100%;background:linear-gradient(90deg,#e50914,#ff6b35);
+    animation:zm-bar-fill 1.7s ease forwards;
+  }
+  .zm-ld-counter {
+    font-family:'Inter',monospace;font-size:9px;letter-spacing:3px;
+    color:rgba(229,9,20,.7);margin-top:8px;
+    animation:zm-sub-up .7s .9s ease both;
+  }
+</style>
+<div class="zm-ld-bg-grid"></div>
+<div class="zm-ld-scan"></div>
+<div class="zm-ld-vignette"></div>
+<div class="zm-ld-frame">
+  <div class="zm-ld-rings">
+    <div class="zm-ld-perf"></div>
+    <div class="zm-ld-r1"></div>
+    <div class="zm-ld-r2"></div>
+    <img class="zm-ld-logo" src="assets/logo-white-big.png"
+      onerror="this.style.display='none';document.getElementById('zm-ld-fb').style.display='block'">
+    <div id="zm-ld-fb" class="zm-ld-logo-fb">Z</div>
+  </div>
+  <div class="zm-ld-film">
+    ${Array.from({length:8},()=>'<div class="zm-ld-frame-hole"></div>').join('')}
+  </div>
+  <div class="zm-ld-title">Z·<span>МЕДИА</span></div>
+  <div class="zm-ld-sub">Видео · Клипы · Живые выступления</div>
+  <div class="zm-ld-progress"><div class="zm-ld-prog-fill"></div></div>
+  <div class="zm-ld-counter" id="zm-ld-cnt">ЗАГРУЗКА...</div>
+</div>
+</div>`;
+
+  // Счётчик загрузки
+  let pct = 0;
+  const cnt = document.getElementById('zm-ld-cnt');
+  const ticker = setInterval(()=>{
+    pct = Math.min(pct + Math.floor(Math.random()*12+4), 99);
+    if(cnt) cnt.textContent = pct + '%';
+  }, 120);
+
+  setTimeout(() => {
+    clearInterval(ticker);
+    // 1. ОЧИЩАЕМ КОНТЕЙНЕР ПЕРЕД РЕНДЕРОМ
+    container.innerHTML = '';
 
   const AR = ['PARVEEZ','MC ARTISAN','HUSTLE TAKIR','YOUNG FLOW','STREET GENIUS','SINO','MALIKA','OZOD','TEMUR G','ZARINA B','UNDERGROUND K','TAJIK STYLE','GHAYRAT','SAFAR'];
   const GN = ['АНДЕРГРАУНД','РЭП','ТРЭП','ЛИРИКА','ПОП','FREESTYLE','ФИТЫ','КАЛЬЯННЫЙ'];
@@ -328,6 +472,125 @@ function renderMedia(container) {
 /* REVEAL */
 .zm-reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
 .zm-reveal.in{opacity:1;transform:translateY(0)}
+
+/* ══════════════════════════════════════════
+   Z·MEDIA — МОБИЛЬ (≤600px)
+══════════════════════════════════════════ */
+@media(max-width:600px){
+
+  /* ── СЕКЦИИ — убираем большие отступы ── */
+  .zm-sec{ padding:32px 16px 12px; }
+  .zm-eyebrow{ font-size:9px; letter-spacing:3px; color:rgba(255,255,255,.7); }
+  .zm-title{ font-size:clamp(38px,12vw,60px); }
+  .zm-hsub{ font-size:10px; letter-spacing:2px; color:rgba(255,255,255,.6); }
+
+  /* ── HERO — стек вместо сетки ── */
+  .zm-hero-wrap{
+    margin:0 !important;
+    grid-template-columns:1fr !important;
+    min-height:auto !important;
+  }
+  .zm-hero-poster{
+    min-height:280px;
+    border-right:none !important;
+    border-bottom:1px solid rgba(255,255,255,.07);
+  }
+  .zm-hero-poster-bg{ font-size:100px !important; }
+  .zm-hero-poster-info{ padding:20px 16px; gap:8px; }
+  .zm-hero-tag{ font-size:8px; letter-spacing:3px; padding:5px 10px; }
+  .zm-hero-week{ font-size:9px; letter-spacing:2px; color:rgba(255,255,255,.6); }
+  .zm-hero-artist{ font-size:10px; letter-spacing:4px; }
+  .zm-hero-title{ font-size:clamp(20px,7vw,28px); }
+  .zm-hero-genre{ font-size:8px; padding:4px 10px; color:rgba(255,255,255,.7); }
+  .zm-hero-info{ flex-direction:row; }
+  .zm-hero-preview{ min-height:160px; flex:1; }
+  .zm-hero-bottom-info{ padding:14px 16px; }
+  .zm-hero-stat-n{ font-size:20px; }
+  .zm-hero-stat-l{ font-size:7px; letter-spacing:2px; color:rgba(255,255,255,.6); }
+  .zm-hero-stats-row{ gap:14px; }
+  .zm-hero-divider-v{ height:24px; }
+
+  /* ── SCROLL ROW — карточки чуть меньше ── */
+  .zm-row-wrap{ margin:0 !important; }
+  .zm-row-top{ padding:0 14px 6px; }
+  .zm-arrow{ width:28px; height:28px; font-size:12px; }
+  .zm-card{ flex:0 0 200px !important; }
+  .zm-thumb-fill{ font-size:36px !important; }
+  .zm-cinfo{ padding:10px 10px 12px; }
+  .zm-cartist{ font-size:9px; letter-spacing:2px; }
+  .zm-ctitle{ font-size:16px; }
+  .zm-cgenre{ font-size:9px; letter-spacing:1px; color:rgba(255,255,255,.6); }
+  .zm-cyear{ font-size:9px; color:rgba(255,255,255,.5); }
+  .zm-views{ font-size:13px; }
+
+  /* ── LIVE — 1 колонка ── */
+  .zm-live-wrap{ margin:0 !important; }
+  .zm-live{
+    grid-template-columns:1fr !important;
+    gap:1px;
+  }
+  .zm-lc{ aspect-ratio:16/7 !important; }
+  .zm-lc-ov{ padding:14px 16px; }
+  .zm-lc-title{ font-size:clamp(16px,5vw,22px); margin-bottom:6px; }
+  .zm-lc-artist{ font-size:9px; letter-spacing:2px; color:rgba(255,255,255,.7); }
+  .zm-lc-views{ font-size:15px; color:rgba(255,255,255,.7); }
+
+  /* ── ARCHIVE — 1 колонка ── */
+  .zm-arch{ margin:0 !important; border-left:none; border-right:none; }
+  .zm-arch-grid{ grid-template-columns:1fr !important; }
+  .zm-ar{
+    grid-template-columns:28px 48px 1fr 44px !important;
+    gap:8px; padding:10px 14px;
+  }
+  .zm-ar-v{ display:none; } /* скрываем просмотры — нет места */
+  .zm-ar-n{ font-size:11px; color:rgba(255,255,255,.5); }
+  .zm-ar-title{ font-size:13px; color:rgba(255,255,255,.9); }
+  .zm-ar-artist{ font-size:9px; letter-spacing:1px; color:rgba(255,255,255,.6); }
+  .zm-ar-yr{ font-size:10px; color:rgba(255,255,255,.5); }
+
+  /* ── SHORTS — 2 колонки ── */
+  .zm-shorts{
+    grid-template-columns:repeat(2,1fr) !important;
+    margin:0 !important;
+    gap:2px;
+  }
+  .zm-sh-title{ font-size:12px; }
+  .zm-sh-artist{ font-size:7px; }
+  .zm-sh-views{ font-size:8px; color:rgba(255,255,255,.6); }
+
+  /* ── ARALASH ── */
+  .zm-aralash{ margin:0 !important; }
+  .zm-aralash-head{ padding:18px 16px 0; }
+  .zm-aralash-t{ font-size:clamp(36px,10vw,52px); }
+  .zm-aralash-s{ font-size:9px; letter-spacing:2px; color:rgba(255,255,255,.6); }
+
+  /* ── MORE ── */
+  .zm-more{ padding:16px; }
+  .zm-mbtn{
+    font-size:9px; letter-spacing:3px; padding:11px 30px;
+    color:rgba(255,255,255,.7); border-color:rgba(255,255,255,.2);
+  }
+
+  /* ── MODAL — полный экран ── */
+  .zm-mbox{ width:100vw !important; height:100dvh !important; display:flex; flex-direction:column; }
+  .zm-mvid{ flex:1; }
+  .zm-mfoot{ padding:12px 16px; }
+  .zm-m-title{ font-size:20px; }
+
+  /* ── Яркие серые тексты глобально ── */
+  .zm .zm-eyebrow,
+  .zm .zm-hsub,
+  .zm-hero-stat-l,
+  .zm-cgenre,
+  .zm-cyear,
+  .zm-lc-artist,
+  .zm-lc-views,
+  .zm-ar-artist,
+  .zm-ar-yr,
+  .zm-ar-n,
+  .zm-aralash-s,
+  .zm-mbtn { color: rgba(255,255,255,.65) !important; }
+}
   `;
   document.head.appendChild(S);
 
@@ -603,12 +866,13 @@ function renderMedia(container) {
 
   /* ── MOUNT ── */
   container.appendChild(wrap);
-
   /* ── REVEAL ── */
   const obs=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}});
   },{threshold:.05});
   wrap.querySelectorAll('.zm-reveal').forEach(el=>obs.observe(el));
+
+  }, 1900); // конец setTimeout загрузки
 }
 
 // Принудительно кидаем функцию в глобальное окно, чтобы index.html её всегда видел
